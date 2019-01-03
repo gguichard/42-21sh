@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 13:36:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 14:29:57 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 int	main(int argc, char **argv, char **environ)
 {
-	(void)argc;
-	(void)argv;
+	t_shell	shell;
+
+	shell.argc = argc;
+	shell.argv = argv;
 	(void)environ;
 	return (0);
 }
