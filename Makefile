@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/03 17:54:44 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/03 19:32:23 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,11 @@ SRC_DIR	= 	src
 OBJ		= 	$(SRC:.c=.o)
 OBJ_DIR	= 	.obj
 
-HEADERS	=	includes/shell.h includes/vars.h \
-			includes/error.h includes/check_path.h
+INC_DIR	=	includes
+INC		=	shell.h vars.h error.h check_path.h
 
 CC		= 	gcc
-CFLAGS	= 	-Wall -Wextra -Werror -I libft/includes -I includes
+CFLAGS	= 	-Wall -Wextra -Werror -I libft/includes -I $(INC_DIR)
 
 LIBFT	= 	libft/libft.a
 
@@ -36,7 +36,7 @@ $(NAME): $(LIBFT) $(addprefix $(OBJ_DIR)/,$(OBJ))
 $(LIBFT):
 	$(MAKE) -C libft
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(addprefix $(INC_DIR)/,$(INC)) | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
