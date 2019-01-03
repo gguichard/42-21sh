@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 20:56:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 23:16:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,19 @@
 # include "libft.h"
 # include <term.h>
 
-typedef struct		s_var
-{
-	char			*key;
-	char			*value;
-}					t_var;
+# define MAX_ESC_SEQ_BYTES 8
+
+typedef struct		s_term
+{	
+	struct termios	default_term;
+	struct termios	curr_term;
+	int				legacy_mode;
+	int				esc_seq;
+	char			seq[MAX_ESC_SEQ_BYTES];
+	int				seq_off;
+	char			*line;
+	int				line_off;
+}					t_term;
 
 typedef struct		s_shell
 {
@@ -29,9 +37,7 @@ typedef struct		s_shell
 	t_list			*env;
 	t_list			*local;
 	int				last_status;
-	struct termios	default_term;
-	struct termios	curr_term;
-	int				legacy_mode;
+	t_term			term;
 }					t_shell;
 
 t_list				*parse_env(char **environ);

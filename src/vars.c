@@ -6,12 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 16:41:55 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 18:19:09 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 21:53:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "shell.h"
+#include "libft.h"
+#include "vars.h"
 
 void		free_var(void *content, size_t content_size)
 {

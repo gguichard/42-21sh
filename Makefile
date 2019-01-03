@@ -6,14 +6,14 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/03 20:55:34 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/03 21:56:41 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= 	21sh
 
 SRC		= 	main.c env.c vars.c shell_vars.c \
-			term.c error.c check_path.c
+			term.c input.c error.c check_path.c
 SRC_DIR	= 	src
 
 OBJ		= 	$(SRC:.c=.o)

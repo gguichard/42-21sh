@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 21:01:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 23:18:36 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,15 @@ int	main(int argc, char **argv, char **environ)
 
 	shell.argc = argc;
 	shell.argv = argv;
-	if ((shell.env = parse_env(environ)) == NULL)
-	{
-		ft_dprintf(2, "21sh: unable to parse env\n");
-		return (1);
-	}
+	shell.env = parse_env(environ);
 	shell.last_status = 0;
-	shell.legacy_mode = !setup_term(&shell);
-	if (!shell.legacy_mode)
-		reset_term(&shell);
+	shell.term.legacy_mode = !setup_term(&shell);
+	if (!shell.term.legacy_mode)
+	{
+		shell.term.seq_off = 0;
+		shell.term.esc_seq = 0;
+	}
+	wait_for_command(&shell);
+	reset_term(&shell);
 	return (0);
 }
