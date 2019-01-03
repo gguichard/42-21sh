@@ -6,31 +6,37 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 14:39:11 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 17:13:42 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 18:25:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "shell.h"
+#include "vars.h"
 
 t_list	*parse_env(char **environ)
 {
 	int		index;
 	t_list	*lst;
-	t_var	var;
+	char	*def;
 	char	*sep;
+	int		ret;
 
 	index = 0;
 	lst = NULL;
+	ret = 1;
 	while (environ[index] != NULL)
 	{
-		sep = ft_strchr(environ[index], '=');
-		if (sep == NULL)
-			return (ft_lstfree(&lst));
-		var.key = ft_strndup(environ[index], (size_t)(sep - environ[index]));
-		var.value = ft_strdup(sep + 1);
-		if (var.key == NULL || var.value == NULL)
-			return (ft_lstfree(&lst));
-		ft_lstpush(&lst, ft_lstnew(&var, sizeof(t_var)));
+		if (!(def = ft_strdup(environ[index])))
+			ret = 0;
+		if (ret && (sep = ft_strchr(def, '=')) == NULL)
+			ret = 0;
+		*sep = '\0';
+		if (ret && !create_var(&lst, def, sep + 1))
+			ret = 0;
+		free(def);
+		if (!ret)
+			return (ft_lstdel(&lst, free_var));
 		index++;
 	}
 	return (lst);

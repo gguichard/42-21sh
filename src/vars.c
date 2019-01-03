@@ -6,13 +6,25 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 16:41:55 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 17:18:24 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 18:19:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "shell.h"
 
-static t_var	*get_var_lst(t_list *lst, const char *key)
+void		free_var(void *content, size_t content_size)
+{
+	t_var	*var;
+
+	(void)content_size;
+	var = (t_var *)content;
+	free(var->key);
+	free(var->value);
+	free(var);
+}
+
+t_var		*get_var(t_list *lst, const char *key)
 {
 	t_var	*var;
 
@@ -26,35 +38,64 @@ static t_var	*get_var_lst(t_list *lst, const char *key)
 	return (NULL);
 }
 
-const char		*get_var(t_list *lst, const char *key)
+int			create_var(t_list **lst, const char *key, const char *value)
 {
-	t_var	*var;
+	t_var	var;
+	t_list	*elem;
 
-	var = get_var_lst(lst, key);
-	return (var == NULL ? "" : var->value);
-}
-
-char			*get_shell_var(t_shell *shell, const char *key)
-{
-	t_var	*var;
-	int		tmp;
-
-	var = NULL;
-	if (ft_isalpha(key[0]) || key[0] == '_')
+	var.key = ft_strdup(key);
+	var.value = ft_strdup(value);
+	if (var.key != NULL && var.value != NULL)
 	{
-		var = get_var_lst(shell->env, key);
-		if (var == NULL)
-			var = get_var_lst(shell->local, key);
-	}
-	else
-	{
-		if (ft_strequ(key, "?"))
-			return (ft_itoa((unsigned char)shell->last_status));
-		if (ft_isdigit(key[0]))
+		elem = ft_lstnew(&var, sizeof(t_var));
+		if (elem != NULL)
 		{
-			tmp = ft_atoi(key);
-			return (ft_strdup(shell->argc <= tmp ? "" : shell->argv[tmp]));
+			ft_lstpush(lst, elem);
+			return (1);
 		}
 	}
-	return (var == NULL ? "" : ft_strdup(var->value));
+	free(var.key);
+	free(var.value);
+	return (0);
+}
+
+int			update_var(t_list **lst, const char *key, const char *value)
+{
+	t_var	*var;
+	char	*dup;
+
+	var = get_var(*lst, key);
+	if (var != NULL)
+	{
+		if ((dup = ft_strdup(value)) == NULL)
+			return (0);
+		free(var->value);
+		var->value = dup;
+		return (1);
+	}
+	return (create_var(lst, key, value));
+}
+
+int			unset_var(t_list **lst, const char *key)
+{
+	t_list	*prev;
+	t_list	*curr;
+	t_var	*var;
+
+	prev = NULL;
+	curr = *lst;
+	while (curr != NULL)
+	{
+		var = (t_var *)curr->content;
+		if (ft_strequ(var->key, key))
+		{
+			if (prev != NULL)
+				prev->next = curr->next;
+			ft_lstdelone(&curr, &free_var);
+			return (1);
+		}
+		prev = curr;
+		curr = curr->next;
+	}
+	return (0);
 }
