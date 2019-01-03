@@ -1,32 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   input.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 21:01:08 by gguichar         ###   ########.fr       */
+/*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/03 20:49:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
-#include "input.h"
+#ifndef TERM_H
+# define TERM_H
 
-int	main(int argc, char **argv, char **environ)
-{
-	t_shell	shell;
+# include "shell.h"
 
-	shell.argc = argc;
-	shell.argv = argv;
-	if ((shell.env = parse_env(environ)) == NULL)
-	{
-		ft_dprintf(2, "21sh: unable to parse env\n");
-		return (1);
-	}
-	shell.last_status = 0;
-	shell.legacy_mode = !setup_term(&shell);
-	if (!shell.legacy_mode)
-		reset_term(&shell);
-	return (0);
-}
+int	setup_term(t_shell *shell);
+int	reset_term(t_shell *shell);
+
+#endif
