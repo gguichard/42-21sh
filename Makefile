@@ -6,44 +6,42 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/03 16:12:40 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/03 16:19:00 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	=	21sh
+NAME	= 	21sh
 
-SRC_DIR	=	src
-SRC_DEF	=	main.c \
-			check_path.c \
-			error.c
-SRC		=	$(addprefix $(SRC_DIR)/,$(SRC_DEF))
-OBJ		=	$(SRC:.c=.o)
+SRC		= 	main.c env.c error.c check_path.c
+SRC_DIR	= 	src
 
-INC_DIR	=	includes
-INC_DEF	=	shell.h \
-			check_path.h \
-			error.h
-INC		=	$(addprefix $(INC_DIR)/,$(INC_DEF))
+OBJ		= 	$(SRC:.c=.o)
+OBJ_DIR	= 	.obj
 
-CC		=	gcc
-CFLAGS	=	-Wall -Wextra -Werror
+HEADERS	=	includes/shell.h includes/error.h includes/check_path.h
 
-LIBFT	=	libft/libft.a
+CC		= 	gcc
+CFLAGS	= 	-Wall -Wextra -Werror -I libft/includes -I includes
+
+LIBFT	= 	libft/libft.a
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ)
-	$(CC) $(LIBS) -o $@ $^
+$(NAME): $(LIBFT) $(addprefix $(OBJ_DIR)/,$(OBJ))
+	$(CC) $(CFLAGS) -o $@ $^
 
 $(LIBFT):
 	$(MAKE) -C libft
 
-%.o: %.c $(INC)
-	$(CC) $(CFLAGS) -I libft/includes -I includes -o $@ -c $<
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	/bin/mkdir $@
 
 clean:
 	$(MAKE) -C libft clean
-	/bin/rm -f $(OBJ)
+	/bin/rm -rf $(OBJ_DIR)
 
 fclean: clean
 	$(MAKE) -C libft fclean

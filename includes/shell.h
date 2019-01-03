@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 14:29:15 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 16:11:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,7 @@ typedef struct	s_shell
 	t_list		*local;
 	int			last_exit;
 }				t_shell;
+
+t_list			*parse_env(char **environ);
 
 #endif
