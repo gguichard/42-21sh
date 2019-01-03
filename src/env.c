@@ -6,11 +6,10 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 14:39:11 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 16:23:11 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 17:13:42 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "shell.h"
 
 t_list	*parse_env(char **environ)

@@ -6,12 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 16:25:21 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/03 17:19:45 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "printf.h"
 
 int	main(int argc, char **argv, char **environ)
 {
@@ -20,5 +19,6 @@ int	main(int argc, char **argv, char **environ)
 	shell.argc = argc;
 	shell.argv = argv;
 	shell.env = parse_env(environ);
+	shell.last_status = 0;
 	return (0);
 }
