@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 08:11:17 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/03 15:58:06 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/03 16:43:33 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "libft.h"
 #include "error.h"
 
-t_error		check_dir_for_cd(char *path)
+t_error		check_dir_for_cd(const char *path)
 {
 	struct stat		stat_buf;
 	char			*cur_path;
@@ -46,7 +46,7 @@ t_error		check_dir_for_cd(char *path)
 	return (del_then_ret_err(cur_path, ERRC_NOERROR));
 }
 
-t_error		check_dir_of_file_for_cd(char *path)
+t_error		check_dir_of_file_for_cd(const char *path)
 {
 	char			*path_cpy;
 	size_t			path_size;
@@ -74,7 +74,7 @@ t_error		check_dir_of_file_for_cd(char *path)
 	return (del_then_ret_err(path_cpy, check_cd_ret));
 }
 
-t_error		check_file_for_exec(char *path)
+t_error		check_file_for_exec(const char *path)
 {
 	char			*path_cpy;
 	size_t			path_size;
