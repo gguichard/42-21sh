@@ -6,14 +6,24 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/03 13:36:20 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/03 16:12:40 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	21sh
 
-SRC		=	src/main.c
+SRC_DIR	=	src
+SRC_DEF	=	main.c \
+			check_path.c \
+			error.c
+SRC		=	$(addprefix $(SRC_DIR)/,$(SRC_DEF))
 OBJ		=	$(SRC:.c=.o)
+
+INC_DIR	=	includes
+INC_DEF	=	shell.h \
+			check_path.h \
+			error.h
+INC		=	$(addprefix $(INC_DIR)/,$(INC_DEF))
 
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror
@@ -28,7 +38,7 @@ $(NAME): $(LIBFT) $(OBJ)
 $(LIBFT):
 	$(MAKE) -C libft
 
-%.o: %.c includes/shell.h
+%.o: %.c $(INC)
 	$(CC) $(CFLAGS) -I libft/includes -I includes -o $@ -c $<
 
 clean:
