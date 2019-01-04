@@ -1,33 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 11:03:31 by gguichar         ###   ########.fr       */
+/*   Created: 2019/01/04 12:13:59 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/04 12:14:43 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
-#include "input.h"
+#ifndef UTILS_H
+# define UTILS_H
 
-int	main(int argc, char **argv, char **environ)
-{
-	t_shell	shell;
+int	term_putchar(int c);
 
-	shell.argc = argc;
-	shell.argv = argv;
-	shell.env = parse_env(environ);
-	shell.last_status = 0;
-	shell.term.legacy_mode = !setup_term(&shell);
-	if (!shell.term.legacy_mode)
-	{
-		shell.term.seq_off = 0;
-		shell.term.esc_seq = 0;
-	}
-	wait_for_command(&shell);
-	reset_term(&shell);
-	return (0);
-}
+#endif

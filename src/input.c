@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 10:27:02 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 12:20:52 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ int	read_input(t_shell *shell)
 			ft_putchar(buf);
 			if (buf == '\n')
 				break ;
-			append_char_cmdline(shell, buf);
+			if (buf >= 32 && buf < 127)
+				append_char_cmdline(shell, buf);
 		}
 	}
 	return (ret);
@@ -50,6 +51,7 @@ int	wait_for_command(t_shell *shell)
 
 	shell->term.line = NULL;
 	shell->term.cmdline = NULL;
+	shell->term.cmdline_curr = NULL;
 	shell->term.cmdline_size = 0;
 	while (1)
 	{

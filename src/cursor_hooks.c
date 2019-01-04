@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cursor_hooks.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 11:03:31 by gguichar         ###   ########.fr       */
+/*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/04 12:20:38 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-#include "input.h"
+#include "utils.h"
 
-int	main(int argc, char **argv, char **environ)
+void	move_cursor_left(t_shell *shell)
 {
-	t_shell	shell;
-
-	shell.argc = argc;
-	shell.argv = argv;
-	shell.env = parse_env(environ);
-	shell.last_status = 0;
-	shell.term.legacy_mode = !setup_term(&shell);
-	if (!shell.term.legacy_mode)
-	{
-		shell.term.seq_off = 0;
-		shell.term.esc_seq = 0;
-	}
-	wait_for_command(&shell);
-	reset_term(&shell);
-	return (0);
+	if (shell->term.cmdline_curr && !(shell->term.cmdline_curr->prev))
+		return ;
+	if (shell->term.cmdline_curr == NULL)
+		shell->term.cmdline_curr = shell->term.cmdline;
+	else if (shell->term.cmdline_curr->prev != NULL)
+		shell->term.cmdline_curr = shell->term.cmdline_curr->prev;
+	tputs(tgetstr("le", NULL), 1, term_putchar);
 }

@@ -1,33 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 11:03:31 by gguichar         ###   ########.fr       */
+/*   Created: 2019/01/04 12:12:54 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/04 12:13:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "shell.h"
-#include "input.h"
+#include <unistd.h>
 
-int	main(int argc, char **argv, char **environ)
+int	term_putchar(int c)
 {
-	t_shell	shell;
-
-	shell.argc = argc;
-	shell.argv = argv;
-	shell.env = parse_env(environ);
-	shell.last_status = 0;
-	shell.term.legacy_mode = !setup_term(&shell);
-	if (!shell.term.legacy_mode)
-	{
-		shell.term.seq_off = 0;
-		shell.term.esc_seq = 0;
-	}
-	wait_for_command(&shell);
-	reset_term(&shell);
-	return (0);
+	return (write(STDOUT_FILENO, &c, 1));
 }

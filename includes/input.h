@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 10:15:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 12:20:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define ESC_SEQ_RIGHT "\e[C"
 # define ESC_SEQ_UP "\e[A"
 # define ESC_SEQ_DOWN "\e[B"
+# define ESC_DEL_KEY "\e[3~"
 
 /*
 ** SETUP TERM.
@@ -29,14 +30,20 @@ int		reset_term(t_shell *shell);
 /*
 ** ESCAPE sequences.
 */
-int		is_valid_esc_seq(t_shell *shell);
+char	*get_valid_esc_seq(t_shell *shell);
 int		append_esc_seq(t_shell *shell, char key);
 
 /*
 ** COMMAND LINE.
 */
 int		wait_for_command(t_shell *shell);
-void	append_char_cmdline(t_shell *shell, char key);
 char	*get_cmdline(t_shell *shell);
+void	append_char_cmdline(t_shell *shell, char key);
+void	handle_esc_key(t_shell *shell, char *seq);
+
+/*
+** HOOKS.
+*/
+void	move_cursor_left(t_shell *shell);
 
 #endif
