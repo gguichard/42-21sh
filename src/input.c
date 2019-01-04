@@ -6,11 +6,10 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 23:34:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 10:27:02 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <limits.h>
 #include <unistd.h>
 #include "get_next_line.h"
 #include "shell.h"
@@ -18,44 +17,11 @@
 
 int	exec_todo(t_shell *shell)
 {
-	ft_printf("would execute: %s\n", shell->term.line);
+	char	*cmdline;
+
+	cmdline = get_cmdline(shell);
+	ft_printf("COMMAND: %s\n", cmdline);
 	return (1);
-}
-
-int	is_valid_esc_seq(t_shell *shell)
-{
-	static char	*seqs[] = {
-		ESC_SEQ_LEFT,
-		NULL
-	};
-	int			index;
-
-	index = 0;
-	while (seqs[index] != NULL)
-	{
-		if (ft_strnequ(shell->term.seq, seqs[index], shell->term.seq_off))
-			return (ft_strlen(seqs[index]) == (size_t)shell->term.seq_off);
-		index++;
-	}
-	return (-1);
-}
-
-int	append_esc_seq(t_shell *shell, char key)
-{
-	int	ret;
-
-	(shell->term.seq)[shell->term.seq_off] = key;
-	(shell->term.seq_off)++;
-	ret = is_valid_esc_seq(shell);
-	if (ret == 1)
-		ft_printf("got good esc seq\n");
-	if (ret != 0 || shell->term.seq_off == MAX_ESC_SEQ_BYTES)
-	{
-		shell->term.esc_seq = 0;
-		shell->term.seq_off = 0;
-		return (ret);
-	}
-	return (0);
 }
 
 int	read_input(t_shell *shell)
@@ -69,9 +35,10 @@ int	read_input(t_shell *shell)
 			shell->term.esc_seq = !(shell->term.esc_seq);
 		if (!(shell->term.esc_seq) || append_esc_seq(shell, buf) < 0)
 		{
+			ft_putchar(buf);
 			if (buf == '\n')
 				break ;
-			ft_putchar(buf);
+			append_char_cmdline(shell, buf);
 		}
 	}
 	return (ret);
@@ -82,10 +49,11 @@ int	wait_for_command(t_shell *shell)
 	int	ret;
 
 	shell->term.line = NULL;
-	shell->term.line_off = 0;
+	shell->term.cmdline = NULL;
+	shell->term.cmdline_size = 0;
 	while (1)
 	{
-		if (!shell->term.legacy_mode)
+		if (!(shell->term.legacy_mode))
 		{
 			if ((ret = read_input(shell) <= 0))
 				return (ret);

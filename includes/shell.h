@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 23:16:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 10:27:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,36 @@
 
 # define MAX_ESC_SEQ_BYTES 8
 
-typedef struct		s_term
-{	
-	struct termios	default_term;
-	struct termios	curr_term;
-	int				legacy_mode;
-	int				esc_seq;
-	char			seq[MAX_ESC_SEQ_BYTES];
-	int				seq_off;
-	char			*line;
-	int				line_off;
-}					t_term;
-
-typedef struct		s_shell
+typedef struct			s_cmdline
 {
-	int				argc;
-	char			**argv;
-	t_list			*env;
-	t_list			*local;
-	int				last_status;
-	t_term			term;
-}					t_shell;
+	char				key;
+	struct s_cmdline	*prev;
+	struct s_cmdline	*next;
+}						t_cmdline;
 
-t_list				*parse_env(char **environ);
+typedef struct			s_term
+{	
+	struct termios		default_term;
+	struct termios		curr_term;
+	int					legacy_mode;
+	int					esc_seq;
+	char				seq[MAX_ESC_SEQ_BYTES];
+	int					seq_off;
+	t_cmdline			*cmdline;
+	int					cmdline_size;
+	char				*line;
+}						t_term;
+
+typedef struct			s_shell
+{
+	int					argc;
+	char				**argv;
+	t_list				*env;
+	t_list				*local;
+	int					last_status;
+	t_term				term;
+}						t_shell;
+
+t_list					*parse_env(char **environ);
 
 #endif
