@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 15:26:54 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/03 16:04:16 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/04 15:45:52 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 typedef enum	e_error
 {
-	ERRC_NOERROR		= 0,
-	ERRC_UNEXPECTED		= 1,
+	ERRC_NOERROR = 0,
+	ERRC_UNEXPECTED = 1,
 	ERRC_FILENOTFOUND,
 	ERRC_CMDNOTFOUND,
 	ERRC_WRONGNUMOFARGS,

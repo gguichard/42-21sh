@@ -6,17 +6,16 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/04 15:35:40 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/04 16:09:11 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	21sh
 
 SRC		=	main.c env.c vars.c shell_vars.c \
-			term.c input.c cmdline.c esc_seq.c \
-			cursor_hooks.c error.c check_path.c utils.c \
-			hash_table.c convert_path_to_tab.c
-SRC_DIR	=	src
+			term.c input.c cmdline.c esc_seq.c cursor_hooks.c insdel_hooks.c \
+			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c
+SRC_DIR	= 	src
 
 OBJ		=	$(SRC:.c=.o)
 OBJ_DIR	=	.obj

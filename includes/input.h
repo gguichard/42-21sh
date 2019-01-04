@@ -6,12 +6,12 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 12:20:06 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 16:05:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TERM_H
-# define TERM_H
+#ifndef INPUT_H
+# define INPUT_H
 
 # include "shell.h"
 
@@ -38,12 +38,16 @@ int		append_esc_seq(t_shell *shell, char key);
 */
 int		wait_for_command(t_shell *shell);
 char	*get_cmdline(t_shell *shell);
+void	realloc_cmdline(t_shell *shell);
 void	append_char_cmdline(t_shell *shell, char key);
-void	handle_esc_key(t_shell *shell, char *seq);
+void	handle_esc_key(t_shell *shell, const char *seq);
 
 /*
 ** HOOKS.
 */
 void	move_cursor_left(t_shell *shell);
+void	move_cursor_right(t_shell *shell);
+void	handle_bs_key(t_shell *shell);
+void	handle_del_key(t_shell *shell);
 
 #endif
