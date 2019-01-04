@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 16:05:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 17:26:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	append_char_cmdline(t_shell *shell, char key)
 void	handle_esc_key(t_shell *shell, const char *seq)
 {
 	if (ft_strequ(seq, ESC_SEQ_LEFT))
-		move_cursor_left(shell);
+		move_cursor_left(&(shell->term));
 	else if (ft_strequ(seq, ESC_SEQ_RIGHT))
-		move_cursor_right(shell);
+		move_cursor_right(&(shell->term));
 	else if (ft_strequ(seq, ESC_DEL_KEY))
-		handle_del_key(shell);
+		handle_del_key(&(shell->term));
 }

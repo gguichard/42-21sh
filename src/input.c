@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 15:28:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 17:26:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	read_input(t_shell *shell)
 				break ;
 			}
 			if (buf == 127)
-				handle_bs_key(shell);
+				handle_bs_key(&(shell->term));
 			else
 				append_char_cmdline(shell, buf);
 		}

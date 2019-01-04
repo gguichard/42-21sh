@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 16:05:33 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 17:24:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	handle_esc_key(t_shell *shell, const char *seq);
 /*
 ** HOOKS.
 */
-void	move_cursor_left(t_shell *shell);
-void	move_cursor_right(t_shell *shell);
-void	handle_bs_key(t_shell *shell);
-void	handle_del_key(t_shell *shell);
+void	move_cursor_left(t_term *term);
+void	move_cursor_right(t_term *term);
+void	handle_bs_key(t_term *term);
+void	handle_del_key(t_term *term);
 
 #endif
