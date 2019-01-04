@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 17:24:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 23:18:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,25 @@ int		reset_term(t_shell *shell);
 /*
 ** ESCAPE sequences.
 */
-char	*get_valid_esc_seq(t_shell *shell);
-int		append_esc_seq(t_shell *shell, char key);
+char	*get_valid_esc_seq(t_term *term);
+int		append_esc_seq(t_term *term, char key);
 
 /*
 ** COMMAND LINE.
 */
+int		setup_cmdline(t_term *term);
+void	update_winsize(t_term *term);
 int		wait_for_command(t_shell *shell);
-char	*get_cmdline(t_shell *shell);
-void	realloc_cmdline(t_shell *shell);
-void	append_char_cmdline(t_shell *shell, char key);
-void	handle_esc_key(t_shell *shell, const char *seq);
+void	refresh_cmdline(t_term *term);
+void	print_cmdline(t_term *term, char key);
+int		realloc_cmdline(t_term *term);
+void	append_cmdline(t_term *term, char key);
+void	handle_esc_key(t_term *term, const char *seq);
 
 /*
 ** HOOKS.
 */
+void	move_cursor_right_col(t_term *term);
 void	move_cursor_left(t_term *term);
 void	move_cursor_right(t_term *term);
 void	handle_bs_key(t_term *term);

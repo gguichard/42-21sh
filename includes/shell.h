@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 15:46:31 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 23:20:49 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,18 @@
 # define MAX_ESC_SEQ_BYTES 8
 # define CMDLINE_CAPACITY 1024
 
-typedef struct			s_cmdline
-{
-	char				key;
-	struct s_cmdline	*prev;
-	struct s_cmdline	*next;
-}						t_cmdline;
-
 typedef struct			s_term
 {
 	struct termios		default_term;
 	struct termios		curr_term;
 	int					legacy_mode;
+	struct winsize		winsize;
 	int					esc_seq;
 	char				seq[MAX_ESC_SEQ_BYTES];
 	int					seq_off;
-	char				*cmdline;
-	size_t				cmdline_cap;
-	size_t				cmdline_siz;
+	char				*line;
+	size_t				capacity;
+	size_t				size;
 	size_t				cursor;
 }						t_term;
 

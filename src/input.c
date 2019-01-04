@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 17:26:24 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 23:21:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@
 
 int	exec_todo(t_shell *shell)
 {
-	ft_printf("COMMAND: %s\n", shell->term.cmdline);
-	ft_memset(shell->term.cmdline, 0, shell->term.cmdline_siz);
-	shell->term.cmdline_siz = 0;
-	shell->term.cursor = 0;
+	ft_printf("COMMAND: %s\n", shell->term.line);
+	free(shell->term.line);
 	return (1);
 }
 
@@ -34,7 +32,7 @@ int	read_input(t_shell *shell)
 	{
 		if (buf == 27)
 			shell->term.esc_seq = !(shell->term.esc_seq);
-		if (!(shell->term.esc_seq) || append_esc_seq(shell, buf) < 0)
+		if (!(shell->term.esc_seq) || append_esc_seq(&(shell->term), buf) < 0)
 		{
 			if (buf == '\n')
 			{
@@ -44,7 +42,7 @@ int	read_input(t_shell *shell)
 			if (buf == 127)
 				handle_bs_key(&(shell->term));
 			else
-				append_char_cmdline(shell, buf);
+				append_cmdline(&(shell->term), buf);
 		}
 	}
 	return (ret);
@@ -54,17 +52,9 @@ int	wait_for_command(t_shell *shell)
 {
 	int	ret;
 
-	shell->term.cmdline_cap = CMDLINE_CAPACITY;
-	if (!(shell->term.cmdline = (char *)malloc(shell->term.cmdline_cap + 1)))
+	while (setup_cmdline(&(shell->term)))
 	{
-		shell->term.cmdline_cap = -1;
-		return (0);
-	}
-	shell->term.cmdline_siz = 0;
-	shell->term.cmdline[0] = '\0';
-	shell->term.cursor = 0;
-	while (1)
-	{
+		update_winsize(&(shell->term));
 		if (!(shell->term.legacy_mode))
 		{
 			if ((ret = read_input(shell) <= 0))
@@ -72,7 +62,7 @@ int	wait_for_command(t_shell *shell)
 		}
 		else
 		{
-			ret = get_next_line(0, &(shell->term.cmdline));
+			ret = get_next_line(0, &(shell->term.line));
 			if (ret <= 0)
 				return (ret);
 		}

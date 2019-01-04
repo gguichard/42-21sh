@@ -6,39 +6,57 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 17:21:30 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 23:28:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+#include "input.h"
 #include "utils.h"
 
-void	handle_bs_key(t_term *term)
+static void	delete_char(t_term *term)
+{
+	tputs(tgetstr("dc", NULL), 1, term_putchar);
+	if (term->cursor < term->size)
+	{
+		tputs(tgetstr("sc", NULL), 1, term_putchar);
+		ft_putstr(&(term->line[term->cursor]));
+		tputs(tgetstr("cd", NULL), 1, term_putchar);
+		tputs(tgetstr("rc", NULL), 1, term_putchar);
+	}
+	(term->size)--;
+}
+
+void		handle_bs_key(t_term *term)
 {
 	if (term->cursor <= 0)
 	{
 		tputs(tgetstr("bl", NULL), 1, term_putchar);
 		return ;
 	}
-	ft_memcpy(&(term->cmdline[term->cursor - 1])
-			, &(term->cmdline[term->cursor])
-			, term->cmdline_siz - term->cursor + 1);
+	ft_memcpy(&(term->line[term->cursor - 1])
+			, &(term->line[term->cursor])
+			, term->size - term->cursor + 1);
+	if (term->cursor % term->winsize.ws_col != 0)
+		tputs(tgetstr("le", NULL), 1, term_putchar);
+	else
+	{
+		move_cursor_right_col(term);
+		tputs(tgetstr("sr", NULL), 1, term_putchar);
+	}
 	(term->cursor)--;
-	(term->cmdline_siz)--;
-	tputs(tgetstr("le", NULL), 1, term_putchar);
-	tputs(tgetstr("dc", NULL), 1, term_putchar);
+	delete_char(term);
 }
 
-void	handle_del_key(t_term *term)
+void		handle_del_key(t_term *term)
 {
-	if (term->cursor >= term->cmdline_siz)
+	if (term->cursor >= term->size)
 	{
 		tputs(tgetstr("bl", NULL), 1, term_putchar);
 		return ;
 	}
-	ft_memmove(&(term->cmdline[term->cursor])
-			, &(term->cmdline[term->cursor + 1])
-			, term->cmdline_siz - term->cursor + 1);
-	(term->cmdline_siz)--;
-	tputs(tgetstr("dc", NULL), 1, term_putchar);
+	ft_memmove(&(term->line[term->cursor])
+			, &(term->line[term->cursor + 1])
+			, term->size - term->cursor + 1);
+	delete_char(term);
 }

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 17:26:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 23:20:10 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,67 @@
 #include "input.h"
 #include "utils.h"
 
-void	print_cmdline(t_shell *shell, char key)
+void	refresh_cmdline(t_term *term)
 {
-	ft_putchar(key);
-	tputs(tgetstr("sc", NULL), 1, term_putchar);
-	ft_putstr(&(shell->term.cmdline[shell->term.cursor]));
-	tputs(tgetstr("rc", NULL), 1, term_putchar);
+	if (term->cursor < term->size)
+	{
+		tputs(tgetstr("sc", NULL), 1, term_putchar);
+		ft_putstr(&(term->line[term->cursor]));
+		tputs(tgetstr("rc", NULL), 1, term_putchar);
+	}
 }
 
-void	realloc_cmdline(t_shell *shell)
+void	print_cmdline(t_term *term, char key)
+{
+	ft_putchar(key);
+	if (term->cursor % term->winsize.ws_col == 0)
+	{
+		tputs(tgetstr("cr", NULL), 1, term_putchar);
+		tputs(tgetstr("sf", NULL), 1, term_putchar);
+	}
+	refresh_cmdline(term);
+}
+
+int		realloc_cmdline(t_term *term)
 {
 	char	*tmp;
 
-	if (shell->term.cmdline_siz >= shell->term.cmdline_cap)
-	{
-		tmp = (char *)malloc(shell->term.cmdline_cap + CMDLINE_CAPACITY + 1);
-		if (tmp == NULL)
-			return ;
-		ft_memcpy(tmp, shell->term.cmdline, shell->term.cmdline_siz);
-		free(shell->term.cmdline);
-		shell->term.cmdline = tmp;
-		shell->term.cmdline_cap += CMDLINE_CAPACITY;
-	}
+	tmp = (char *)malloc(term->capacity + CMDLINE_CAPACITY + 1);
+	if (tmp == NULL)
+		return (0);
+	ft_memcpy(tmp, term->line, term->size);
+	free(term->line);
+	term->line = tmp;
+	term->capacity += CMDLINE_CAPACITY;
+	return (1);
 }
 
-void	append_char_cmdline(t_shell *shell, char key)
+void	append_cmdline(t_term *term, char key)
 {
 	size_t	off;
 
-	realloc_cmdline(shell);
-	off = shell->term.cmdline_siz - shell->term.cursor;
+	if (term->size >= term->capacity && !realloc_cmdline(term))
+		return ;
+	off = term->size - term->cursor;
 	if (off > 0)
 	{
-		ft_memmove(&(shell->term.cmdline[shell->term.cursor + 1])
-				, &(shell->term.cmdline[shell->term.cursor])
+		ft_memmove(&(term->line[term->cursor + 1])
+				, &(term->line[term->cursor])
 				, off);
 	}
-	(shell->term.cmdline_siz)++;
-	(shell->term.cmdline)[shell->term.cmdline_siz] = '\0';
-	(shell->term.cmdline)[shell->term.cursor] = key;
-	(shell->term.cursor)++;
-	print_cmdline(shell, key);
+	(term->size)++;
+	(term->line)[term->size] = '\0';
+	(term->line)[term->cursor] = key;
+	(term->cursor)++;
+	print_cmdline(term, key);
 }
 
-void	handle_esc_key(t_shell *shell, const char *seq)
+void	handle_esc_key(t_term *term, const char *seq)
 {
 	if (ft_strequ(seq, ESC_SEQ_LEFT))
-		move_cursor_left(&(shell->term));
+		move_cursor_left(term);
 	else if (ft_strequ(seq, ESC_SEQ_RIGHT))
-		move_cursor_right(&(shell->term));
+		move_cursor_right(term);
 	else if (ft_strequ(seq, ESC_DEL_KEY))
-		handle_del_key(&(shell->term));
+		handle_del_key(term);
 }
