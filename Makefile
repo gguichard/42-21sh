@@ -6,27 +6,29 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/04 12:20:19 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/04 13:42:15 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= 	21sh
+NAME	=	21sh
 
-SRC		= 	main.c env.c vars.c shell_vars.c \
+SRC		=	main.c env.c vars.c shell_vars.c \
 			term.c input.c cmdline.c esc_seq.c \
-			cursor_hooks.c error.c check_path.c utils.c
-SRC_DIR	= 	src
+			cursor_hooks.c error.c check_path.c utils.c \
+			hash_table.c
+SRC_DIR	=	src
 
-OBJ		= 	$(SRC:.c=.o)
-OBJ_DIR	= 	.obj
+OBJ		=	$(SRC:.c=.o)
+OBJ_DIR	=	.obj
 
 INC_DIR	=	includes
-INC		=	shell.h vars.h error.h check_path.h input.h utils.h
+INC		=	shell.h vars.h error.h check_path.h input.h utils.h \
+			hash_table.h
 
-CC		= 	gcc
-CFLAGS	= 	-Wall -Wextra -Werror -I libft/includes -I $(INC_DIR)
+CC		=	gcc
+CFLAGS	=	-Wall -Wextra -Werror -I libft/includes -I $(INC_DIR)
 
-LIBFT	= 	libft/libft.a
+LIBFT	=	libft/libft.a
 
 all: $(NAME)
 
