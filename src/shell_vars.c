@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 17:51:53 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 18:12:18 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/04 09:44:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,5 @@ char	*get_shell_var(t_shell *shell, const char *key)
 			return (ft_strdup(shell->argc <= tmp ? "" : shell->argv[tmp]));
 		}
 	}
-	return (var == NULL ? "" : ft_strdup(var->value));
+	return (ft_strdup(var == NULL ? "" : var->value));
 }
