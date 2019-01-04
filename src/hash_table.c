@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 11:14:45 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/04 13:40:30 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/04 13:57:21 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ t_hashtable			*make_def_hashtable(void)
 	return (new_hashtable);
 }
 
+/*
+** Retourne le hashentry ayant pour clef key et pour hash hash, ou NULL
+** s'il n'existe pas. Cette fonction a pour but d'eviter de recalculer le hash.
+*/
+
 static t_hashentry	*get_hashentry_with_hash(t_hashtable *hashtable,
 		const char *key, size_t hash)
 {
@@ -66,6 +71,11 @@ t_hashentry			*get_hashentry(t_hashtable *hashtable, const char *key)
 	return (get_hashentry_with_hash(hashtable, key, hashtable->hash_fun(key)));
 }
 
+/*
+** Malloc et retourne un nouveau hashentry avec une copie de key et de value.
+** Retourne NULL en cas d'erreur.
+*/
+
 static t_hashentry	*make_hashentry(const char *key, const char *value)
 {
 	t_hashentry		*new_entry;
@@ -81,6 +91,11 @@ static t_hashentry	*make_hashentry(const char *key, const char *value)
 	}
 	return (new_entry);
 }
+
+/*
+** Free le contenu de la hashentry ainsi que la hashentry elle-meme (le tout si
+** elle est != NULL). Retourne toujours 0.
+*/
 
 static int			delete_hashentry(t_hashentry *entry)
 {
