@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/05 14:07:28 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/05 14:18:10 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 		free(dir_to_use);
 		return (ft_strdup(""));
 	}
+	ac_is_dir = 0;
 	ac_suff_len = -1;
 	if ((ac_suff = ft_strdup("")) == NULL)
 	{
@@ -92,11 +93,11 @@ static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 					{
 						free(ac_suff);
 						ac_suff_len = ft_strlen(dirent->d_name + file_word_len);
-						if ((ac_suff = (char*)malloc(sizeof(char) * (ac_suff_len + 1))) == NULL)
+						if ((ac_suff = (char*)malloc(sizeof(char) * (ac_suff_len + 2))) == NULL)
 							ac_suff_len= 0;
 						else
 						{
-							ft_memcpy(ac_suff, dirent->d_name + file_word_len, ac_suff_len);
+							ft_memcpy(ac_suff, dirent->d_name + file_word_len, ac_suff_len + 1);
 							ac_is_dir = S_ISDIR(stat_buf.st_mode);
 						}
 					}
