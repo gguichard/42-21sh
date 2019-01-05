@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 13:16:45 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 17:09:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	delete_char(t_term *term)
 	{
 		tputs(tgetstr("sc", NULL), 1, term_putchar);
 		ft_putstr(&(term->line[term->cursor]));
-		if ((term->size - 1) % term->winsize.ws_col == 0)
+		if (term->size != 1 && term->size % term->winsize.ws_col == 1)
 		{
 			tputs(tgetstr("cr", NULL), 1, term_putchar);
 			tputs(tgetstr("do", NULL), 1, term_putchar);
