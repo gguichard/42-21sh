@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 00:17:45 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 13:16:45 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	delete_char(t_term *term)
 		if ((term->size - 1) % term->winsize.ws_col == 0)
 		{
 			tputs(tgetstr("cr", NULL), 1, term_putchar);
-			tputs(tgetstr("sf", NULL), 1, term_putchar);
+			tputs(tgetstr("do", NULL), 1, term_putchar);
 		}
 		tputs(tgetstr("dc", NULL), 1, term_putchar);
 		tputs(tgetstr("rc", NULL), 1, term_putchar);
@@ -47,7 +47,7 @@ void		handle_bs_key(t_term *term)
 	else
 	{
 		move_cursor_right_col(term);
-		tputs(tgetstr("sr", NULL), 1, term_putchar);
+		tputs(tgetstr("up", NULL), 1, term_putchar);
 	}
 	(term->cursor)--;
 	delete_char(term);

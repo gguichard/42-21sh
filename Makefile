@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/04 22:07:49 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/05 14:03:24 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	=	21sh
 
 SRC		=	main.c env.c vars.c shell_vars.c \
 			term.c input.c input_utils.c \
-			cmdline.c esc_seq.c cursor_hooks.c insdel_hooks.c \
+			cmdline.c esc_seq.c input_hooks.c cursor_hooks.c insdel_hooks.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c
 SRC_DIR	= 	src
 

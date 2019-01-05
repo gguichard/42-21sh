@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 23:20:10 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 14:14:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,19 @@ void	append_cmdline(t_term *term, char key)
 	print_cmdline(term, key);
 }
 
-void	handle_esc_key(t_term *term, const char *seq)
+int		handle_key(t_term *term, char key)
 {
-	if (ft_strequ(seq, ESC_SEQ_LEFT))
-		move_cursor_left(term);
-	else if (ft_strequ(seq, ESC_SEQ_RIGHT))
-		move_cursor_right(term);
-	else if (ft_strequ(seq, ESC_DEL_KEY))
-		handle_del_key(term);
+	if (key == '\n')
+	{
+		move_cursor_end(term);
+		ft_putchar('\n');
+		return (0);
+	}
+	if (key == 127)
+	{
+		handle_bs_key(term);
+		return (1);
+	}
+	append_cmdline(term, key);
+	return (1);
 }

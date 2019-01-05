@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 23:21:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 14:15:16 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "shell.h"
 #include "input.h"
 
-int	exec_todo(t_shell *shell)
+int	handle_command(t_shell *shell)
 {
 	ft_printf("COMMAND: %s\n", shell->term.line);
 	free(shell->term.line);
@@ -25,24 +25,21 @@ int	exec_todo(t_shell *shell)
 
 int	read_input(t_shell *shell)
 {
-	char	buf;
 	int		ret;
+	char	buf;
 
 	while ((ret = read(STDIN_FILENO, &buf, 1)) > 0)
 	{
-		if (buf == 27)
-			shell->term.esc_seq = !(shell->term.esc_seq);
-		if (!(shell->term.esc_seq) || append_esc_seq(&(shell->term), buf) < 0)
+		if (buf == 4)
 		{
-			if (buf == '\n')
-			{
-				ft_putchar(buf);
+			if (handle_eot_key(&(shell->term)))
+				return (0);
+		}
+		else
+		{
+			if (!handle_esc_key(&(shell->term), buf)
+					&& !handle_key(&(shell->term), buf))
 				break ;
-			}
-			if (buf == 127)
-				handle_bs_key(&(shell->term));
-			else
-				append_cmdline(&(shell->term), buf);
 		}
 	}
 	return (ret);
@@ -57,7 +54,7 @@ int	wait_for_command(t_shell *shell)
 		update_winsize(&(shell->term));
 		if (!(shell->term.legacy_mode))
 		{
-			if ((ret = read_input(shell) <= 0))
+			if ((ret = read_input(shell)) <= 0)
 				return (ret);
 		}
 		else
@@ -66,7 +63,7 @@ int	wait_for_command(t_shell *shell)
 			if (ret <= 0)
 				return (ret);
 		}
-		exec_todo(shell);
+		handle_command(shell);
 	}
 	return (1);
 }
