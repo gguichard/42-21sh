@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 14:14:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 17:00:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,13 @@ int		realloc_cmdline(t_term *term)
 
 void	append_cmdline(t_term *term, char key)
 {
-	size_t	off;
-
 	if (term->size >= term->capacity && !realloc_cmdline(term))
 		return ;
-	off = term->size - term->cursor;
-	if (off > 0)
+	if (term->size > term->cursor)
 	{
 		ft_memmove(&(term->line[term->cursor + 1])
 				, &(term->line[term->cursor])
-				, off);
+				, term->size - term->cursor);
 	}
 	(term->size)++;
 	(term->line)[term->size] = '\0';
