@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 23:22:05 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 12:59:31 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	move_cursor_left(t_term *term)
 	else
 	{
 		move_cursor_right_col(term);
-		tputs(tgetstr("sr", NULL), 1, term_putchar);
+		tputs(tgetstr("up", NULL), 1, term_putchar);
 	}
 	(term->cursor)--;
 }
@@ -55,6 +55,41 @@ void	move_cursor_right(t_term *term)
 	else
 	{
 		tputs(tgetstr("cr", NULL), 1, term_putchar);
-		tputs(tgetstr("sf", NULL), 1, term_putchar);
+		tputs(tgetstr("do", NULL), 1, term_putchar);
+	}
+}
+
+void	move_cursor_home(t_term *term)
+{
+	int	rows;
+
+	if (term->cursor <= 0)
+		return ;
+	tputs(tgetstr("cr", NULL), 1, term_putchar);
+	rows = term->cursor / term->winsize.ws_col;
+	if (rows > 0)
+		tputs(tparm(tgetstr("UP", NULL), rows), 1, term_putchar);
+	term->cursor = 0;
+}
+
+void	move_cursor_end(t_term *term)
+{
+	int	rows;
+
+	if (term->cursor >= term->size)
+		return ;
+	tputs(tgetstr("cr", NULL), 1, term_putchar);
+	term->cursor = (term->cursor / term->winsize.ws_col) * term->winsize.ws_col;
+	rows = term->size / term->winsize.ws_col;
+	rows -= term->cursor / term->winsize.ws_col;
+	if (rows > 0)
+	{
+		tputs(tparm(tgetstr("DO", NULL), rows), 1, term_putchar);
+		term->cursor += term->winsize.ws_col;
+	}
+	while (term->cursor < term->size)
+	{
+		tputs(tgetstr("nd", NULL), 1, term_putchar);
+		(term->cursor)++;
 	}
 }
