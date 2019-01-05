@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 17:09:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 18:49:12 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,17 @@
 
 static void	delete_char(t_term *term)
 {
+	int	curr;
+	int	rows;
+
 	tputs(tgetstr("dc", NULL), 1, term_putchar);
-	if (term->cursor < term->size)
+	curr = (term->cursor + prompt_len(NULL)) / term->winsize.ws_col;
+	rows = (term->size + prompt_len(NULL)) / term->winsize.ws_col;
+	if (curr != rows)
 	{
 		tputs(tgetstr("sc", NULL), 1, term_putchar);
 		ft_putstr(&(term->line[term->cursor]));
-		if (term->size != 1 && term->size % term->winsize.ws_col == 1)
+		if ((term->size - 1 + prompt_len(NULL)) % term->winsize.ws_col == 0)
 		{
 			tputs(tgetstr("cr", NULL), 1, term_putchar);
 			tputs(tgetstr("do", NULL), 1, term_putchar);
@@ -42,14 +47,7 @@ void		handle_bs_key(t_term *term)
 	ft_memcpy(&(term->line[term->cursor - 1])
 			, &(term->line[term->cursor])
 			, term->size - term->cursor + 1);
-	if (term->cursor % term->winsize.ws_col != 0)
-		tputs(tgetstr("le", NULL), 1, term_putchar);
-	else
-	{
-		move_cursor_right_col(term);
-		tputs(tgetstr("up", NULL), 1, term_putchar);
-	}
-	(term->cursor)--;
+	move_cursor_left(term);
 	delete_char(term);
 }
 

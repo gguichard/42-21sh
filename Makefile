@@ -6,13 +6,13 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/05 17:05:15 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/05 17:12:21 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	21sh
 
-SRC		=	main.c env.c vars.c shell_vars.c \
+SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
 			input/term.c input/input.c input/input_utils.c \
 			input/cmdline.c input/esc_seq.c input/input_hooks.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/insdel_hooks.c \

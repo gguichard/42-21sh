@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 12:59:31 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 18:56:18 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,7 @@
 
 void	move_cursor_right_col(t_term *term)
 {
-	int	n;
-
-	n = 0;
-	while (n < term->winsize.ws_col)
-	{
-		tputs(tgetstr("nd", NULL), 1, term_putchar);
-		n++;
-	}
+	tputs(tparm(tgetstr("RI", NULL), term->winsize.ws_col), 1, term_putchar);
 }
 
 void	move_cursor_left(t_term *term)
@@ -32,7 +25,7 @@ void	move_cursor_left(t_term *term)
 		tputs(tgetstr("bl", NULL), 1, term_putchar);
 		return ;
 	}
-	if (term->cursor % term->winsize.ws_col != 0)
+	if ((term->cursor + prompt_len(NULL)) % term->winsize.ws_col != 0)
 		tputs(tgetstr("le", NULL), 1, term_putchar);
 	else
 	{
@@ -50,7 +43,7 @@ void	move_cursor_right(t_term *term)
 		return ;
 	}
 	(term->cursor)++;
-	if (term->cursor % term->winsize.ws_col != 0)
+	if ((term->cursor + prompt_len(NULL)) % term->winsize.ws_col != 0)
 		tputs(tgetstr("nd", NULL), 1, term_putchar);
 	else
 	{
@@ -65,21 +58,28 @@ void	move_cursor_home(t_term *term)
 
 	if (term->cursor <= 0)
 		return ;
-	tputs(tgetstr("cr", NULL), 1, term_putchar);
-	rows = term->cursor / term->winsize.ws_col;
+	rows = (term->cursor + prompt_len(NULL)) / term->winsize.ws_col;
 	if (rows > 0)
+	{
 		tputs(tparm(tgetstr("UP", NULL), rows), 1, term_putchar);
-	term->cursor = 0;
+		term->cursor -= rows * term->winsize.ws_col;
+	}
+	tputs(tgetstr("cr", NULL), 1, term_putchar);
+	
+	if (term->cursor > 0)
+	{
+		tputs(tparm(tgetstr("LE", NULL), term->cursor), 1, term_putchar);
+		term->cursor = 0;
+	}
 }
 
 void	move_cursor_end(t_term *term)
 {
 	int	rows;
+	int	offset;
 
 	if (term->cursor >= term->size)
 		return ;
-	tputs(tgetstr("cr", NULL), 1, term_putchar);
-	term->cursor = (term->cursor / term->winsize.ws_col) * term->winsize.ws_col;
 	rows = term->size / term->winsize.ws_col;
 	rows -= term->cursor / term->winsize.ws_col;
 	if (rows > 0)
@@ -87,9 +87,10 @@ void	move_cursor_end(t_term *term)
 		tputs(tparm(tgetstr("DO", NULL), rows), 1, term_putchar);
 		term->cursor += term->winsize.ws_col;
 	}
-	while (term->cursor < term->size)
+	offset = term->size - term->cursor;
+	if (offset > 0)
 	{
-		tputs(tgetstr("nd", NULL), 1, term_putchar);
-		(term->cursor)++;
+		tputs(tparm(tgetstr("RI", NULL), offset), 1, term_putchar);
+		term->cursor = term->size;
 	}
 }

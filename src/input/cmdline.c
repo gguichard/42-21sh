@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 17:00:06 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 17:15:23 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	refresh_cmdline(t_term *term)
 void	print_cmdline(t_term *term, char key)
 {
 	ft_putchar(key);
-	if (term->cursor % term->winsize.ws_col == 0)
+	if ((term->cursor + prompt_len(NULL)) % term->winsize.ws_col == 0)
 	{
 		tputs(tgetstr("cr", NULL), 1, term_putchar);
 		tputs(tgetstr("sf", NULL), 1, term_putchar);

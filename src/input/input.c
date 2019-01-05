@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 14:15:16 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/05 17:13:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	wait_for_command(t_shell *shell)
 
 	while (setup_cmdline(&(shell->term)))
 	{
+		show_prompt(shell);
 		update_winsize(&(shell->term));
 		if (!(shell->term.legacy_mode))
 		{
