@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 14:46:36 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/04 15:32:54 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/05 09:25:08 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,29 @@ static size_t	count_subpath(const char *path)
 	return (subpath_count);
 }
 
-char			**convert_path_to_tab(char *path)
+char			**convert_path_to_tab(char *path_cpy)
 {
 	size_t	path_count;
 	char	**path_tab;
 	char	*next_sep;
 	size_t	path_idx;
 
-	path_count = count_subpath(path);
+	path_count = count_subpath(path_cpy);
 	if ((path_tab = (char**)malloc(sizeof(char*) * (path_count + 1))) == NULL)
 		return (NULL);
 	path_tab[path_count] = NULL;
 	path_idx = 0;
 	while (path_idx < path_count)
 	{
-		next_sep = ft_strchr(path, ':');
-		if (next_sep == path || *path == '\0')
+		next_sep = ft_strchr(path_cpy, ':');
+		if (next_sep == path_cpy || *path_cpy == '\0')
 			path_tab[path_idx] = ".";
 		else
-			path_tab[path_idx] = path;
+			path_tab[path_idx] = path_cpy;
 		if (next_sep != NULL)
 		{
 			*next_sep = '\0';
-			path = next_sep + 1;
+			path_cpy = next_sep + 1;
 		}
 		++path_idx;
 	}

@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 14:18:42 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/04 14:46:31 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/05 09:24:10 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,6 @@
 ** Ce tableau contiendra des pointeurs sur path, donc ce dernier doit rester
 ** valide. Retourne le tableau ou NULL en cas d'erreur.
 */
-char	**convert_path_to_tab(char *path);
+char	**convert_path_to_tab(char *path_cpy);
 
 #endif
