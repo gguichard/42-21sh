@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 02:40:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/06 16:44:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,25 @@
 
 static void	delete_char(t_term *term)
 {
-	(void)term;
+	int	curr;
+	int	rows;
+
+	tputs(tgetstr("dc", NULL), 1, t_putchar);
+	curr = (term->cursor + term->offset) / term->winsize.ws_col;
+	rows = (term->size + term->offset) / term->winsize.ws_col;
+	if (curr < rows)
+	{
+		tputs(tgetstr("sc", NULL), 1, t_putchar);
+		ft_putstr(&(term->line[term->cursor]));
+		if ((term->size + term->offset - 1) % term->winsize.ws_col == 0)
+		{
+			tputs(tgetstr("rc", NULL), 1, t_putchar);
+			tputs(tgetstr("do", NULL), 1, t_putchar);
+		}
+		tputs(tgetstr("ce", NULL), 1, t_putchar);
+		tputs(tgetstr("rc", NULL), 1, t_putchar);
+	}
+	(term->size)--;
 }
 
 void		handle_bs_key(t_term *term)

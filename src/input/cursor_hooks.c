@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 02:15:38 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/06 16:46:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,15 @@ void	move_cursor_end(t_term *term)
 {
 	int	col;
 	int	curr;
-	int	row;
+	int	rows;
 
 	if (term->cursor >= term->size)
 		return ;
-	col = term->size % term->winsize.ws_col + term->offset;
+	col = (term->size + term->offset) % term->winsize.ws_col;
 	tputs(tparm(tgetstr("ch", NULL), col), 1, t_putchar);
 	curr = (term->cursor + term->offset) / term->winsize.ws_col;
-	row = (term->size + term->offset) / term->winsize.ws_col;
-	if (curr < row)
-		tputs(tparm(tgetstr("DO", NULL), row - curr), 1, t_putchar);
+	rows = (term->size + term->offset) / term->winsize.ws_col;
+	if (curr < rows)
+		tputs(tparm(tgetstr("DO", NULL), rows - curr), 1, t_putchar);
 	term->cursor = term->size;
 }
