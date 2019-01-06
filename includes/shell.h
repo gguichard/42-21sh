@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 01:14:12 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/07 00:49:36 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ typedef struct			s_shell
 	int					last_status;
 	t_term				term;
 }						t_shell;
+
+
+void					handle_signal(int sig);
 
 t_list					*parse_env(char **environ);
 
