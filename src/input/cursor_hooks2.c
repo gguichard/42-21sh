@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 14:19:25 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 15:07:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/06 02:03:00 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	move_cursor_prev_word(t_term *term)
 {
 	if (term->cursor <= 0)
 	{
-		tputs(tgetstr("bl", NULL), 1, term_putchar);
+		tputs(tgetstr("bl", NULL), 1, t_putchar);
 		return ;
 	}
 	while (term->cursor > 0 && term->line[term->cursor - 1] == ' ')
@@ -31,7 +31,7 @@ void	move_cursor_next_word(t_term *term)
 {
 	if (term->cursor >= term->size)
 	{
-		tputs(tgetstr("bl", NULL), 1, term_putchar);
+		tputs(tgetstr("bl", NULL), 1, t_putchar);
 		return ;
 	}
 	while (term->cursor < term->size && term->line[term->cursor] != ' ')

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 17:15:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/06 02:05:13 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@ void	refresh_cmdline(t_term *term)
 {
 	if (term->cursor < term->size)
 	{
-		tputs(tgetstr("sc", NULL), 1, term_putchar);
+		tputs(tgetstr("sc", NULL), 1, t_putchar);
 		ft_putstr(&(term->line[term->cursor]));
-		tputs(tgetstr("rc", NULL), 1, term_putchar);
+		tputs(tgetstr("rc", NULL), 1, t_putchar);
 	}
 }
 
 void	print_cmdline(t_term *term, char key)
 {
 	ft_putchar(key);
-	if ((term->cursor + prompt_len(NULL)) % term->winsize.ws_col == 0)
+	if ((term->cursor + term->offset) % term->winsize.ws_col == 0)
 	{
-		tputs(tgetstr("cr", NULL), 1, term_putchar);
-		tputs(tgetstr("sf", NULL), 1, term_putchar);
+		tputs(tgetstr("cr", NULL), 1, t_putchar);
+		tputs(tgetstr("sf", NULL), 1, t_putchar);
 	}
 	refresh_cmdline(term);
 }
