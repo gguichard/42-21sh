@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:58:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 15:39:07 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 15:53:42 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,18 @@ t_hashentry		*get_hashentry(t_hashtable *hashtable, const char *key);
 
 /*
 ** Set l'entree de la hashtable ayant pour clef key a la valeur value. Si
-** l'entree existe deja ne fait rien d'autre que retourner 1. Retourn 0 en
-** cas d'erreur et 1 en cas de succes.
+** l'entree existe deja ne fait rien d'autre que retourner 1. La valeur et la
+** clef sont ajoutes via une shallow copie. Retourne 0 en cas d'erreur et 1
+** en cas de succes.
 */
 int				add_hashentry(t_hashtable *hashtable, const char *key,
 		const void *value, size_t value_size);
 
 /*
 ** Set l'entree de la hashtable ayant pour clef key a la valeur value. Si
-** l'entree existe deja elle sera remplacee, sinon elle est cree. Retourn 0 en
-** cas d'erreur et 1 en cas de succes.
+** l'entree existe deja elle sera remplacee, sinon elle est cree. La valeur
+** et la clef sont ajoutes via une shallow copie. Retourne 0 en cas d'erreur
+** et 1 en cas de succes.
 */
 int				replace_hashentry(t_hashtable *hashtable, const char *key,
 		const void *value, size_t value_size);
