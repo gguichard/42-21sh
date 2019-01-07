@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 11:55:43 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 14:33:36 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <sys/stat.h>
 #include "libft.h"
 #include "convert_path_to_tab.h"
+#include "shell.h"
 #include "autocomplete.h"
 
 static size_t	count_same_char(const char *str1, const char *str2)
@@ -48,8 +49,8 @@ static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
 	}
 	acrd->file_word_len = ft_strlen(acrd->file_word);
 	acrd->dir = NULL;
-	acrd->dirent = NULL;
 	acrd->cur_file_path = NULL;
+	acrd->cur_file_name = NULL;
 	return (1);
 }
 
@@ -67,10 +68,13 @@ static void		delete_ac_rdir(t_ac_rdir_inf *acrd)
 
 static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
-	while ((acrd->dirent = readdir(acrd->dir)) != NULL)
+	struct dirent	*tmp_dirent;
+
+	while ((tmp_dirent = readdir(acrd->dir)) != NULL)
 	{
+		acrd->cur_file_name = tmp_dirent->d_name;
 		if ((acrd->cur_file_path = ft_strjoin(acrd->dir_to_use,
-						acrd->dirent->d_name)) == NULL)
+						acrd->cur_file_name)) == NULL)
 		{
 			acs->suff = NULL;
 			return (0);
@@ -87,14 +91,14 @@ static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 
 static int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 {
-	if (acrd->dirent->d_name[0] != '.' || acrd->file_word[0] == '.')
+	if (acrd->cur_file_name[0] != '.' || acrd->file_word[0] == '.')
 	{
 		if (!acrd->need_to_be_cmd
 				|| (acrd->can_be_dir && S_ISDIR(acrd->stat_buf.st_mode))
 				|| (S_ISREG(acrd->stat_buf.st_mode)
 					&& access(acrd->cur_file_path, X_OK) == 0))
 		{
-			if (ft_strnequ(acrd->dirent->d_name, acrd->file_word,
+			if (ft_strnequ(acrd->cur_file_name, acrd->file_word,
 					acrd->file_word_len))
 			{
 				return (1);
@@ -104,26 +108,30 @@ static int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 	return (0);
 }
 
-static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
+static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
+		int check_dir)
 {
 	if (acs->suff_len == -1)
 	{
 		free(acs->suff);
-		acs->suff_len = ft_strlen(acrd->dirent->d_name + acrd->file_word_len);
+		acs->suff_len = ft_strlen(acrd->cur_file_name + acrd->file_word_len);
 		if ((acs->suff =
 					(char*)malloc(sizeof(char) * (acs->suff_len + 2))) == NULL)
 			acs->suff_len = 0;
 		else
 		{
-			ft_memcpy(acs->suff, acrd->dirent->d_name + acrd->file_word_len,
+			ft_memcpy(acs->suff, acrd->cur_file_name + acrd->file_word_len,
 					acs->suff_len + 1);
-			acs->is_dir = S_ISDIR(acrd->stat_buf.st_mode);
+			if (check_dir)
+				acs->is_dir = S_ISDIR(acrd->stat_buf.st_mode);
+			else
+				acs->is_dir = 0;
 		}
 	}
 	else
 	{
 		acs->is_dir = 0;
-		acs->suff_len = count_same_char(acrd->dirent->d_name +
+		acs->suff_len = count_same_char(acrd->cur_file_name +
 				acrd->file_word_len, acs->suff);
 		acs->suff[acs->suff_len] = '\0';
 	}
@@ -134,10 +142,10 @@ static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
 	if (valid_file_for_ac(acrd))
 	{
-		if (acs->suff_len == -1 || !ft_strnequ(acrd->dirent->d_name +
+		if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name +
 					acrd->file_word_len, acs->suff, acs->suff_len))
 		{
-			if (!build_ac_suff(acrd, acs))
+			if (!build_ac_suff(acrd, acs, 1))
 			{
 				ft_memdel((void**)&(acrd->cur_file_path));
 				return (0);
@@ -195,7 +203,27 @@ static char		*build_path_to_file(const char *path, const char *file)
 	return (path_to_file);
 }
 
-static char		*autocomplet_cmd(const char *word, char **path_tab)
+static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
+		t_builtin **builtin_tab)
+{
+	while (*builtin_tab != NULL)
+	{
+		acrd->cur_file_name = (*builtin_tab)->name;
+		if (ft_strnequ(acrd->cur_file_name, acrd->file_word,
+					acrd->file_word_len))
+		{
+			if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name +
+						acrd->file_word_len, acs->suff, acs->suff_len))
+			{
+				build_ac_suff(acrd, acs, 0);
+			}
+		}
+		++builtin_tab;
+	}
+}
+
+static char		*autocomplet_cmd(const char *word, char **path_tab,
+		t_builtin **builtin_tab)
 {
 	t_ac_rdir_inf	acrd;
 	t_ac_suff_inf	acs;
@@ -205,6 +233,7 @@ static char		*autocomplet_cmd(const char *word, char **path_tab)
 	acs.suff_len = -1;
 	if ((acs.suff = ft_strdup("")) == NULL)
 		return (NULL);
+	check_for_builtin_ac(&acrd, &acs, builtin_tab);
 	while (*path_tab != NULL)
 	{
 		if ((real_word = build_path_to_file(*path_tab, word)) == NULL
@@ -223,7 +252,7 @@ static char		*autocomplet_cmd(const char *word, char **path_tab)
 }
 
 char			*autocomplet_word(const char *word, int is_a_cmd,
-		const char *path)
+		const char *path, t_builtin **builtin_tab)
 {
 	char	*word_suffix;
 	char	*path_cpy;
@@ -238,7 +267,7 @@ char			*autocomplet_word(const char *word, int is_a_cmd,
 			return (NULL);
 		path_tab = convert_path_to_tab(path_cpy);
 		if (path_tab != NULL)
-			word_suffix = autocomplet_cmd(word, path_tab);
+			word_suffix = autocomplet_cmd(word, path_tab, builtin_tab);
 		free(path_tab);
 		free(path_cpy);
 	}

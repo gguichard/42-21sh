@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 10:45:21 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 14:32:32 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,15 @@
 
 # include <dirent.h>
 # include <sys/stat.h>
+# include "shell.h"
 
 typedef struct		s_ac_rdir_inf
 {
 	DIR				*dir;
-	struct dirent	*dirent;
 	char			*dir_to_use;
 	char			*file_word;
 	char			*cur_file_path;
+	char			*cur_file_name;
 	size_t			file_word_len;
 	struct stat		stat_buf;
 	int				need_to_be_cmd;
@@ -44,6 +45,6 @@ typedef struct		s_ac_suff_inf
 ** quelconque.
 */
 char				*autocomplet_word(const char *word, int is_a_cmd,
-		const char *path);
+		const char *path, t_builtin **builtin_tab);
 
 #endif
