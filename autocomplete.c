@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 10:49:44 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 11:17:39 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 		if (!acrd->need_to_be_cmd
 				|| (acrd->can_be_dir && S_ISDIR(acrd->stat_buf.st_mode))
 				|| (S_ISREG(acrd->stat_buf.st_mode)
-					&& access(acrd->cur_file_path, X_OK)))
+					&& access(acrd->cur_file_path, X_OK) == 0))
 		{
 			if (ft_strnequ(acrd->dirent->d_name, acrd->file_word,
 					acrd->file_word_len))
@@ -165,7 +165,7 @@ static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 	t_ac_rdir_inf	acrd;
 	t_ac_suff_inf	acs;
 
-	if (!init_ac_rdir(word, &acrd, is_a_cmd, 0))
+	if (!init_ac_rdir(word, &acrd, is_a_cmd, 1))
 		return (NULL);
 	acs.is_dir = 0;
 	acs.suff_len = -1;
