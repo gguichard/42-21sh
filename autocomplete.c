@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 09:59:15 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 10:06:13 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,27 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	return (!(acs->suff_len == 0 && !acs->is_dir));
 }
 
+static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
+		int is_a_cmd)
+{
+	if (valid_file_for_ac(acrd, acs, is_a_cmd))
+	{
+		if (acs->suff_len == -1 || !ft_strnequ(acrd->dirent->d_name +
+					acrd->file_word_len, acs->suff, acs->suff_len))
+		{
+			if (!build_ac_suff(acrd, acs))
+			{
+				free(acrd->cur_file_path);
+				return (0);
+			}
+		}
+		else
+			acs->is_dir = 0;
+	}
+	free(acrd->cur_file_path);
+	return (1);
+}
+
 static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 {
 	t_ac_rdir_inf	acrd;
@@ -144,23 +165,8 @@ static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 		return (NULL);
 	}
 	while (readdir_to_dirent(&acrd, &acs))
-	{
-		if (valid_file_for_ac(&acrd, &acs, is_a_cmd))
-		{
-			if (acs.suff_len == -1 || !ft_strnequ(acrd.dirent->d_name +
-						acrd.file_word_len, acs.suff, acs.suff_len))
-			{
-				if (!build_ac_suff(&acrd, &acs))
-				{
-					free(acrd.cur_file_path);
-					break ;
-				}
-			}
-			else
-				acs.is_dir = 0;
-		}
-		free(acrd.cur_file_path);
-	}
+		if (!try_ac_for_this_file(&acrd, &acs, is_a_cmd))
+			break ;
 	delete_ac_rdir(&acrd);
 	if (acs.is_dir && acs.suff != NULL)
 		ft_memcpy(acs.suff + acs.suff_len, "/", 2);
