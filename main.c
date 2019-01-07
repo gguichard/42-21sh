@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:46:28 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/05 14:16:52 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 10:44:21 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 int		main(int argc, char **argv)
 {
 	char	*ac;
-	int		idx;
 
 	for (int idx = 1; idx < argc; ++idx)
 	{

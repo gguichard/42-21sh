@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 10:06:13 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 10:49:44 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@ static size_t	count_same_char(const char *str1, const char *str2)
 	return (count);
 }
 
-static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd)
+static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
+		int need_to_be_cmd, int can_be_dir)
 {
 	char			*last_slash;
 
+	acrd->need_to_be_cmd = need_to_be_cmd;
+	acrd->can_be_dir = can_be_dir;
 	if ((last_slash = ft_strrchr(word, '/')) == NULL)
 		acrd->dir_to_use = ft_strdup("./");
 	else
@@ -40,7 +43,7 @@ static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd)
 	if (acrd->dir_to_use == NULL || (acrd->file_word = ft_strdup(
 					last_slash == NULL ? word : last_slash + 1)) == NULL)
 	{
-		free(acrd->dir_to_use);
+		ft_memdel((void**)&(acrd->dir_to_use));
 		return (0);
 	}
 	acrd->file_word_len = ft_strlen(acrd->file_word);
@@ -53,10 +56,13 @@ static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd)
 static void		delete_ac_rdir(t_ac_rdir_inf *acrd)
 {
 	if (acrd->dir != NULL)
+	{
 		closedir(acrd->dir);
-	free(acrd->dir_to_use);
-	free(acrd->file_word);
-	free(acrd->cur_file_path);
+		acrd->dir = NULL;
+	}
+	ft_memdel((void**)&(acrd->dir_to_use));
+	ft_memdel((void**)&(acrd->file_word));
+	ft_memdel((void**)&(acrd->cur_file_path));
 }
 
 static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
@@ -71,7 +77,7 @@ static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 		}
 		if (stat(acrd->cur_file_path, &(acrd->stat_buf)) == -1)
 		{
-			free(acrd->cur_file_path);
+			ft_memdel((void**)&(acrd->cur_file_path));
 			continue ;
 		}
 		return (1);
@@ -79,12 +85,12 @@ static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	return (0);
 }
 
-static int		valid_file_for_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
-		int is_a_cmd)
+static int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 {
 	if (acrd->dirent->d_name[0] != '.' || acrd->file_word[0] == '.')
 	{
-		if (!is_a_cmd || S_ISDIR(acrd->stat_buf.st_mode)
+		if (!acrd->need_to_be_cmd
+				|| (acrd->can_be_dir && S_ISDIR(acrd->stat_buf.st_mode))
 				|| (S_ISREG(acrd->stat_buf.st_mode)
 					&& access(acrd->cur_file_path, X_OK)))
 		{
@@ -124,25 +130,34 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	return (!(acs->suff_len == 0 && !acs->is_dir));
 }
 
-static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
-		int is_a_cmd)
+static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
-	if (valid_file_for_ac(acrd, acs, is_a_cmd))
+	if (valid_file_for_ac(acrd))
 	{
 		if (acs->suff_len == -1 || !ft_strnequ(acrd->dirent->d_name +
 					acrd->file_word_len, acs->suff, acs->suff_len))
 		{
 			if (!build_ac_suff(acrd, acs))
 			{
-				free(acrd->cur_file_path);
+				ft_memdel((void**)&(acrd->cur_file_path));
 				return (0);
 			}
 		}
 		else
 			acs->is_dir = 0;
 	}
-	free(acrd->cur_file_path);
+	ft_memdel((void**)&(acrd->cur_file_path));
 	return (1);
+}
+
+static void		autocomplete_with_infs(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
+{
+	if ((acrd->dir = opendir(acrd->dir_to_use)) != NULL)
+	{
+		while (readdir_to_dirent(acrd, acs))
+			if (!try_ac_for_this_file(acrd, acs))
+				break ;
+	}
 }
 
 static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
@@ -150,13 +165,8 @@ static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 	t_ac_rdir_inf	acrd;
 	t_ac_suff_inf	acs;
 
-	if (!init_ac_rdir(word, &acrd))
+	if (!init_ac_rdir(word, &acrd, is_a_cmd, 0))
 		return (NULL);
-	if ((acrd.dir = opendir(acrd.dir_to_use)) == NULL)
-	{
-		delete_ac_rdir(&acrd);
-		return (ft_strdup(""));
-	}
 	acs.is_dir = 0;
 	acs.suff_len = -1;
 	if ((acs.suff = ft_strdup("")) == NULL)
@@ -164,9 +174,7 @@ static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 		delete_ac_rdir(&acrd);
 		return (NULL);
 	}
-	while (readdir_to_dirent(&acrd, &acs))
-		if (!try_ac_for_this_file(&acrd, &acs, is_a_cmd))
-			break ;
+	autocomplete_with_infs(&acrd, &acs);
 	delete_ac_rdir(&acrd);
 	if (acs.is_dir && acs.suff != NULL)
 		ft_memcpy(acs.suff + acs.suff_len, "/", 2);

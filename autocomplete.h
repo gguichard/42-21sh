@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 09:58:48 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 10:45:21 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,15 @@ typedef struct		s_ac_rdir_inf
 	char			*cur_file_path;
 	size_t			file_word_len;
 	struct stat		stat_buf;
+	int				need_to_be_cmd;
+	int				can_be_dir;
 }					t_ac_rdir_inf;
 
 typedef struct		s_ac_suff_inf
 {
 	int				is_dir;
 	char			*suff;
-	size_t			suff_len;
+	long long		suff_len;
 }					t_ac_suff_inf;
 
 /*
