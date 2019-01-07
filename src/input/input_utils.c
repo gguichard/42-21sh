@@ -6,15 +6,17 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 22:06:12 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 23:23:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/07 14:48:35 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
+#include <math.h>
 #include "shell.h"
 #include "input.h"
+#include "utils.h"
 
 int		setup_cmdline(t_term *term)
 {

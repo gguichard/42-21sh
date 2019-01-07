@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 02:05:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/07 15:00:42 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,17 @@
 #include "input.h"
 #include "utils.h"
 
-void	refresh_cmdline(t_term *term)
+void	print_cmdline(t_term *term)
 {
-	if (term->cursor < term->size)
-	{
-		tputs(tgetstr("sc", NULL), 1, t_putchar);
-		ft_putstr(&(term->line[term->cursor]));
-		tputs(tgetstr("rc", NULL), 1, t_putchar);
-	}
-}
+	int	rows;
 
-void	print_cmdline(t_term *term, char key)
-{
-	ft_putchar(key);
-	if ((term->cursor + term->offset) % term->winsize.ws_col == 0)
-	{
-		tputs(tgetstr("cr", NULL), 1, t_putchar);
-		tputs(tgetstr("sf", NULL), 1, t_putchar);
-	}
-	refresh_cmdline(term);
+	tputs(tgetstr("sc", NULL), 1, t_putchar);
+	rows = (term->cursor + term->offset) / term->winsize.ws_col;
+	if (rows > 0)
+		tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
+	tputs(tparm(tgetstr("ch", NULL), term->offset), 1, t_putchar);
+	ft_putstr(term->line);
+	tputs(tgetstr("rc", NULL), 1, t_putchar);
 }
 
 int		realloc_cmdline(t_term *term)
@@ -62,8 +54,8 @@ void	append_cmdline(t_term *term, char key)
 	(term->size)++;
 	(term->line)[term->size] = '\0';
 	(term->line)[term->cursor] = key;
-	(term->cursor)++;
-	print_cmdline(term, key);
+	move_cursor_right(term);
+	print_cmdline(term);
 }
 
 int		handle_key(t_term *term, char key)

@@ -6,11 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/07 00:51:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/07 14:49:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include <signal.h>
+#include <sys/ioctl.h>
 #include "shell.h"
 #include "input.h"
 

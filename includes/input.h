@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 17:28:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/07 14:59:32 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ int		handle_command(t_shell *shell);
 int		setup_cmdline(t_term *term);
 void	update_winsize(t_term *term);
 int		wait_for_command(t_shell *shell);
-void	refresh_cmdline(t_term *term);
-void	print_cmdline(t_term *term, char key);
+void	print_cmdline(t_term *term);
 int		realloc_cmdline(t_term *term);
 void	append_cmdline(t_term *term, char key);
 int		handle_key(t_term *term, char key);
