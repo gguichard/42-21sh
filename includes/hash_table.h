@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:58:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/04 13:52:56 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 15:39:07 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 typedef struct	s_hashentry
 {
 	char		*key;
-	char		*value;
+	void		*value;
+	size_t		value_size;
 }				t_hashentry;
 
 typedef struct	s_hashtable
@@ -28,7 +29,14 @@ typedef struct	s_hashtable
 	t_list		**buckets;
 	size_t		bucket_count;
 	size_t		(*hash_fun)(const char *str);
+	void		(*del_hashentry_val_fun)(void *value, size_t value_size);
 }				t_hashtable;
+
+/*
+** Fonction de suppression de valeur de hashentry par defaut qui se contente
+** de free value.
+*/
+void			def_del_hashentry_val_fun(void *value, size_t value_size);
 
 /*
 ** Fonction de hashage d'une string par defaut.
@@ -48,11 +56,19 @@ t_hashentry		*get_hashentry(t_hashtable *hashtable, const char *key);
 
 /*
 ** Set l'entree de la hashtable ayant pour clef key a la valeur value. Si
-** l'entree existe deja et que replace_if_exist vaut 0 ne fait rien d'autre
-** que retourner 1. Retourn 0 en cas d'erreur et 1 en cas de succes.
+** l'entree existe deja ne fait rien d'autre que retourner 1. Retourn 0 en
+** cas d'erreur et 1 en cas de succes.
 */
-int				set_hashentry(t_hashtable *hashtable, const char *key,
-		const char *value, int replace_if_exist);
+int				add_hashentry(t_hashtable *hashtable, const char *key,
+		const void *value, size_t value_size);
+
+/*
+** Set l'entree de la hashtable ayant pour clef key a la valeur value. Si
+** l'entree existe deja elle sera remplacee, sinon elle est cree. Retourn 0 en
+** cas d'erreur et 1 en cas de succes.
+*/
+int				replace_hashentry(t_hashtable *hashtable, const char *key,
+		const void *value, size_t value_size);
 
 /*
 ** Free l'integralite des elements de la hashtable ainsi que la hashtable
