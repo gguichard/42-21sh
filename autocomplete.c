@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 11:17:39 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 11:55:43 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,11 +181,45 @@ static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
 	return (acs.suff);
 }
 
+static char		*build_path_to_file(const char *path, const char *file)
+{
+	char	*path_to_file;
+
+	if ((path_to_file = (char*)malloc(sizeof(char) * (ft_strlen(path) +
+						ft_strlen(file) + 2))) == NULL)
+		return (NULL);
+	path_to_file[0] = '\0';
+	ft_strcat(path_to_file, path);
+	ft_strcat(path_to_file, "/");
+	ft_strcat(path_to_file, file);
+	return (path_to_file);
+}
+
 static char		*autocomplet_cmd(const char *word, char **path_tab)
 {
-	(void)word;
-	(void)path_tab;
-	return (ft_strdup(""));
+	t_ac_rdir_inf	acrd;
+	t_ac_suff_inf	acs;
+	char			*real_word;
+
+	acs.is_dir = 0;
+	acs.suff_len = -1;
+	if ((acs.suff = ft_strdup("")) == NULL)
+		return (NULL);
+	while (*path_tab != NULL)
+	{
+		if ((real_word = build_path_to_file(*path_tab, word)) == NULL
+				|| !init_ac_rdir(real_word, &acrd, 1, 1))
+		{
+			free(real_word);
+			free(acs.suff);
+			return (NULL);
+		}
+		autocomplete_with_infs(&acrd, &acs);
+		free(real_word);
+		delete_ac_rdir(&acrd);
+		++path_tab;
+	}
+	return (acs.suff);
 }
 
 char			*autocomplet_word(const char *word, int is_a_cmd,
