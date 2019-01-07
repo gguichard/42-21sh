@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 13:55:57 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 14:15:28 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/06 02:29:07 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@ int	handle_eot_key(t_term *term)
 {
 	if (term->size == 0)
 		return (1);
-	tputs(tgetstr("bl", NULL), 1, term_putchar);
+	tputs(tgetstr("bl", NULL), 1, t_putchar);
 	return (0);
 }

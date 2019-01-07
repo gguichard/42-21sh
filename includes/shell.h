@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 23:20:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/07 00:49:36 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct			s_term
 	size_t				capacity;
 	size_t				size;
 	size_t				cursor;
+	size_t				offset;
 }						t_term;
 
 typedef struct			s_shell
@@ -44,6 +45,11 @@ typedef struct			s_shell
 	t_term				term;
 }						t_shell;
 
+
+void					handle_signal(int sig);
+
 t_list					*parse_env(char **environ);
+
+void					show_prompt(t_shell *shell);
 
 #endif

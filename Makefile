@@ -6,16 +6,16 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/05 14:29:53 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/05 17:12:21 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	21sh
 
-SRC		=	main.c env.c vars.c shell_vars.c \
-			term.c input.c input_utils.c \
-			cmdline.c esc_seq.c \
-			input_hooks.c cursor_hooks.c cursor_hooks2.c insdel_hooks.c \
+SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
+			input/term.c input/input.c input/input_utils.c \
+			input/cmdline.c input/esc_seq.c input/input_hooks.c \
+			input/cursor_hooks.c input/cursor_hooks2.c input/insdel_hooks.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c
 SRC_DIR	= 	src
 
@@ -44,10 +44,12 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(addprefix $(INC_DIR)/,$(INC)) | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	/bin/mkdir $@
+	/bin/mkdir $@/input
 
 clean:
 	$(MAKE) -C libft clean
 	/bin/rm -rf $(OBJ_DIR)
+	/bin/rm -rf $(OBJ_DIR)/input
 
 fclean: clean
 	$(MAKE) -C libft fclean

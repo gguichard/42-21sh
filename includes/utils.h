@@ -6,13 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:13:59 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/04 12:14:43 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/06 01:16:17 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 
-int	term_putchar(int c);
+int	t_putchar(int c);
 
 #endif

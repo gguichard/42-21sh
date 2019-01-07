@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/05 14:54:52 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/06 17:28:49 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,15 @@ void	handle_esc_seq(t_term *term, const char *seq);
 /*
 ** HOOKS.
 */
-void	move_cursor_right_col(t_term *term);
 void	move_cursor_left(t_term *term);
 void	move_cursor_right(t_term *term);
 void	move_cursor_home(t_term *term);
 void	move_cursor_end(t_term *term);
 void	move_cursor_prev_word(t_term *term);
 void	move_cursor_next_word(t_term *term);
+void	move_cursor_up(t_term *term);
+void	move_cursor_down(t_term *term);
+
 int		handle_eot_key(t_term *term);
 void	handle_bs_key(t_term *term);
 void	handle_del_key(t_term *term);

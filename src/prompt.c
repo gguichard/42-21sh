@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/04 12:12:54 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 01:16:03 by gguichar         ###   ########.fr       */
+/*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/06 01:14:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include "shell.h"
 
-int	t_putchar(int c)
+void	show_prompt(t_shell *shell)
 {
-	return (write(STDOUT_FILENO, &c, 1));
+	write(STDOUT_FILENO, "$> ", 3);
+	shell->term.offset = 3;
 }
