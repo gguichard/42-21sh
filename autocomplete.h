@@ -6,19 +6,33 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/05 15:39:21 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/07 09:58:48 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AUTOCOMPLETE_H
 # define AUTOCOMPLETE_H
 
-typedef struct	s_ac_inf
+# include <dirent.h>
+# include <sys/stat.h>
+
+typedef struct		s_ac_rdir_inf
 {
-	int			is_dir;
-	char		*suff;
-	size_t		suff_len;
-}				t_ac_inf;
+	DIR				*dir;
+	struct dirent	*dirent;
+	char			*dir_to_use;
+	char			*file_word;
+	char			*cur_file_path;
+	size_t			file_word_len;
+	struct stat		stat_buf;
+}					t_ac_rdir_inf;
+
+typedef struct		s_ac_suff_inf
+{
+	int				is_dir;
+	char			*suff;
+	size_t			suff_len;
+}					t_ac_suff_inf;
 
 /*
 ** Malloc et retourne une chaine de caractere a ajouter a word pour arriver au
@@ -27,6 +41,7 @@ typedef struct	s_ac_inf
 ** true si le word doit etre un executable, false s'il peut etre un fichier
 ** quelconque.
 */
-char	*autocomplet_word(const char *word, int is_a_cmd, const char *path);
+char				*autocomplet_word(const char *word, int is_a_cmd,
+		const char *path);
 
 #endif
