@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/07 15:00:42 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 00:21:48 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,34 @@
 #include "input.h"
 #include "utils.h"
 
-void	print_cmdline(t_term *term)
+extern t_shell	*g_shell;
+
+void			print_cmdline(t_term *term)
 {
 	int	rows;
+	int	offset;
 
-	tputs(tgetstr("sc", NULL), 1, t_putchar);
-	rows = (term->cursor + term->offset) / term->winsize.ws_col;
-	if (rows > 0)
-		tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
-	tputs(tparm(tgetstr("ch", NULL), term->offset), 1, t_putchar);
+	move_cursor_top_left(term);
+	tputs(tgetstr("cd", NULL), 1, t_putchar);
+	show_prompt(g_shell);
 	ft_putstr(term->line);
-	tputs(tgetstr("rc", NULL), 1, t_putchar);
+	if ((term->size + term->offset) % term->winsize.ws_col == 0)
+	{
+		tputs(tgetstr("cr", NULL), 1, t_putchar);
+		tputs(tgetstr("do", NULL), 1, t_putchar);
+	}
+	if (term->cursor < term->size)
+	{
+		rows = (term->size + term->offset) / term->winsize.ws_col;
+		rows -= (term->cursor + term->offset) / term->winsize.ws_col;
+		if (rows > 0)
+			tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
+		offset = (term->cursor + term->offset) % term->winsize.ws_col;
+		tputs(tparm(tgetstr("ch", NULL), offset), 1, t_putchar);
+	}
 }
 
-int		realloc_cmdline(t_term *term)
+int				realloc_cmdline(t_term *term)
 {
 	char	*tmp;
 
@@ -41,7 +55,7 @@ int		realloc_cmdline(t_term *term)
 	return (1);
 }
 
-void	append_cmdline(t_term *term, char key)
+void			append_cmdline(t_term *term, char key)
 {
 	if (term->size >= term->capacity && !realloc_cmdline(term))
 		return ;
@@ -58,7 +72,7 @@ void	append_cmdline(t_term *term, char key)
 	print_cmdline(term);
 }
 
-int		handle_key(t_term *term, char key)
+int				handle_key(t_term *term, char key)
 {
 	if (key == '\n')
 	{
