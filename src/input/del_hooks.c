@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 14:37:34 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 16:29:10 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	del_refresh(t_term *term)
 	refresh_prompt_command(term);
 }
 
-void	handle_bs_key(t_term *term)
+void		handle_bs_key(t_term *term)
 {
 	if (term->cursor <= 0)
 	{
@@ -34,7 +34,7 @@ void	handle_bs_key(t_term *term)
 	del_refresh(term);
 }
 
-void	handle_del_key(t_term *term)
+void		handle_del_key(t_term *term)
 {
 	if (term->cursor >= term->size)
 	{
