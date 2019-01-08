@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 16:28:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 19:01:22 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,19 @@
 #include "shell.h"
 #include "input.h"
 #include "utils.h"
+
+void		vm_toggle(t_term *term)
+{
+	term->visual_mode = !(term->visual_mode);
+	if (!(term->visual_mode))
+		refresh_prompt_command(term);
+	else
+	{
+		if (term->cursor == term->size && term->size > 0)
+			term->cursor = term->size - 1;
+		term->select.begin = term->cursor;
+	}
+}
 
 static void	vm_restore(t_term *term)
 {
