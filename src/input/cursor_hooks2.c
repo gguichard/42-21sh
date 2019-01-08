@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 14:19:25 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 18:44:42 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 01:29:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	move_cursor_up(t_term *term)
 		tputs(tgetstr("bl", NULL), 1, t_putchar);
 		return ;
 	}
-	tputs(tgetstr("cr", NULL), 1, t_putchar);
 	tputs(tgetstr("up", NULL), 1, t_putchar);
 	term->cursor = ft_max(0, term->cursor - term->winsize.ws_col);
 	col = (term->cursor + term->offset) % term->winsize.ws_col;
@@ -70,7 +69,6 @@ void	move_cursor_down(t_term *term)
 		tputs(tgetstr("bl", NULL), 1, t_putchar);
 		return ;
 	}
-	tputs(tgetstr("cr", NULL), 1, t_putchar);
 	tputs(tgetstr("do", NULL), 1, t_putchar);
 	term->cursor = ft_min(term->size, term->cursor + term->winsize.ws_col);
 	col = (term->cursor + term->offset) % term->winsize.ws_col;

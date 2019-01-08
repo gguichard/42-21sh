@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 00:15:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 01:42:57 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,15 @@ void	move_cursor_right(t_term *term)
 	}
 }
 
-void	move_cursor_top_left(t_term *term)
+void	move_cursor_home(t_term *term)
 {
 	int	rows;
 
-	tputs(tgetstr("cr", NULL), 1, t_putchar);
+	if (term->cursor <= 0)
+		return ;
 	rows = (term->cursor + term->offset) / term->winsize.ws_col;
 	if (rows > 0)
 		tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
-}
-
-void	move_cursor_home(t_term *term)
-{
-	if (term->cursor <= 0)
-		return ;
-	move_cursor_top_left(term);
 	tputs(tparm(tgetstr("ch", NULL), term->offset), 1, t_putchar);
 	term->cursor = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 00:21:48 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 01:41:52 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,13 @@ extern t_shell	*g_shell;
 void			print_cmdline(t_term *term)
 {
 	int	rows;
+	int	curr;
 	int	offset;
 
-	move_cursor_top_left(term);
+	tputs(tgetstr("cr", NULL), 1, t_putchar);
+	rows = (term->cursor + term->offset) / term->winsize.ws_col;
+	if (rows > 0)
+		tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
 	tputs(tgetstr("cd", NULL), 1, t_putchar);
 	show_prompt(g_shell);
 	ft_putstr(term->line);
@@ -33,9 +37,9 @@ void			print_cmdline(t_term *term)
 	if (term->cursor < term->size)
 	{
 		rows = (term->size + term->offset) / term->winsize.ws_col;
-		rows -= (term->cursor + term->offset) / term->winsize.ws_col;
-		if (rows > 0)
-			tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
+		curr = (term->cursor + term->offset) / term->winsize.ws_col;
+		if (curr < rows)
+			tputs(tparm(tgetstr("UP", NULL), rows - curr), 1, t_putchar);
 		offset = (term->cursor + term->offset) % term->winsize.ws_col;
 		tputs(tparm(tgetstr("ch", NULL), offset), 1, t_putchar);
 	}
