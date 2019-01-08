@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:12:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 19:35:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,19 @@ typedef struct	s_seq
 */
 int				setup_term(t_shell *shell);
 int				reset_term(t_shell *shell);
+int				update_winsize(t_term *term);
 
 /*
 ** COMMAND LINE.
 */
 int				handle_command(t_shell *shell);
-int				setup_cmdline(t_term *term);
-void			update_winsize(t_term *term);
 int				wait_for_command(t_shell *shell);
+int				setup_cmdline(t_term *term);
+int				realloc_cmdline(t_term *term);
 void			print_cmdline(t_term *term);
 void			refresh_prompt_command(t_term *term);
-int				realloc_cmdline(t_term *term);
 void			insert_cmdline(t_term *term, char key);
-int				handle_key_mode(t_term *term, unsigned char key);
+int				handle_key_mode(t_term *term, char key);
 int				handle_key(t_term *term, char key);
 
 /*
@@ -70,7 +70,7 @@ void			handle_esc_sequence(t_term *term, const t_seq *seq);
 void			vm_toggle(t_term *term);
 void			vm_copy_hook(t_term *term, int cut);
 void			vm_paste_hook(t_term *term, int before_cursor);
-int				handle_vm_key(t_term *term, unsigned char key);
+int				handle_vm_key(t_term *term, char key);
 
 /*
 ** HOOKS.

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 16:03:47 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 19:30:59 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,20 @@
 #include "utils.h"
 
 extern t_shell	*g_shell;
+
+int				setup_cmdline(t_term *term)
+{
+	term->capacity = CMDLINE_CAPACITY;
+	if (!(term->line = (char *)malloc(term->capacity + 1)))
+	{
+		term->capacity = -1;
+		return (0);
+	}
+	term->line[0] = '\0';
+	term->size = 0;
+	term->cursor = 0;
+	return (1);
+}
 
 int				realloc_cmdline(t_term *term)
 {

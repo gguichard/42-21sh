@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:01:22 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 19:25:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "input.h"
 #include "utils.h"
 
-void		vm_toggle(t_term *term)
+void	vm_toggle(t_term *term)
 {
 	term->visual_mode = !(term->visual_mode);
 	if (!(term->visual_mode))
@@ -28,16 +28,7 @@ void		vm_toggle(t_term *term)
 	}
 }
 
-static void	vm_restore(t_term *term)
-{
-	term->visual_mode = 0;
-	if (term->select.end > term->select.begin)
-		term->cursor = term->select.begin;
-	else
-		term->cursor = ft_min(term->select.end, term->size);
-}
-
-void		vm_copy_hook(t_term *term, int cut)
+void	vm_copy_hook(t_term *term, int cut)
 {
 	size_t	begin;
 	size_t	end;
@@ -59,7 +50,7 @@ void		vm_copy_hook(t_term *term, int cut)
 	}
 }
 
-void		vm_paste_hook(t_term *term, int before_cursor)
+void	vm_paste_hook(t_term *term, int before_cursor)
 {
 	char	*curr;
 
@@ -82,7 +73,7 @@ void		vm_paste_hook(t_term *term, int before_cursor)
 	term->visual_mode = 1;
 }
 
-int			handle_vm_key(t_term *term, unsigned char key)
+int		handle_vm_key(t_term *term, char key)
 {
 	if (key != 'y' && key != 'd' && key != 'p' && key != 'P')
 	{
@@ -97,7 +88,8 @@ int			handle_vm_key(t_term *term, unsigned char key)
 		vm_paste_hook(term, 0);
 	else if (key == 'P')
 		vm_paste_hook(term, 1);
-	vm_restore(term);
+	term->visual_mode = 0;
+	term->cursor = term->select.begin;
 	refresh_prompt_command(term);
 	return (1);
 }

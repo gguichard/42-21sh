@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 14:48:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 19:32:21 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,14 @@ int		main(int argc, char **argv, char **environ)
 	shell.env = parse_env(environ);
 	shell.last_status = 0;
 	shell.term.legacy_mode = !setup_term(&shell);
-	if (!shell.term.legacy_mode)
+	if (!(shell.term.legacy_mode))
 	{
+		signal(SIGWINCH, handle_signal);
 		shell.term.seq_off = 0;
 		shell.term.esc_seq = 0;
+		shell.term.visual_mode = 0;
+		shell.term.select.clipboard = NULL;
 	}
-	shell.term.visual_mode = 0;
-	shell.term.select.clipboard = NULL;
-	update_winsize(&(shell.term));
-	signal(SIGWINCH, handle_signal);
 	wait_for_command(&shell);
 	reset_term(&shell);
 	return (0);
