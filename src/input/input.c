@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/07 19:12:18 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 14:32:47 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@ int	handle_command(t_shell *shell)
 	ft_printf("COMMAND: %s\n", shell->term.line);
 	free(shell->term.line);
 	return (1);
+}
+
+int	handle_key_mode(t_term *term, unsigned char key)
+{
+	if (term->visual_mode)
+		return (handle_vm_key(term, key));
+	else
+		return (handle_key(term, key));
 }
 
 int	read_input(t_shell *shell)
@@ -38,7 +46,7 @@ int	read_input(t_shell *shell)
 		else
 		{
 			if (!handle_esc_key(&(shell->term), buf)
-					&& !handle_key(&(shell->term), buf))
+					&& !handle_key_mode(&(shell->term), buf))
 				break ;
 		}
 	}

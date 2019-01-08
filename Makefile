@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/08 00:22:23 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/08 14:29:58 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME	=	21sh
 SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
 			input/term.c input/input.c input/input_utils.c \
 			input/cmdline.c input/esc_seq.c input/input_hooks.c \
+			input/insert_mode.c input/visual_mode.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c \
 			autocomplete.c

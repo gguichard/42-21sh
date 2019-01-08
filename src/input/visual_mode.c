@@ -1,22 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   visual_mode.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 13:23:03 by gguichar         ###   ########.fr       */
+/*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/08 14:29:02 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "shell.h"
+#include "input.h"
+#include "utils.h"
 
-void	show_prompt(t_shell *shell)
+int	handle_vm_key(t_term *term, unsigned char key)
 {
-	char	*prompt;
-
-	prompt = (shell->term.visual_mode) ? "(visual) $> " : "$> ";
-	shell->term.offset = write(STDOUT_FILENO, prompt, ft_strlen(prompt));
+	(void)term;
+	if (key != 'c' && key != 'x' && key != 'v')
+		tputs(tgetstr("bl", NULL), 1, t_putchar);
+	else if (key == 'c')
+	{
+	}
+	else if (key == 'x')
+	{
+	}
+	else if (key == 'v')
+	{
+	}
+	return (1);
 }

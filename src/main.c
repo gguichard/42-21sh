@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/07 14:49:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 13:33:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int		main(int argc, char **argv, char **environ)
 		shell.term.seq_off = 0;
 		shell.term.esc_seq = 0;
 	}
+	shell.term.visual_mode = 0;
 	update_winsize(&(shell.term));
 	signal(SIGWINCH, handle_signal);
 	wait_for_command(&shell);

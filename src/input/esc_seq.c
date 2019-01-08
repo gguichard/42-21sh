@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 17:29:12 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 14:33:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,14 @@
 char	*get_valid_esc_seq(t_term *term)
 {
 	static char	*seqs[] = {
-		ESC_SEQ_LEFT,
-		ESC_SEQ_RIGHT,
-		ESC_SEQ_UP,
-		ESC_SEQ_DOWN,
+		ESC_SEQ_LEFT, ESC_SEQ_RIGHT,
+		ESC_SEQ_UP, ESC_SEQ_DOWN,
+		ESC_HOME_KEY, ESC_END_KEY,
+		ESC_SHIFT_LEFT_KEY, ESC_SHIFT_RIGHT_KEY,
+		ESC_SHIFT_UP_KEY, ESC_SHIFT_DOWN_KEY,
+		ESC_ALT_LEFT, ESC_ALT_RIGHT,
 		ESC_DEL_KEY,
-		ESC_HOME_KEY,
-		ESC_END_KEY,
-		ESC_SHIFT_LEFT_KEY,
-		ESC_SHIFT_RIGHT_KEY,
-		ESC_SHIFT_UP_KEY,
-		ESC_SHIFT_DOWN_KEY,
+		ESC_FN_F1,
 		NULL
 	};
 	int			index;
@@ -63,7 +60,7 @@ int		append_esc_seq(t_term *term, char key)
 int		handle_esc_key(t_term *term, char key)
 {
 	if (key == 27)
-		term->esc_seq = !(term->esc_seq);
+		term->esc_seq = 1;
 	if (!(term->esc_seq))
 		return (0);
 	return (append_esc_seq(term, key) >= 0);
@@ -89,4 +86,20 @@ void	handle_esc_seq(t_term *term, const char *seq)
 		move_cursor_up(term);
 	else if (ft_strequ(seq, ESC_SHIFT_DOWN_KEY))
 		move_cursor_down(term);
+	else if (ft_strequ(seq, ESC_FN_F1))
+	{
+		term->visual_mode = !(term->visual_mode);
+		if (term->visual_mode)
+		{
+			term->select_begin = term->cursor;
+			term->select_end = term->cursor;
+		}
+		refresh_prompt_command(term);
+		return ;
+	}
+	if (term->visual_mode)
+	{
+		term->select_end = term->cursor;
+		refresh_prompt_command(term);
+	}
 }

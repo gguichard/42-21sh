@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 01:42:25 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 14:27:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,20 @@
 
 # include "shell.h"
 
-# define ESC_SEQ_LEFT "\e[D"
-# define ESC_SEQ_RIGHT "\e[C"
-# define ESC_SEQ_UP "\e[A"
-# define ESC_SEQ_DOWN "\e[B"
-# define ESC_DEL_KEY "\e[3~"
-# define ESC_HOME_KEY "\e[H"
-# define ESC_END_KEY "\e[F"
-# define ESC_SHIFT_LEFT_KEY "\e[1;2D"
-# define ESC_SHIFT_RIGHT_KEY "\e[1;2C"
-# define ESC_SHIFT_UP_KEY "\e[1;2A"
-# define ESC_SHIFT_DOWN_KEY "\e[1;2B"
+# define ESC_SEQ_LEFT "\033[D"
+# define ESC_SEQ_RIGHT "\033[C"
+# define ESC_SEQ_UP "\033[A"
+# define ESC_SEQ_DOWN "\033[B"
+# define ESC_DEL_KEY "\033[3~"
+# define ESC_HOME_KEY "\033[H"
+# define ESC_END_KEY "\033[F"
+# define ESC_SHIFT_LEFT_KEY "\033[1;2D"
+# define ESC_SHIFT_RIGHT_KEY "\033[1;2C"
+# define ESC_SHIFT_UP_KEY "\033[1;2A"
+# define ESC_SHIFT_DOWN_KEY "\033[1;2B"
+# define ESC_ALT_LEFT "\033\033[D"
+# define ESC_ALT_RIGHT "\033\033[C"
+# define ESC_FN_F1 "\033OP"
 
 /*
 ** SETUP TERM.
@@ -47,11 +50,18 @@ int		setup_cmdline(t_term *term);
 void	update_winsize(t_term *term);
 int		wait_for_command(t_shell *shell);
 void	print_cmdline(t_term *term);
+void	refresh_prompt_command(t_term *term);
 int		realloc_cmdline(t_term *term);
-void	append_cmdline(t_term *term, char key);
+void	insert_cmdline(t_term *term, char key);
+int		handle_key_mode(t_term *term, unsigned char key);
 int		handle_key(t_term *term, char key);
 int		handle_esc_key(t_term *term, char key);
 void	handle_esc_seq(t_term *term, const char *seq);
+
+/*
+** VISUAL MODE.
+*/
+int		handle_vm_key(t_term *term, unsigned char key);
 
 /*
 ** HOOKS.

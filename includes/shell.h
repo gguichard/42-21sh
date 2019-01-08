@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/07 12:58:46 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/08 13:30:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ typedef struct			s_term
 	size_t				size;
 	size_t				cursor;
 	size_t				offset;
+	int					visual_mode;
+	int					select_begin;
+	int					select_end;
 }						t_term;
 
 typedef struct			s_shell

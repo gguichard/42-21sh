@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   insert_mode.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 13:23:03 by gguichar         ###   ########.fr       */
+/*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/08 14:28:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "shell.h"
+#include "input.h"
 
-void	show_prompt(t_shell *shell)
+int	handle_key(t_term *term, char key)
 {
-	char	*prompt;
-
-	prompt = (shell->term.visual_mode) ? "(visual) $> " : "$> ";
-	shell->term.offset = write(STDOUT_FILENO, prompt, ft_strlen(prompt));
+	if (key == '\n')
+	{
+		ft_putchar('\n');
+		return (0);
+	}
+	else if (key == 127)
+	{
+		handle_bs_key(term);
+		return (1);
+	}
+	insert_cmdline(term, key);
+	return (1);
 }
