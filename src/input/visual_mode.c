@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:25:33 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 19:37:21 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		handle_vm_key(t_term *term, char key)
 	else if (key == 'P')
 		vm_paste_hook(term, 1);
 	term->visual_mode = 0;
-	term->cursor = term->select.begin;
+	term->cursor = ft_min(term->size, term->select.begin);
 	refresh_prompt_command(term);
 	return (1);
 }
