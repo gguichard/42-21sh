@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 14:33:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 14:45:34 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,15 +91,15 @@ void	handle_esc_seq(t_term *term, const char *seq)
 		term->visual_mode = !(term->visual_mode);
 		if (term->visual_mode)
 		{
-			term->select_begin = term->cursor;
-			term->select_end = term->cursor;
+			term->select.begin = term->cursor;
+			term->select.end = term->cursor;
 		}
 		refresh_prompt_command(term);
 		return ;
 	}
 	if (term->visual_mode)
 	{
-		term->select_end = term->cursor;
+		term->select.end = term->cursor;
 		refresh_prompt_command(term);
 	}
 }

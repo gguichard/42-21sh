@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 14:27:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 15:13:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	handle_esc_seq(t_term *term, const char *seq);
 /*
 ** VISUAL MODE.
 */
+void	vm_copy_hook(t_term *term, int cut);
+void	vm_paste_hook(t_term *term);
 int		handle_vm_key(t_term *term, unsigned char key);
 
 /*

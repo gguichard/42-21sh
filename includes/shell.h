@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 13:30:24 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/08 14:44:29 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@
 
 # define MAX_ESC_SEQ_BYTES 8
 # define CMDLINE_CAPACITY 1024
+
+typedef struct			s_select
+{
+	size_t				begin;
+	size_t				end;
+	char				*clipboard;
+}						t_select;
 
 typedef struct			s_term
 {
@@ -34,8 +41,7 @@ typedef struct			s_term
 	size_t				cursor;
 	size_t				offset;
 	int					visual_mode;
-	int					select_begin;
-	int					select_end;
+	t_select			select;
 }						t_term;
 
 typedef struct			s_shell
