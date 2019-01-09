@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:45:39 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 14:41:05 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,11 @@ int		init_shell(t_shell *shell, int argc, char **argv, char **environ)
 	shell->last_status = 0;
 	shell->builtins = NULL;
 	shell->history = NULL;
-	add_history_entry(shell, "");
-	if (shell->history == NULL)
-	{
-		ft_dprintf(2, "unable to init history\n");
-		return (0);
-	}
+	shell->history_off = NULL;
+	shell->term.capacity = 0;
+	shell->term.size = 0;
+	shell->term.line = NULL;
+	shell->term.def_line = NULL;
 	return (1);
 }
 

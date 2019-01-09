@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 09:54:41 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:44:37 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 15:06:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,74 +24,62 @@ void		clear_history(t_shell *shell)
 	t_history	*curr;
 	t_history	*next;
 
-	if (shell->history != NULL)
+	curr = shell->history;
+	while (curr != NULL)
 	{
-		curr = shell->history->next;
-		while (curr != NULL)
-		{
-			next = curr->next;
-			clear_history_entry(curr);
-			curr = next;
-		}
-		curr = shell->history->prev;
-		while (curr != NULL)
-		{
-			next = curr->prev;
-			clear_history_entry(curr);
-			curr = next;
-		}
-		clear_history_entry(shell->history);
-		shell->history = NULL;
+		next = curr->next;
+		clear_history_entry(curr);
+		curr = next;
 	}
+	shell->history = NULL;
+	shell->history_off = NULL;
 }
 
 void		add_history_entry(t_shell *shell, const char *command)
 {
 	t_history	*elem;
-	t_history	*curr;
 
 	elem = (t_history *)malloc(sizeof(t_history));
-	if (elem == NULL || (elem->content = ft_strdup(command)) == NULL)
+	if (elem == NULL)
+		return ;
+	elem->content = ft_strdup(command);
+	if (elem->content == NULL)
 	{
 		free(elem);
 		return ;
 	}
-	curr = shell->history;
-	while (curr != NULL && curr->next != NULL)
-		curr = curr->next;
-	elem->next = curr;
-	if (curr == NULL)
-	{
-		elem->prev = NULL;
-		shell->history = elem;
-	}
-	else
-	{
-		if ((elem->prev = curr->prev) != NULL)
-			elem->prev->next = elem;
-		curr->prev = elem;
-		shell->history = curr;
-	}
+	elem->prev = shell->history;
+	if (elem->prev != NULL)
+		elem->prev->next = elem;
+	elem->next = NULL;
+	shell->history = elem;
+	shell->history_off = NULL;
 }
 
 const char	*peek_history_prev(t_shell *shell)
 {
 	t_history	*elem;
 
-	elem = shell->history;
-	if (elem == NULL || elem->prev == NULL)
+	elem = shell->history_off;
+	if (elem == NULL)
+		elem = shell->history;
+	else
+		elem = elem->prev;
+	if (elem == NULL)
 		return (NULL);
-	shell->history = elem->prev;
-	return (elem->prev->content);
+	shell->history_off = elem;
+	return (elem->content);
 }
 
 const char	*peek_history_next(t_shell *shell)
 {
 	t_history	*elem;
 
-	elem = shell->history;
-	if (elem == NULL || elem->next == NULL)
+	elem = shell->history_off;
+	if (elem == NULL)
 		return (NULL);
-	shell->history = elem->next;
+	shell->history_off = elem->next;
+	if (elem->next == NULL)
+		return (NULL);
 	return (elem->next->content);
 }

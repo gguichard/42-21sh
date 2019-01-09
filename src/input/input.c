@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:30:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 15:10:20 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	handle_command(t_shell *shell)
 {
 	ft_printf("COMMAND: %s\n", shell->term.line);
 	add_history_entry(shell, shell->term.line);
+	ft_strdel(&(shell->term.def_line));
 	return (1);
 }
 
@@ -58,11 +59,8 @@ int	wait_for_command(t_shell *shell)
 {
 	int	ret;
 
-	shell->term.line = NULL;
-	shell->term.capacity = 0;
 	if (!realloc_cmdline(&(shell->term)))
 		return (0);
-	shell->term.size = shell->term.capacity;
 	ret = 1;
 	while (ret > 0)
 	{

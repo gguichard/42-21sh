@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:46:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 14:40:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct			s_term
 	char				seq[MAX_ESC_SEQ_BYTES];
 	int					seq_off;
 	char				*line;
+	char				*def_line;
 	size_t				capacity;
 	size_t				size;
 	size_t				cursor;
@@ -67,6 +68,7 @@ typedef struct			s_shell
 	int					last_status;
 	t_term				term;
 	t_history			*history;
+	t_history			*history_off;
 }						t_shell;
 
 void					handle_signal(int sig);
