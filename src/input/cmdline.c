@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:27:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 15:46:47 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 #include <stdlib.h>
 #include "input.h"
 #include "utils.h"
+
+void	reset_cmdline(t_shell *shell)
+{
+	ft_memset(shell->term.line, 0, shell->term.size + 1);
+	shell->term.size = 0;
+	shell->term.cursor = 0;
+	shell->term.esc_seq = 0;
+	shell->term.seq_off = 0;
+	show_prompt(shell);
+}
 
 int		realloc_cmdline(t_term *term)
 {

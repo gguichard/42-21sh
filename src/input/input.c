@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 15:10:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 15:42:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,7 @@ int	wait_for_command(t_shell *shell)
 	ret = 1;
 	while (ret > 0)
 	{
-		ft_memset(shell->term.line, 0, shell->term.size + 1);
-		shell->term.size = 0;
-		shell->term.cursor = 0;
-		show_prompt(shell);
+		reset_cmdline(shell);
 		if (!(shell->term.legacy_mode))
 			ret = read_input(shell);
 		else

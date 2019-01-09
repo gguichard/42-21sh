@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 14:41:05 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 15:47:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@ void	handle_signal(int sig)
 {
 	if (sig == SIGWINCH)
 		update_winsize(&(g_shell->term));
+	if (sig == SIGINT)
+	{
+		if (g_shell->term.visual_mode)
+			vm_toggle(g_shell, &(g_shell->term));
+		ft_putchar('\n');
+		reset_cmdline(g_shell);
+	}
 }
 
 int		init_shell(t_shell *shell, int argc, char **argv, char **environ)
@@ -49,6 +56,7 @@ int		main(int argc, char **argv, char **environ)
 	g_shell = &shell;
 	if (!init_shell(&shell, argc, argv, environ))
 		return (1);
+	signal(SIGINT, handle_signal);
 	shell.term.legacy_mode = !setup_term(&shell);
 	if (!(shell.term.legacy_mode))
 	{
