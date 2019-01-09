@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 15:42:25 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 16:14:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,15 @@ int	read_input(t_shell *shell)
 {
 	int		ret;
 	char	buf;
+	int		handle;
 
 	while ((ret = read(STDIN_FILENO, &buf, 1)) > 0)
 	{
-		if (buf == 4)
-		{
-			if (handle_eot_key(shell, &(shell->term)))
-				return (0);
-		}
-		else
-		{
-			if (!handle_esc_key(shell, &(shell->term), buf)
-					&& !handle_key_mode(shell, &(shell->term), buf))
-				break ;
-		}
+		if (handle_esc_key(shell, &(shell->term), buf))
+			continue ;
+		handle = handle_key_mode(shell, &(shell->term), buf);
+		if (handle <= 0)
+			return (handle < 0 ? handle : ret);
 	}
 	return (ret);
 }

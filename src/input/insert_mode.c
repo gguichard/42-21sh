@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 15:09:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 16:13:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "autocomplete.h"
 #include "utils.h"
 
-int	try_autocomplete(t_shell *shell, t_term *term)
+int		try_autocomplete(t_shell *shell, t_term *term)
 {
 	t_var				*path;
 	size_t				cursor;
@@ -46,9 +46,25 @@ int	try_autocomplete(t_shell *shell, t_term *term)
 	return (1);
 }
 
-int	handle_key(t_shell *shell, t_term *term, char key)
+int		handle_eot_key(t_shell *shell, t_term *term)
 {
-	if (key == '\n')
+	(void)shell;
+	if (term->size == 0)
+		return (1);
+	tputs(tgetstr("bl", NULL), 1, t_putchar);
+	return (0);
+}
+
+int		handle_key(t_shell *shell, t_term *term, char key)
+{
+	if (key == EOT_KEY)
+		return (handle_eot_key(shell, term) ? -1 : 1);
+	else if (key == BACKSPACE_KEY)
+	{
+		handle_bs_key(shell, term);
+		return (1);
+	}
+	else if (key == '\n')
 	{
 		ft_putchar('\n');
 		return (0);
@@ -57,11 +73,6 @@ int	handle_key(t_shell *shell, t_term *term, char key)
 	{
 		if (!try_autocomplete(shell, term))
 			tputs(tgetstr("bl", NULL), 1, t_putchar);
-		return (1);
-	}
-	else if (key == BACKSPACE_KEY)
-	{
-		handle_bs_key(shell, term);
 		return (1);
 	}
 	insert_cmdline(shell, term, key);
