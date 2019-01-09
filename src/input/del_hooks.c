@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:33:39 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 20:55:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,19 @@ static void	del_on_cursor(t_shell *shell, t_term *term)
 	refresh_prompt_command(shell, term);
 }
 
-void		handle_bs_key(t_shell *shell, t_term *term)
+int			handle_bs_key(t_shell *shell, t_term *term)
 {
 	if (term->cursor <= 0)
-	{
-		tputs(tgetstr("bl", NULL), 1, t_putchar);
-		return ;
-	}
+		return (0);
 	move_cursor_left(shell, term);
 	del_on_cursor(shell, term);
+	return (1);
 }
 
-void		handle_del_key(t_shell *shell, t_term *term)
+int			handle_del_key(t_shell *shell, t_term *term)
 {
 	if (term->cursor >= term->size)
-	{
-		tputs(tgetstr("bl", NULL), 1, t_putchar);
-		return ;
-	}
+		return (0);
 	del_on_cursor(shell, term);
+	return (1);
 }

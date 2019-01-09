@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 15:22:34 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 20:53:29 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,11 @@ int				handle_esc_key(t_shell *shell, t_term *term, char key)
 void			handle_esc_sequence(t_shell *shell, t_term *term
 		, const t_seq *seq)
 {
-	seq->f(shell, term);
+	if (!seq->f(shell, term))
+	{
+		tputs(tgetstr("bl", NULL), 1, t_putchar);
+		return ;
+	}
 	if (term->visual_mode)
 	{
 		if (term->size > 0 && term->cursor >= term->size)

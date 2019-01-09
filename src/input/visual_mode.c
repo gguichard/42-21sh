@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 15:24:50 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 20:51:16 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "input.h"
 #include "utils.h"
 
-void	vm_toggle(t_shell *shell, t_term *term)
+int	vm_toggle(t_shell *shell, t_term *term)
 {
 	term->visual_mode = !(term->visual_mode);
 	if (!(term->visual_mode))
@@ -26,9 +26,10 @@ void	vm_toggle(t_shell *shell, t_term *term)
 			term->cursor = term->size - 1;
 		term->select.begin = term->cursor;
 	}
+	return (1);
 }
 
-void	vm_copy_hook(t_shell *shell, t_term *term, int cut)
+int	vm_copy_hook(t_shell *shell, t_term *term, int cut)
 {
 	size_t	begin;
 	size_t	end;
@@ -50,20 +51,16 @@ void	vm_copy_hook(t_shell *shell, t_term *term, int cut)
 			term->size -= off;
 		}
 	}
+	return (1);
 }
 
-void	vm_paste_hook(t_shell *shell, t_term *term, int before_cursor)
+int	vm_paste_hook(t_shell *shell, t_term *term, int before_cursor)
 {
 	char	*curr;
 
 	curr = term->select.clipboard;
-	if (curr == NULL)
-		return ;
-	if (term->select.begin != term->select.end)
-	{
-		tputs(tgetstr("bl", NULL), 1, t_putchar);
-		return ;
-	}
+	if (curr == NULL || term->select.begin != term->select.end)
+		return (0);
 	term->visual_mode = 0;
 	if (!before_cursor)
 		move_cursor_right(shell, term);
@@ -74,23 +71,27 @@ void	vm_paste_hook(t_shell *shell, t_term *term, int before_cursor)
 	}
 	term->visual_mode = 1;
 	term->select.end = term->cursor;
+	return (1);
 }
 
-int		handle_vm_key(t_shell *shell, t_term *term, char key)
+int	handle_vm_key(t_shell *shell, t_term *term, char key)
 {
-	if (key != 'y' && key != 'd' && key != 'p' && key != 'P')
+	int	ret;
+
+	ret = 0;
+	if (key == 'y')
+		ret = vm_copy_hook(shell, term, 0);
+	else if (key == 'd')
+		ret = vm_copy_hook(shell, term, 1);
+	else if (key == 'p')
+		ret = vm_paste_hook(shell, term, 0);
+	else if (key == 'P')
+		ret = vm_paste_hook(shell, term, 1);
+	if (!ret)
 	{
 		tputs(tgetstr("bl", NULL), 1, t_putchar);
 		return (1);
 	}
-	if (key == 'y')
-		vm_copy_hook(shell, term, 0);
-	else if (key == 'd')
-		vm_copy_hook(shell, term, 1);
-	else if (key == 'p')
-		vm_paste_hook(shell, term, 0);
-	else if (key == 'P')
-		vm_paste_hook(shell, term, 1);
 	vm_toggle(shell, term);
 	return (1);
 }

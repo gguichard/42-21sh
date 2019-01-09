@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 16:10:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 20:46:19 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 typedef struct	s_seq
 {
 	char		*str;
-	void		(*f)(t_shell *shell, t_term *term);
+	int			(*f)(t_shell *shell, t_term *term);
 }				t_seq;
 
 /*
@@ -68,28 +68,28 @@ void			handle_esc_sequence(t_shell *shell, t_term *term
 */
 int				try_autocomplete(t_shell *shell, t_term *term);
 int				handle_eot_key(t_shell *shell, t_term *term);
-void			handle_bs_key(t_shell *shell, t_term *term);
-void			handle_del_key(t_shell *shell, t_term *term);
+int				handle_bs_key(t_shell *shell, t_term *term);
+int				handle_del_key(t_shell *shell, t_term *term);
 int				handle_key(t_shell *shell, t_term *term, char key);
 
 /*
 ** VISUAL MODE.
 */
-void			vm_toggle(t_shell *shell, t_term *term);
-void			vm_copy_hook(t_shell *shell, t_term *term, int cut);
-void			vm_paste_hook(t_shell *shell, t_term *term, int before_cursor);
+int				vm_toggle(t_shell *shell, t_term *term);
+int				vm_copy_hook(t_shell *shell, t_term *term, int cut);
+int				vm_paste_hook(t_shell *shell, t_term *term, int before_cursor);
 int				handle_vm_key(t_shell *shell, t_term *term, char key);
 
 /*
 ** HOOKS.
 */
-void			move_cursor_left(t_shell *shell, t_term *term);
-void			move_cursor_right(t_shell *shell, t_term *term);
-void			move_cursor_home(t_shell *shell, t_term *term);
-void			move_cursor_end(t_shell *shell, t_term *term);
-void			move_cursor_prev_word(t_shell *shell, t_term *term);
-void			move_cursor_next_word(t_shell *shell, t_term *term);
-void			move_cursor_up(t_shell *shell, t_term *term);
-void			move_cursor_down(t_shell *shell, t_term *term);
+int				move_cursor_left(t_shell *shell, t_term *term);
+int				move_cursor_right(t_shell *shell, t_term *term);
+int				move_cursor_home(t_shell *shell, t_term *term);
+int				move_cursor_end(t_shell *shell, t_term *term);
+int				move_cursor_prev_word(t_shell *shell, t_term *term);
+int				move_cursor_next_word(t_shell *shell, t_term *term);
+int				move_cursor_up(t_shell *shell, t_term *term);
+int				move_cursor_down(t_shell *shell, t_term *term);
 
 #endif

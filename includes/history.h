@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 09:50:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:22:25 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 20:45:51 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 
 # include "shell.h"
 
-void					clear_history_entry(t_history *elem);
-void					clear_history(t_shell *shell);
-void					add_history_entry(t_shell *shell, const char *command);
-const char				*peek_history_prev(t_shell *shell);
-const char				*peek_history_next(t_shell *shell);
+void		clear_history_entry(t_history *elem);
+void		clear_history(t_shell *shell);
+void		add_history_entry(t_shell *shell, const char *command);
+const char	*peek_history_prev(t_shell *shell);
+const char	*peek_history_next(t_shell *shell);
 
 /*
 ** HOOKS.
 */
-void					history_up(t_shell *shell, t_term *term);
-void					history_down(t_shell *shell, t_term *term);
+int			history_up(t_shell *shell, t_term *term);
+int			history_down(t_shell *shell, t_term *term);
 
 #endif
