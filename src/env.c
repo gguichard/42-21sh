@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 14:39:11 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/03 18:25:28 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 21:31:29 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,14 @@ t_list	*parse_env(char **environ)
 	ret = 1;
 	while (environ[index] != NULL)
 	{
-		if (!(def = ft_strdup(environ[index])))
+		if (!(def = ft_strdup(environ[index]))
+				|| (sep = ft_strchr(def, '=')) == NULL)
 			ret = 0;
-		if (ret && (sep = ft_strchr(def, '=')) == NULL)
-			ret = 0;
-		*sep = '\0';
-		if (ret && !create_var(&lst, def, sep + 1))
-			ret = 0;
+		else
+		{
+			*sep = '\0';
+			ret = create_var(&lst, def, sep + 1);
+		}
 		free(def);
 		if (!ret)
 			return (ft_lstdel(&lst, free_var));
