@@ -6,12 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:28:21 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 13:31:22 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
 #include "history.h"
+#include "utils.h"
 
 const t_seq		g_seqs[] = {
 	{ESC_DEL_KEY, handle_del_key},
@@ -75,6 +76,11 @@ void			handle_esc_sequence(t_shell *shell, t_term *term
 	seq->f(shell, term);
 	if (term->visual_mode)
 	{
+		if (term->size > 0 && term->cursor >= term->size)
+		{
+			tputs(tgetstr("bl", NULL), 1, t_putchar);
+			term->cursor = term->size - 1;
+		}
 		term->select.end = term->cursor;
 		refresh_prompt_command(shell, term);
 	}

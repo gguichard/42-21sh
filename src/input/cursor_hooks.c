@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:35:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 13:17:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ void	move_cursor_left(t_shell *shell, t_term *term)
 void	move_cursor_right(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->cursor >= term->size
-			|| (term->visual_mode && term->cursor + 1 >= term->size))
+	if (term->cursor >= term->size)
 	{
 		tputs(tgetstr("bl", NULL), 1, t_putchar);
 		return ;

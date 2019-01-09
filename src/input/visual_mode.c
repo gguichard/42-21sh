@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:31:06 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 13:34:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,16 @@
 void	vm_toggle(t_shell *shell, t_term *term)
 {
 	term->visual_mode = !(term->visual_mode);
-	if (!(term->visual_mode))
-		refresh_prompt_command(shell, term);
+	if (term->visual_mode)
+	{
+		tputs(tgetstr("vi", NULL), 1, t_putchar);
+		term->select.begin = term->cursor;
+	}
 	else
 	{
-		if (term->cursor == term->size && term->size > 0)
-			term->cursor = term->size - 1;
-		term->select.begin = term->cursor;
+		term->cursor = ft_min(term->size, term->select.end);
+		refresh_prompt_command(shell, term);
+		tputs(tgetstr("ve", NULL), 1, t_putchar);
 	}
 }
 
@@ -90,8 +93,6 @@ int		handle_vm_key(t_shell *shell, t_term *term, char key)
 		vm_paste_hook(shell, term, 0);
 	else if (key == 'P')
 		vm_paste_hook(shell, term, 1);
-	term->visual_mode = 0;
-	term->cursor = term->select.end;
-	refresh_prompt_command(shell, term);
+	vm_toggle(shell, term);
 	return (1);
 }
