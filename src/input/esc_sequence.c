@@ -6,22 +6,25 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:16:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 10:20:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
+#include "history.h"
 
 const t_seq		g_seqs[] = {
 	{ESC_DEL_KEY, handle_del_key},
 	{ESC_SEQ_LEFT, move_cursor_left},
 	{ESC_SEQ_RIGHT, move_cursor_right},
+	{ESC_SEQ_UP, history_up},
+	{ESC_SEQ_DOWN, history_down},
 	{ESC_HOME_KEY, move_cursor_home},
 	{ESC_END_KEY, move_cursor_end},
-	{ESC_SHIFT_LEFT_KEY, move_cursor_prev_word},
-	{ESC_SHIFT_RIGHT_KEY, move_cursor_next_word},
-	{ESC_SHIFT_UP_KEY, move_cursor_up},
-	{ESC_SHIFT_DOWN_KEY, move_cursor_down},
+	{ESC_SHIFT_LEFT, move_cursor_prev_word},
+	{ESC_SHIFT_RIGHT, move_cursor_next_word},
+	{ESC_SHIFT_UP, move_cursor_up},
+	{ESC_SHIFT_DOWN, move_cursor_down},
 	{ESC_FN_F1, vm_toggle},
 	{NULL, NULL}
 };

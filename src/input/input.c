@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:28:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 10:13:41 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 #include "get_next_line.h"
 #include "shell.h"
 #include "input.h"
+#include "history.h"
 
 int	handle_command(t_shell *shell)
 {
 	ft_printf("COMMAND: %s\n", shell->term.line);
-	ft_strdel(&(shell->term.line));
+	add_history_entry(shell, shell->term.line);
 	return (1);
 }
 

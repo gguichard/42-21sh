@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:35:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 10:16:16 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,22 @@
 # define ESC_SEQ_RIGHT "\033[C"
 # define ESC_SEQ_UP "\033[A"
 # define ESC_SEQ_DOWN "\033[B"
+# define ESC_SEQ_UP "\033[A"
+# define ESC_SEQ_DOWN "\033[B"
 # define ESC_DEL_KEY "\033[3~"
 # define ESC_HOME_KEY "\033[H"
 # define ESC_END_KEY "\033[F"
-# define ESC_SHIFT_LEFT_KEY "\033[1;2D"
-# define ESC_SHIFT_RIGHT_KEY "\033[1;2C"
-# define ESC_SHIFT_UP_KEY "\033[1;2A"
-# define ESC_SHIFT_DOWN_KEY "\033[1;2B"
-# define ESC_ALT_LEFT "\033\033[D"
-# define ESC_ALT_RIGHT "\033\033[C"
+# define ESC_SHIFT_LEFT "\033[1;2D"
+# define ESC_SHIFT_RIGHT "\033[1;2C"
+# define ESC_SHIFT_UP "\033[1;2A"
+# define ESC_SHIFT_DOWN "\033[1;2B"
 # define ESC_FN_F1 "\033OP"
 
 typedef struct	s_seq
 {
 	char		*str;
-	void 		(*f)(t_term *term);
+	void		(*f)(t_term *term);
 }				t_seq;
-
 
 /*
 ** SETUP TERM.

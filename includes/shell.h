@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 14:44:29 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 10:13:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@ typedef struct			s_term
 	t_select			select;
 }						t_term;
 
+typedef struct			s_history
+{
+	char				*content;
+	struct s_history	*prev;
+	struct s_history	*next;
+}						t_history;
+
 typedef struct			s_shell
 {
 	int					argc;
@@ -52,6 +59,7 @@ typedef struct			s_shell
 	t_list				*local;
 	int					last_status;
 	t_term				term;
+	t_history			*history;
 }						t_shell;
 
 typedef struct			s_builtin
