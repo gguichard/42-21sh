@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 11:14:45 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 15:44:10 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/09 09:23:51 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ size_t				def_hash_fun(const char *str)
 
 	hash = 5381;
 	while ((c = *str++))
-	{
 		hash = ((hash << 5) + hash) + c;
-		++str;
-	}
 	return (hash);
 }
 
