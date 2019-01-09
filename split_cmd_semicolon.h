@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_enclosing_char_cmd.h                         :+:      :+:    :+:   */
+/*   split_cmd_semicolon.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/09 09:12:50 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/09 11:49:56 by fwerner          ###   ########.fr       */
+/*   Created: 2019/01/09 13:19:19 by fwerner           #+#    #+#             */
+/*   Updated: 2019/01/09 13:20:30 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHECK_ENCLOSING_CHAR_CMD_H
-# define CHECK_ENCLOSING_CHAR_CMD_H
+#ifndef SPLIT_CMD_SEMICOLON_H
+# define SPLIT_CMD_SEMICOLON_H
 
-# include <stdlib.h>
-# include "str_cmd_inf.h"
+#include "libft.h"
+#include "str_cmd_inf.h"
 
-t_str_cmd_err	check_enclosing_char_cmd(t_str_cmd_inf *str_cmd_inf);
+t_list	*split_cmd_semicolon(t_str_cmd_inf *str_cmd_inf);
 
 #endif
