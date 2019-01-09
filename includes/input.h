@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 12:39:18 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 13:12:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 # define BACKSPACE_KEY 127
 # define ESC_SEQ_LEFT "\033[D"
 # define ESC_SEQ_RIGHT "\033[C"
-# define ESC_SEQ_UP "\033[A"
-# define ESC_SEQ_DOWN "\033[B"
 # define ESC_SEQ_UP "\033[A"
 # define ESC_SEQ_DOWN "\033[B"
 # define ESC_DEL_KEY "\033[3~"
