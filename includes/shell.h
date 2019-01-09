@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 10:13:28 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 12:46:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,27 @@ typedef struct			s_history
 	struct s_history	*next;
 }						t_history;
 
-typedef struct			s_shell
-{
-	int					argc;
-	char				**argv;
-	t_list				*env;
-	t_list				*local;
-	int					last_status;
-	t_term				term;
-	t_history			*history;
-}						t_shell;
-
 typedef struct			s_builtin
 {
 	char				*name;
 	int					(*builtin_fun);
 }						t_builtin;
 
+typedef struct			s_shell
+{
+	int					argc;
+	char				**argv;
+	t_list				*env;
+	t_list				*local;
+	t_builtin			*builtins;
+	int					last_status;
+	t_term				term;
+	t_history			*history;
+}						t_shell;
+
 void					handle_signal(int sig);
+int						init_shell(t_shell *shell, int argc, char **argv
+		, char **environ);
 
 t_list					*parse_env(char **environ);
 

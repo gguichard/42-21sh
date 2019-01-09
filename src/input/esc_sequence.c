@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 10:20:09 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 12:28:21 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ const t_seq		*get_valid_esc_sequence(t_term *term)
 	return (NULL);
 }
 
-int				handle_esc_key(t_term *term, char key)
+int				handle_esc_key(t_shell *shell, t_term *term, char key)
 {
 	const t_seq	*seq;
 	int			is_valid;
@@ -59,7 +59,7 @@ int				handle_esc_key(t_term *term, char key)
 	seq = get_valid_esc_sequence(term);
 	is_valid = seq != NULL && (seq->str)[term->seq_off] == '\0';
 	if (is_valid)
-		handle_esc_sequence(term, seq);
+		handle_esc_sequence(shell, term, seq);
 	if (seq == NULL || is_valid || term->seq_off == MAX_ESC_SEQ_BYTES)
 	{
 		term->esc_seq = 0;
@@ -69,12 +69,13 @@ int				handle_esc_key(t_term *term, char key)
 	return (1);
 }
 
-void			handle_esc_sequence(t_term *term, const t_seq *seq)
+void			handle_esc_sequence(t_shell *shell, t_term *term
+		, const t_seq *seq)
 {
-	seq->f(term);
+	seq->f(shell, term);
 	if (term->visual_mode)
 	{
 		term->select.end = term->cursor;
-		refresh_prompt_command(term);
+		refresh_prompt_command(shell, term);
 	}
 }

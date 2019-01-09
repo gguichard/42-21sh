@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 09:54:41 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 10:42:12 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 12:44:37 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,24 +49,16 @@ void		add_history_entry(t_shell *shell, const char *command)
 {
 	t_history	*elem;
 	t_history	*curr;
-	char		*content;
 
 	elem = (t_history *)malloc(sizeof(t_history));
-	if (elem == NULL)
-		return ;
-	content = ft_strdup(command);
-	if (content == NULL)
+	if (elem == NULL || (elem->content = ft_strdup(command)) == NULL)
 	{
 		free(elem);
 		return ;
 	}
-	elem->content = content;
 	curr = shell->history;
-	if (curr != NULL)
-	{
-		while (curr->next != NULL)
-			curr = curr->next;
-	}
+	while (curr != NULL && curr->next != NULL)
+		curr = curr->next;
 	elem->next = curr;
 	if (curr == NULL)
 	{
@@ -75,8 +67,7 @@ void		add_history_entry(t_shell *shell, const char *command)
 	}
 	else
 	{
-		elem->prev = curr->prev;
-		if (elem->prev != NULL)
+		if ((elem->prev = curr->prev) != NULL)
 			elem->prev->next = elem;
 		curr->prev = elem;
 		shell->history = curr;

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 10:39:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 12:45:39 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,30 @@ void	handle_signal(int sig)
 		update_winsize(&(g_shell->term));
 }
 
+int		init_shell(t_shell *shell, int argc, char **argv, char **environ)
+{
+	shell->argc = argc;
+	shell->argv = argv;
+	shell->env = parse_env(environ);
+	shell->last_status = 0;
+	shell->builtins = NULL;
+	shell->history = NULL;
+	add_history_entry(shell, "");
+	if (shell->history == NULL)
+	{
+		ft_dprintf(2, "unable to init history\n");
+		return (0);
+	}
+	return (1);
+}
+
 int		main(int argc, char **argv, char **environ)
 {
 	t_shell	shell;
 
 	g_shell = &shell;
-	shell.argc = argc;
-	shell.argv = argv;
-	shell.env = parse_env(environ);
-	shell.last_status = 0;
-	shell.history = NULL;
-	add_history_entry(&shell, "");
-	if (shell.history == NULL)
-	{
-		ft_dprintf(2, "unable to init history\n");
+	if (!init_shell(&shell, argc, argv, environ))
 		return (1);
-	}
 	shell.term.legacy_mode = !setup_term(&shell);
 	if (!(shell.term.legacy_mode))
 	{

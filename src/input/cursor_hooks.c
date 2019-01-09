@@ -6,15 +6,16 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 16:08:51 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 12:35:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "utils.h"
 
-void	move_cursor_left(t_term *term)
+void	move_cursor_left(t_shell *shell, t_term *term)
 {
+	(void)shell;
 	if (term->cursor <= 0)
 	{
 		tputs(tgetstr("bl", NULL), 1, t_putchar);
@@ -30,8 +31,9 @@ void	move_cursor_left(t_term *term)
 	(term->cursor)--;
 }
 
-void	move_cursor_right(t_term *term)
+void	move_cursor_right(t_shell *shell, t_term *term)
 {
+	(void)shell;
 	if (term->cursor >= term->size
 			|| (term->visual_mode && term->cursor + 1 >= term->size))
 	{
@@ -48,10 +50,11 @@ void	move_cursor_right(t_term *term)
 	}
 }
 
-void	move_cursor_home(t_term *term)
+void	move_cursor_home(t_shell *shell, t_term *term)
 {
 	int	rows;
 
+	(void)shell;
 	if (term->cursor <= 0)
 		return ;
 	rows = (term->cursor + term->offset) / term->winsize.ws_col;
@@ -61,12 +64,13 @@ void	move_cursor_home(t_term *term)
 	term->cursor = 0;
 }
 
-void	move_cursor_end(t_term *term)
+void	move_cursor_end(t_shell *shell, t_term *term)
 {
 	int	col;
 	int	curr;
 	int	rows;
 
+	(void)shell;
 	if (term->cursor >= term->size)
 		return ;
 	col = (term->size + term->offset) % term->winsize.ws_col;

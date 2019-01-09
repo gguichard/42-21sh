@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 10:16:16 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 12:39:18 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "shell.h"
 
+# define BACKSPACE_KEY 127
 # define ESC_SEQ_LEFT "\033[D"
 # define ESC_SEQ_RIGHT "\033[C"
 # define ESC_SEQ_UP "\033[A"
@@ -33,7 +34,7 @@
 typedef struct	s_seq
 {
 	char		*str;
-	void		(*f)(t_term *term);
+	void		(*f)(t_shell *shell, t_term *term);
 }				t_seq;
 
 /*
@@ -48,43 +49,45 @@ int				update_winsize(t_term *term);
 */
 int				handle_command(t_shell *shell);
 int				wait_for_command(t_shell *shell);
-int				setup_cmdline(t_term *term);
 int				realloc_cmdline(t_term *term);
 void			print_cmdline(t_term *term);
-void			refresh_prompt_command(t_term *term);
-void			insert_cmdline(t_term *term, char key);
-int				handle_key_mode(t_term *term, char key);
-int				handle_key(t_term *term, char key);
+void			refresh_prompt_command(t_shell *shell, t_term *term);
+void			insert_cmdline(t_shell *shell, t_term *term, char key);
+int				handle_key_mode(t_shell *shell, t_term *term, char key);
+
+int				try_autocomplete(t_shell *shell, t_term *term);
+int				handle_key(t_shell *shell, t_term *term, char key);
 
 /*
 ** ESCAPE sequences.
 */
 const t_seq		*get_valid_esc_sequence(t_term *term);
-int				handle_esc_key(t_term *term, char key);
-void			handle_esc_sequence(t_term *term, const t_seq *seq);
+int				handle_esc_key(t_shell *shell, t_term *term, char key);
+void			handle_esc_sequence(t_shell *shell, t_term *term
+		, const t_seq *seq);
 
 /*
 ** VISUAL MODE.
 */
-void			vm_toggle(t_term *term);
-void			vm_copy_hook(t_term *term, int cut);
-void			vm_paste_hook(t_term *term, int before_cursor);
-int				handle_vm_key(t_term *term, char key);
+void			vm_toggle(t_shell *shell, t_term *term);
+void			vm_copy_hook(t_shell *shell, t_term *term, int cut);
+void			vm_paste_hook(t_shell *shell, t_term *term, int before_cursor);
+int				handle_vm_key(t_shell *shell, t_term *term, char key);
 
 /*
 ** HOOKS.
 */
-void			move_cursor_left(t_term *term);
-void			move_cursor_right(t_term *term);
-void			move_cursor_home(t_term *term);
-void			move_cursor_end(t_term *term);
-void			move_cursor_prev_word(t_term *term);
-void			move_cursor_next_word(t_term *term);
-void			move_cursor_up(t_term *term);
-void			move_cursor_down(t_term *term);
+void			move_cursor_left(t_shell *shell, t_term *term);
+void			move_cursor_right(t_shell *shell, t_term *term);
+void			move_cursor_home(t_shell *shell, t_term *term);
+void			move_cursor_end(t_shell *shell, t_term *term);
+void			move_cursor_prev_word(t_shell *shell, t_term *term);
+void			move_cursor_next_word(t_shell *shell, t_term *term);
+void			move_cursor_up(t_shell *shell, t_term *term);
+void			move_cursor_down(t_shell *shell, t_term *term);
 
-int				handle_eot_key(t_term *term);
-void			handle_bs_key(t_term *term);
-void			handle_del_key(t_term *term);
+int				handle_eot_key(t_shell *shell, t_term *term);
+void			handle_bs_key(t_shell *shell, t_term *term);
+void			handle_del_key(t_shell *shell, t_term *term);
 
 #endif
