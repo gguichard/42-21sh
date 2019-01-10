@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 13:27:51 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 13:54:40 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 #include "shell.h"
 #include "autocomplete.h"
 
+/*
+** Renvoie le nombre de premiers caracteres identiques entre les deux strings.
+*/
+
 static size_t	count_same_char(const char *str1, const char *str2)
 {
 	int		count;
@@ -29,6 +33,11 @@ static size_t	count_same_char(const char *str1, const char *str2)
 		++count;
 	return (count);
 }
+
+/*
+** Initialise le contenu du t_ac_rdir_inf avec les informations passes en
+** parametre. Retourne 0 si l'initialisation rate, 1 si elle reussi.
+*/
 
 static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
 		int need_to_be_cmd, int can_be_dir)
@@ -54,6 +63,10 @@ static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
 	return (1);
 }
 
+/*
+** Supprime le contenu du t_ac_rdir_inf.
+*/
+
 static void		delete_ac_rdir(t_ac_rdir_inf *acrd)
 {
 	if (acrd->dir != NULL)
@@ -65,6 +78,12 @@ static void		delete_ac_rdir(t_ac_rdir_inf *acrd)
 	ft_memdel((void**)&(acrd->file_word));
 	ft_memdel((void**)&(acrd->cur_file_path));
 }
+
+/*
+** Remplie les inforamtions du prochain fichier a lire present dans le dossier
+** contenu dans le t_ac_rdir_inf. Retourne 1 si un fichier a ete trouve et 0
+** sinon. Met le suffix du t_ac_suff_inf a NULL s'il y a eu une erreur.
+*/
 
 static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
@@ -89,6 +108,11 @@ static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	return (0);
 }
 
+/*
+** Retourne 1 si le fichier present dans le t_ac_rdir_inf peut etre une
+** autocompletion valide, 0 sinon.
+*/
+
 static int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 {
 	if (acrd->cur_file_name[0] != '.' || acrd->file_word[0] == '.')
@@ -107,6 +131,15 @@ static int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 	}
 	return (0);
 }
+
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
+** les informations de fichier contenues dans le  t_ac_rdir_inf.
+** Si force_file_type est vrai et que l'autocompletion a un type, ce type sera
+** force en tant que fichier.
+** Retourne 0 si l'autocompletion est vide (aucun suffix et aucun type).
+** Retourne 1 sinon.
+*/
 
 static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 		int force_file_type)
@@ -137,6 +170,13 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 	return (!(acs->suff_len == 0 && acs->suff_len == ACS_TYPE_NOTHING));
 }
 
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
+** les informations de fichier contenues dans le  t_ac_rdir_inf.
+** Retourne 0 si l'autocompletion est vide (aucun suffix et aucun type).
+** Retourne 1 sinon.
+*/
+
 static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
 	if (valid_file_for_ac(acrd))
@@ -157,6 +197,11 @@ static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	return (1);
 }
 
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
+** les informations de dossier contenues dans le  t_ac_rdir_inf.
+*/
+
 static void		autocomplete_with_infs(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
 	if ((acrd->dir = opendir(acrd->dir_to_use)) != NULL)
@@ -168,6 +213,12 @@ static void		autocomplete_with_infs(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 		}
 	}
 }
+
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter le word
+** passe en parametre, si is_a_cmd est vrai le suffix ne peut etre qu'un
+** executable ou un dossier.
+*/
 
 static void		autocomplet_from_wordpath(const char *word, int is_a_cmd,
 		t_ac_suff_inf *acs)
@@ -183,6 +234,10 @@ static void		autocomplet_from_wordpath(const char *word, int is_a_cmd,
 	delete_ac_rdir(&acrd);
 }
 
+/*
+** Alloue et retourne une string contenant la concatenation de path + / + file.
+*/
+
 static char		*build_path_to_file(const char *path, const char *file)
 {
 	char	*path_to_file;
@@ -196,6 +251,11 @@ static char		*build_path_to_file(const char *path, const char *file)
 	ft_strcat(path_to_file, file);
 	return (path_to_file);
 }
+
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter une
+** commande builtin.
+*/
 
 static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 		t_builtin **builtin_tab)
@@ -215,6 +275,11 @@ static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 		++builtin_tab;
 	}
 }
+
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter une
+** commande builtin ou se trouvant dans le path.
+*/
 
 static void		autocomplet_cmd(const char *word, char **path_tab,
 		t_builtin **builtin_tab, t_ac_suff_inf *acs)
@@ -238,6 +303,11 @@ static void		autocomplet_cmd(const char *word, char **path_tab,
 		++path_tab;
 	}
 }
+
+/*
+** Initialise le t_ac_suff_inf passe en parametre avec les valeurs par defaut.
+** Retourne 1 si l'initialisation reussi, 0 si elle rate.
+*/
 
 static int		init_ac_suff_inf(t_ac_suff_inf *acs)
 {
