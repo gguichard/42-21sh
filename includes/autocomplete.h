@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 16:29:45 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 16:33:13 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ typedef struct		s_ac_suff_inf
 	char			*suff;
 	long long		suff_len;
 }					t_ac_suff_inf;
+
+void				strlist_insert_sort(t_list **lst, t_list *elem);
 
 /*
 ** Free le contenu de l'ac_suff_inf passe en parametre puis free la structure

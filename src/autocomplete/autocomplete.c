@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 16:29:10 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 16:45:20 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 static size_t	count_same_char(const char *str1, const char *str2)
 {
-	int		count;
+	int	count;
 
 	count = 0;
 	while (str1[count] != '\0' && str1[count] == str2[count])
@@ -42,7 +42,7 @@ static size_t	count_same_char(const char *str1, const char *str2)
 static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
 		int need_to_be_cmd, int can_be_dir)
 {
-	char			*last_slash;
+	char	*last_slash;
 
 	acrd->need_to_be_cmd = need_to_be_cmd;
 	acrd->can_be_dir = can_be_dir;
@@ -167,7 +167,7 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 				acrd->file_word_len, acs->suff);
 		acs->suff[acs->suff_len] = '\0';
 	}
-	return (!(acs->suff_len == 0 && acs->suff_len == ACS_TYPE_NOTHING));
+	return (1);
 }
 
 /*
@@ -210,7 +210,7 @@ static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	if (valid_file_for_ac(acrd))
 	{
 		if ((new_elem = make_new_choice(acrd)) != NULL)
-			ft_lstadd(&(acs->choices), new_elem);
+			strlist_insert_sort(&(acs->choices), new_elem);
 		if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name +
 					acrd->file_word_len, acs->suff, acs->suff_len))
 		{

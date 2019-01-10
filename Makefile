@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/10 12:04:20 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/10 16:35:02 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,9 @@ SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
 			input/insert_mode.c input/visual_mode.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c \
-			autocomplete.c check_enclosing_char_cmd.c split_cmd_semicolon.c \
-			str_cmd_inf.c parser.c
+			autocomplete/autocomplete.c autocomplete/utils.c \
+			check_enclosing_char_cmd.c split_cmd_semicolon.c str_cmd_inf.c \
+			parser.c
 SRC_DIR	=	src
 
 OBJ		=	$(SRC:.c=.o)
@@ -49,6 +50,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(addprefix $(INC_DIR)/,$(INC)) | $(OBJ_DIR)
 $(OBJ_DIR):
 	/bin/mkdir $@
 	/bin/mkdir $@/input
+	/bin/mkdir $@/autocomplete
 
 clean:
 	$(MAKE) -C libft clean
