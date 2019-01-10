@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 15:47:28 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 15:59:23 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ static t_list	*make_new_choice(t_ac_rdir_inf *acrd)
 	t_list	*new_elem;
 
 	tmp_file_name_len = ft_strlen(acrd->cur_file_name);
-	if ((tmp_file_name = (char*)malloc(sizeof(char) * (tmp_file_name_len
+	if ((tmp_file_name = (char*)malloc(sizeof(char) * (1 + tmp_file_name_len
 					+ (S_ISDIR(acrd->stat_buf.st_mode) ? 1 : 0)))) == NULL)
 		return (NULL);
 	ft_memcpy(tmp_file_name, acrd->cur_file_name, tmp_file_name_len + 1);
@@ -191,7 +191,7 @@ static t_list	*make_new_choice(t_ac_rdir_inf *acrd)
 		ft_memcpy(tmp_file_name + tmp_file_name_len, "/", 2);
 		++tmp_file_name_len;
 	}
-	new_elem = ft_lstnew(tmp_file_name, tmp_file_name_len);
+	new_elem = ft_lstnew(tmp_file_name, tmp_file_name_len + 1);
 	free(tmp_file_name);
 	return (new_elem);
 }
