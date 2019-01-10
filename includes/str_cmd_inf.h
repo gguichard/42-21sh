@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 11:48:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 10:28:31 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 11:24:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ typedef struct	s_str_cmd_inf
 	int			is_in_doublequote;
 	int			is_in_var_bracket;
 	size_t		pos;
-	char		*str;
+	const char	*str;
 }				t_str_cmd_inf;
 
 /*
 ** Initialise le str_cmd_inf en mettant les valeurs a 0.
 */
-void			scmd_init(t_str_cmd_inf *str_cmd_inf, char *str);
+void			scmd_init(t_str_cmd_inf *str_cmd_inf, const char *str);
 
 /*
 ** Retourne 1 si le curseur a la position actuelle n'est dans aucun enclosing

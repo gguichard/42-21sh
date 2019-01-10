@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 08:29:46 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/09 11:14:52 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 11:25:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "libft.h"
 #include "check_enclosing_char_cmd.h"
 
-static size_t			count_var_len(char *str)
+static size_t			count_var_len(const char *str)
 {
-	size_t		len;
+	size_t	len;
 
 	len = 0;
 	if (str[len] == '?')
@@ -30,7 +30,7 @@ static size_t			count_var_len(char *str)
 	return (len);
 }
 
-static t_str_cmd_err	check_quote_or_var_bracket_at(char **pos,
+static t_str_cmd_err	check_quote_or_var_bracket_at(const char **pos,
 		t_str_cmd_inf *str_cmd_inf)
 {
 	size_t	var_len;
@@ -57,7 +57,7 @@ static t_str_cmd_err	check_quote_or_var_bracket_at(char **pos,
 	return (SCMDERR_NOERROR);
 }
 
-static int				check_not_inside_quote_or_var_bracket_at(char **pos,
+static int				check_not_inside_quote_or_var_bracket_at(const char **pos,
 		t_str_cmd_inf *str_cmd_inf)
 {
 	if (ft_strchr("\'\"$", **pos) != NULL)
@@ -87,7 +87,7 @@ static int				check_not_inside_quote_or_var_bracket_at(char **pos,
 	return (1);
 }
 
-static t_str_cmd_err	loop_check_while_dquote_or_nothing(char **pos,
+static t_str_cmd_err	loop_check_while_dquote_or_nothing(const char **pos,
 		t_str_cmd_inf *str_cmd_inf)
 {
 	while (**pos != '\0')
@@ -110,7 +110,7 @@ static t_str_cmd_err	loop_check_while_dquote_or_nothing(char **pos,
 t_str_cmd_err			check_enclosing_char_cmd(t_str_cmd_inf *str_cmd_inf)
 {
 	t_str_cmd_err	last_err;
-	char			*cur_pos;
+	const char		*cur_pos;
 
 	cur_pos = str_cmd_inf->str + str_cmd_inf->pos;
 	while (*cur_pos != '\0')

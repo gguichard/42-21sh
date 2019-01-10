@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 12:15:36 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 10:24:54 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 11:23:58 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void		move_to_next_char_not_quote_or_var(t_str_cmd_inf *str_cmd_inf)
 		str_cmd_inf->is_in_var_bracket = 1;
 }
 
-void			scmd_init(t_str_cmd_inf *str_cmd_inf, char *str)
+void			scmd_init(t_str_cmd_inf *str_cmd_inf, const char *str)
 {
 	str_cmd_inf->is_in_quote = 0;
 	str_cmd_inf->is_in_doublequote = 0;

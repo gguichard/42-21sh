@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 11:20:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/09 16:37:11 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 11:26:23 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "split_cmd_semicolon.h"
 
 int		add_cur_cmd_to_lst(t_list **cmd_lst, t_str_cmd_inf *str_cmd_inf,
-		char *cmd_start)
+		const char *cmd_start)
 {
 	t_list	*new_elem;
 	size_t	cur_cmd_size;
@@ -33,8 +33,8 @@ int		add_cur_cmd_to_lst(t_list **cmd_lst, t_str_cmd_inf *str_cmd_inf,
 
 t_list	*split_cmd_semicolon(t_str_cmd_inf *str_cmd_inf)
 {
-	t_list	*cmd_lst;
-	char	*after_last_semicolon;
+	t_list		*cmd_lst;
+	const char	*after_last_semicolon;
 
 	cmd_lst = NULL;
 	after_last_semicolon = str_cmd_inf->str;
