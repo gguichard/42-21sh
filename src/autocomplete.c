@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 15:59:23 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 16:29:10 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,7 +349,7 @@ static int		init_ac_suff_inf(t_ac_suff_inf *acs)
 	return (1);
 }
 
-void			delete_ac_suff_inf(t_ac_suff_inf *acs)
+void			*delete_ac_suff_inf(t_ac_suff_inf *acs)
 {
 	if (acs != NULL)
 	{
@@ -357,6 +357,7 @@ void			delete_ac_suff_inf(t_ac_suff_inf *acs)
 		free(acs->suff);
 		free(acs);
 	}
+	return (NULL);
 }
 
 t_ac_suff_inf	*autocomplet_word(const char *word, int is_a_cmd,
@@ -375,10 +376,7 @@ t_ac_suff_inf	*autocomplet_word(const char *word, int is_a_cmd,
 		else
 		{
 			if ((path_cpy = ft_strdup(path)) == NULL)
-			{
-				delete_ac_suff_inf(acs);
-				return (NULL);
-			}
+				return (delete_ac_suff_inf(acs));
 			path_tab = convert_path_to_tab(path_cpy);
 			if (path_tab != NULL)
 				autocomplet_cmd(word, path_tab, builtin_tab, acs);
@@ -388,6 +386,5 @@ t_ac_suff_inf	*autocomplet_word(const char *word, int is_a_cmd,
 		if (acs->suff != NULL)
 			return (acs);
 	}
-	delete_ac_suff_inf(acs);
-	return (NULL);
+	return (delete_ac_suff_inf(acs));
 }

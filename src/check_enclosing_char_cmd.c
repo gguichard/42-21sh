@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 08:29:46 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 11:25:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/10 16:24:34 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ static t_str_cmd_err	check_quote_or_var_bracket_at(const char **pos,
 	return (SCMDERR_NOERROR);
 }
 
-static int				check_not_inside_quote_or_var_bracket_at(const char **pos,
-		t_str_cmd_inf *str_cmd_inf)
+static int				check_not_inside_quote_or_var_bracket_at(
+		const char **pos, t_str_cmd_inf *str_cmd_inf)
 {
 	if (ft_strchr("\'\"$", **pos) != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 14:19:33 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 16:29:45 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ typedef struct		s_ac_suff_inf
 /*
 ** Free le contenu de l'ac_suff_inf passe en parametre puis free la structure
 ** en elle-meme.
+** Renvoie toujours NULL.
 */
-void				delete_ac_suff_inf(t_ac_suff_inf *acs);
+void				*delete_ac_suff_inf(t_ac_suff_inf *acs);
 
 /*
 ** Malloc et retourne une structure contenant une chaine de caractere a ajouter
