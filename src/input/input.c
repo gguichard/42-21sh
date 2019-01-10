@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 20:43:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/10 14:08:47 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,19 @@
 #include "shell.h"
 #include "input.h"
 #include "history.h"
+#include "parser.h"
 
 int	handle_command(t_shell *shell)
 {
+	t_token	*lst;
+
 	ft_printf("COMMAND: %s\n", shell->term.line);
+	lst = tokenize(shell->term.line);
+	while (lst != NULL)
+	{
+		ft_printf("TOKEN: %s\n", lst->content);
+		lst = lst->next;
+	}
 	if (shell->term.size > 0)
 		add_history_entry(shell, shell->term.line);
 	ft_strdel(&(shell->term.def_line));
