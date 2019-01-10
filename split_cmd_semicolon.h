@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 13:19:19 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/09 16:40:08 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 10:31:19 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include "libft.h"
 # include "str_cmd_inf.h"
 
+/*
+** Retourne la liste des sous commandes de la commande passe en parametres
+** (celles qui sont separees par ';').
+*/
 t_list	*split_cmd_semicolon(t_str_cmd_inf *str_cmd_inf);
 
 #endif
