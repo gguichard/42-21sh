@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 14:44:29 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 14:40:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct			s_term
 	char				seq[MAX_ESC_SEQ_BYTES];
 	int					seq_off;
 	char				*line;
+	char				*def_line;
 	size_t				capacity;
 	size_t				size;
 	size_t				cursor;
@@ -44,15 +45,12 @@ typedef struct			s_term
 	t_select			select;
 }						t_term;
 
-typedef struct			s_shell
+typedef struct			s_history
 {
-	int					argc;
-	char				**argv;
-	t_list				*env;
-	t_list				*local;
-	int					last_status;
-	t_term				term;
-}						t_shell;
+	char				*content;
+	struct s_history	*prev;
+	struct s_history	*next;
+}						t_history;
 
 typedef struct			s_builtin
 {
@@ -60,7 +58,22 @@ typedef struct			s_builtin
 	int					(*builtin_fun);
 }						t_builtin;
 
+typedef struct			s_shell
+{
+	int					argc;
+	char				**argv;
+	t_list				*env;
+	t_list				*local;
+	t_builtin			*builtins;
+	int					last_status;
+	t_term				term;
+	t_history			*history;
+	t_history			*history_off;
+}						t_shell;
+
 void					handle_signal(int sig);
+int						init_shell(t_shell *shell, int argc, char **argv
+		, char **environ);
 
 t_list					*parse_env(char **environ);
 

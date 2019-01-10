@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 16:03:47 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 15:46:47 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,32 @@
 #include "input.h"
 #include "utils.h"
 
-extern t_shell	*g_shell;
+void	reset_cmdline(t_shell *shell)
+{
+	ft_memset(shell->term.line, 0, shell->term.size + 1);
+	shell->term.size = 0;
+	shell->term.cursor = 0;
+	shell->term.esc_seq = 0;
+	shell->term.seq_off = 0;
+	show_prompt(shell);
+}
 
-int				realloc_cmdline(t_term *term)
+int		realloc_cmdline(t_term *term)
 {
 	char	*tmp;
 
-	tmp = (char *)malloc(term->capacity + CMDLINE_CAPACITY + 1);
+	tmp = (char *)ft_memalloc(term->capacity + CMDLINE_CAPACITY + 1);
 	if (tmp == NULL)
 		return (0);
-	ft_memcpy(tmp, term->line, term->size);
+	if (term->line != NULL)
+		ft_memcpy(tmp, term->line, term->size);
 	free(term->line);
 	term->line = tmp;
 	term->capacity += CMDLINE_CAPACITY;
 	return (1);
 }
 
-void			insert_cmdline(t_term *term, char key)
+void	insert_cmdline(t_shell *shell, t_term *term, char key)
 {
 	if (term->size >= term->capacity && !realloc_cmdline(term))
 		return ;
@@ -44,11 +53,11 @@ void			insert_cmdline(t_term *term, char key)
 	(term->size)++;
 	(term->line)[term->size] = '\0';
 	(term->line)[term->cursor] = key;
-	move_cursor_right(term);
-	refresh_prompt_command(term);
+	move_cursor_right(shell, term);
+	refresh_prompt_command(shell, term);
 }
 
-void			refresh_prompt_command(t_term *term)
+void	refresh_prompt_command(t_shell *shell, t_term *term)
 {
 	int	rows;
 	int	curr;
@@ -59,7 +68,7 @@ void			refresh_prompt_command(t_term *term)
 	if (rows > 0)
 		tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
 	tputs(tgetstr("cd", NULL), 1, t_putchar);
-	show_prompt(g_shell);
+	show_prompt(shell);
 	print_cmdline(term);
 	if ((term->size + term->offset) % term->winsize.ws_col == 0)
 	{
@@ -77,7 +86,7 @@ void			refresh_prompt_command(t_term *term)
 	}
 }
 
-void			print_cmdline(t_term *term)
+void	print_cmdline(t_term *term)
 {
 	size_t	select_begin;
 	size_t	select_end;
