@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/29 17:35:18 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/03 13:37:22 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/11 00:39:12 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,8 +32,9 @@ SRC		=	ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c \
 			ft_putnbr.c ft_putnbr_fd.c ft_lstnew.c ft_lstdelone.c \
 			ft_lstdel.c ft_lstfree.c ft_lstadd.c ft_lstpush.c ft_lstpop.c \
 			ft_lstpeek.c ft_lstsize.c ft_lstempty.c ft_lstiter.c ft_lstmap.c \
-			ft_min.c ft_max.c ft_abs.c ft_pow.c ft_llsize.c ft_strtab_free.c \
-			ft_levenshtein.c ft_wcharlen.c ft_wstrlen.c get_next_line.c
+			ft_min.c ft_max.c ft_ceil.c ft_abs.c ft_pow.c ft_llsize.c \
+			ft_strtab_free.c ft_levenshtein.c ft_wcharlen.c ft_wstrlen.c \
+			get_next_line.c
 SRC_DIR	=	src
 
 OBJ		=	$(SRC:.c=.o)

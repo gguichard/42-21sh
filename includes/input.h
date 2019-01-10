@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 20:46:19 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 00:30:07 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,15 @@ typedef struct	s_seq
 	char		*str;
 	int			(*f)(t_shell *shell, t_term *term);
 }				t_seq;
+
+typedef struct	s_ac_format
+{
+	int			elems;
+	int			col_width;
+	int			max_col;
+	int			max_row;
+	t_list		**cols;
+}				t_ac_format;
 
 /*
 ** SETUP TERM.
@@ -66,7 +75,10 @@ void			handle_esc_sequence(t_shell *shell, t_term *term
 /*
 ** INSERT MODE.
 */
-int				try_autocomplete(t_shell *shell, t_term *term);
+void			init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term);
+t_ac_format		*ac_get_format(t_list *lst, t_term *term);
+void			ac_print_list(t_list *lst, t_term *term);
+int				handle_ac(t_shell *shell, t_term *term);
 int				handle_eot_key(t_shell *shell, t_term *term);
 int				handle_bs_key(t_shell *shell, t_term *term);
 int				handle_del_key(t_shell *shell, t_term *term);
