@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 11:20:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 11:26:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/10 13:57:40 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,12 @@
 #include "str_cmd_inf.h"
 #include "split_cmd_semicolon.h"
 
-int		add_cur_cmd_to_lst(t_list **cmd_lst, t_str_cmd_inf *str_cmd_inf,
+/*
+** Ajoute la commande representee par les informations passes en parametre
+** a la liste des commandes. Retourne 1 en cas de succes et 0 en cas d'erreur.
+*/
+
+static int	add_cur_cmd_to_lst(t_list **cmd_lst, t_str_cmd_inf *str_cmd_inf,
 		const char *cmd_start)
 {
 	t_list	*new_elem;
@@ -31,7 +36,7 @@ int		add_cur_cmd_to_lst(t_list **cmd_lst, t_str_cmd_inf *str_cmd_inf,
 	return (1);
 }
 
-t_list	*split_cmd_semicolon(t_str_cmd_inf *str_cmd_inf)
+t_list		*split_cmd_semicolon(t_str_cmd_inf *str_cmd_inf)
 {
 	t_list		*cmd_lst;
 	const char	*after_last_semicolon;
