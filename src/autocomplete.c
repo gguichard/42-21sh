@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 12:10:52 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 13:27:51 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 }
 
 static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
-		int check_dir)
+		int force_file_type)
 {
 	if (acs->suff_len == -1)
 	{
@@ -122,20 +122,19 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 		{
 			ft_memcpy(acs->suff, acrd->cur_file_name + acrd->file_word_len,
 					acs->suff_len + 1);
-			if (check_dir)
-				acs->is_dir = S_ISDIR(acrd->stat_buf.st_mode);
-			else
-				acs->is_dir = 0;
+			acs->suff_type = (force_file_type
+					|| !S_ISDIR(acrd->stat_buf.st_mode))
+				? ACS_TYPE_FILE : ACS_TYPE_DIR;
 		}
 	}
 	else
 	{
-		acs->is_dir = 0;
+		acs->suff_type = ACS_TYPE_NOTHING;
 		acs->suff_len = count_same_char(acrd->cur_file_name +
 				acrd->file_word_len, acs->suff);
 		acs->suff[acs->suff_len] = '\0';
 	}
-	return (!(acs->suff_len == 0 && !acs->is_dir));
+	return (!(acs->suff_len == 0 && acs->suff_len == ACS_TYPE_NOTHING));
 }
 
 static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
@@ -145,14 +144,14 @@ static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 		if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name +
 					acrd->file_word_len, acs->suff, acs->suff_len))
 		{
-			if (!build_ac_suff(acrd, acs, 1))
+			if (!build_ac_suff(acrd, acs, 0))
 			{
 				ft_memdel((void**)&(acrd->cur_file_path));
 				return (0);
 			}
 		}
 		else
-			acs->is_dir = 0;
+			acs->suff_type = ACS_TYPE_NOTHING;
 	}
 	ft_memdel((void**)&(acrd->cur_file_path));
 	return (1);
@@ -163,8 +162,10 @@ static void		autocomplete_with_infs(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	if ((acrd->dir = opendir(acrd->dir_to_use)) != NULL)
 	{
 		while (readdir_to_dirent(acrd, acs))
+		{
 			if (!try_ac_for_this_file(acrd, acs))
 				break ;
+		}
 	}
 }
 
@@ -208,7 +209,7 @@ static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 			if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name +
 						acrd->file_word_len, acs->suff, acs->suff_len))
 			{
-				build_ac_suff(acrd, acs, 0);
+				build_ac_suff(acrd, acs, 1);
 			}
 		}
 		++builtin_tab;
@@ -240,8 +241,7 @@ static void		autocomplet_cmd(const char *word, char **path_tab,
 
 static int		init_ac_suff_inf(t_ac_suff_inf *acs)
 {
-	acs->is_dir = 0;
-	acs->is_file = 0;
+	acs->suff_type = ACS_TYPE_NOTHING;
 	acs->suff_len = -1;
 	if ((acs->suff = ft_strdup("")) == NULL)
 		return (0);
