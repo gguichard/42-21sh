@@ -6,22 +6,26 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:16:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/09 20:53:29 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
+#include "history.h"
+#include "utils.h"
 
 const t_seq		g_seqs[] = {
 	{ESC_DEL_KEY, handle_del_key},
 	{ESC_SEQ_LEFT, move_cursor_left},
 	{ESC_SEQ_RIGHT, move_cursor_right},
+	{ESC_SEQ_UP, history_up},
+	{ESC_SEQ_DOWN, history_down},
 	{ESC_HOME_KEY, move_cursor_home},
 	{ESC_END_KEY, move_cursor_end},
-	{ESC_SHIFT_LEFT_KEY, move_cursor_prev_word},
-	{ESC_SHIFT_RIGHT_KEY, move_cursor_next_word},
-	{ESC_SHIFT_UP_KEY, move_cursor_up},
-	{ESC_SHIFT_DOWN_KEY, move_cursor_down},
+	{ESC_SHIFT_LEFT, move_cursor_prev_word},
+	{ESC_SHIFT_RIGHT, move_cursor_next_word},
+	{ESC_SHIFT_UP, move_cursor_up},
+	{ESC_SHIFT_DOWN, move_cursor_down},
 	{ESC_FN_F1, vm_toggle},
 	{NULL, NULL}
 };
@@ -40,7 +44,7 @@ const t_seq		*get_valid_esc_sequence(t_term *term)
 	return (NULL);
 }
 
-int				handle_esc_key(t_term *term, char key)
+int				handle_esc_key(t_shell *shell, t_term *term, char key)
 {
 	const t_seq	*seq;
 	int			is_valid;
@@ -56,7 +60,7 @@ int				handle_esc_key(t_term *term, char key)
 	seq = get_valid_esc_sequence(term);
 	is_valid = seq != NULL && (seq->str)[term->seq_off] == '\0';
 	if (is_valid)
-		handle_esc_sequence(term, seq);
+		handle_esc_sequence(shell, term, seq);
 	if (seq == NULL || is_valid || term->seq_off == MAX_ESC_SEQ_BYTES)
 	{
 		term->esc_seq = 0;
@@ -66,12 +70,22 @@ int				handle_esc_key(t_term *term, char key)
 	return (1);
 }
 
-void			handle_esc_sequence(t_term *term, const t_seq *seq)
+void			handle_esc_sequence(t_shell *shell, t_term *term
+		, const t_seq *seq)
 {
-	seq->f(term);
+	if (!seq->f(shell, term))
+	{
+		tputs(tgetstr("bl", NULL), 1, t_putchar);
+		return ;
+	}
 	if (term->visual_mode)
 	{
+		if (term->size > 0 && term->cursor >= term->size)
+		{
+			tputs(tgetstr("bl", NULL), 1, t_putchar);
+			term->cursor = term->size - 1;
+		}
 		term->select.end = term->cursor;
-		refresh_prompt_command(term);
+		refresh_prompt_command(shell, term);
 	}
 }
