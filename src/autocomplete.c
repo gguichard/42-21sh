@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 13:54:40 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 15:47:28 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,32 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 }
 
 /*
+** Alloue et retourne un nouvel element representant un choix valide pour
+** l'autocompletion.
+*/
+
+static t_list	*make_new_choice(t_ac_rdir_inf *acrd)
+{
+	char	*tmp_file_name;
+	size_t	tmp_file_name_len;
+	t_list	*new_elem;
+
+	tmp_file_name_len = ft_strlen(acrd->cur_file_name);
+	if ((tmp_file_name = (char*)malloc(sizeof(char) * (tmp_file_name_len
+					+ (S_ISDIR(acrd->stat_buf.st_mode) ? 1 : 0)))) == NULL)
+		return (NULL);
+	ft_memcpy(tmp_file_name, acrd->cur_file_name, tmp_file_name_len + 1);
+	if (S_ISDIR(acrd->stat_buf.st_mode))
+	{
+		ft_memcpy(tmp_file_name + tmp_file_name_len, "/", 2);
+		++tmp_file_name_len;
+	}
+	new_elem = ft_lstnew(tmp_file_name, tmp_file_name_len);
+	free(tmp_file_name);
+	return (new_elem);
+}
+
+/*
 ** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
 ** les informations de fichier contenues dans le  t_ac_rdir_inf.
 ** Retourne 0 si l'autocompletion est vide (aucun suffix et aucun type).
@@ -179,8 +205,12 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 
 static int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
+	t_list	*new_elem;
+
 	if (valid_file_for_ac(acrd))
 	{
+		if ((new_elem = make_new_choice(acrd)) != NULL)
+			ft_lstadd(&(acs->choices), new_elem);
 		if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name +
 					acrd->file_word_len, acs->suff, acs->suff_len))
 		{
@@ -311,6 +341,7 @@ static void		autocomplet_cmd(const char *word, char **path_tab,
 
 static int		init_ac_suff_inf(t_ac_suff_inf *acs)
 {
+	acs->choices = NULL;
 	acs->suff_type = ACS_TYPE_NOTHING;
 	acs->suff_len = -1;
 	if ((acs->suff = ft_strdup("")) == NULL)
@@ -320,8 +351,12 @@ static int		init_ac_suff_inf(t_ac_suff_inf *acs)
 
 void			delete_ac_suff_inf(t_ac_suff_inf *acs)
 {
-	free(acs->suff);
-	free(acs);
+	if (acs != NULL)
+	{
+		ft_lstfree(&(acs->choices));
+		free(acs->suff);
+		free(acs);
+	}
 }
 
 t_ac_suff_inf	*autocomplet_word(const char *word, int is_a_cmd,

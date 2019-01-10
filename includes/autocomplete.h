@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 13:27:20 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 14:19:33 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <dirent.h>
 # include <sys/stat.h>
+# include "libft.h"
 # include "shell.h"
 
 typedef enum		e_ac_suff_type
@@ -39,6 +40,7 @@ typedef struct		s_ac_rdir_inf
 
 typedef struct		s_ac_suff_inf
 {
+	t_list			*choices;
 	t_ac_suff_type	suff_type;
 	char			*suff;
 	long long		suff_len;
