@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 14:32:32 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 12:11:52 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,28 @@ typedef struct		s_ac_rdir_inf
 typedef struct		s_ac_suff_inf
 {
 	int				is_dir;
+	int				is_file;
 	char			*suff;
 	long long		suff_len;
 }					t_ac_suff_inf;
 
 /*
-** Malloc et retourne une chaine de caractere a ajouter a word pour arriver au
-** plus grand prefix commun des mots possibles, une chaine vide s'il n'y
-** en a pas et NULL s'il y a eu une erreur. Le parametre is_a_cmd doit valoir
-** true si le word doit etre un executable, false s'il peut etre un fichier
-** quelconque.
+** Free le contenu de l'ac_suff_inf passe en parametre puis free la structure
+** en elle-meme.
 */
-char				*autocomplet_word(const char *word, int is_a_cmd,
+void				delete_ac_suff_inf(t_ac_suff_inf *acs);
+
+/*
+** Malloc et retourne une structure contenant une chaine de caractere a ajouter
+** a word pour arriver au plus grand prefix commun des mots possibles, une
+** chaine vide s'il n'y en a pas et NULL s'il y a eu une erreur.
+** Les variable is_dir et is_file sont set si le suffix represente
+** respectivement un dossier ou un fichier (pour l'ajout d'un slash ou
+** d'un espace final).
+** Le parametre is_a_cmd doit valoir true si le word doit etre un executable,
+** false s'il peut etre un fichier quelconque.
+*/
+t_ac_suff_inf		*autocomplet_word(const char *word, int is_a_cmd,
 		const char *path, t_builtin **builtin_tab);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 14:33:36 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/10 12:10:52 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 		free(acs->suff);
 		acs->suff_len = ft_strlen(acrd->cur_file_name + acrd->file_word_len);
 		if ((acs->suff =
-					(char*)malloc(sizeof(char) * (acs->suff_len + 2))) == NULL)
+					(char*)malloc(sizeof(char) * (acs->suff_len + 1))) == NULL)
 			acs->suff_len = 0;
 		else
 		{
@@ -168,25 +168,18 @@ static void		autocomplete_with_infs(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	}
 }
 
-static char		*autocomplet_from_wordpath(const char *word, int is_a_cmd)
+static void		autocomplet_from_wordpath(const char *word, int is_a_cmd,
+		t_ac_suff_inf *acs)
 {
 	t_ac_rdir_inf	acrd;
-	t_ac_suff_inf	acs;
 
 	if (!init_ac_rdir(word, &acrd, is_a_cmd, 1))
-		return (NULL);
-	acs.is_dir = 0;
-	acs.suff_len = -1;
-	if ((acs.suff = ft_strdup("")) == NULL)
 	{
-		delete_ac_rdir(&acrd);
-		return (NULL);
+		ft_memdel((void**)&(acs->suff));
+		return ;
 	}
-	autocomplete_with_infs(&acrd, &acs);
+	autocomplete_with_infs(&acrd, acs);
 	delete_ac_rdir(&acrd);
-	if (acs.is_dir && acs.suff != NULL)
-		ft_memcpy(acs.suff + acs.suff_len, "/", 2);
-	return (acs.suff);
 }
 
 static char		*build_path_to_file(const char *path, const char *file)
@@ -222,54 +215,74 @@ static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 	}
 }
 
-static char		*autocomplet_cmd(const char *word, char **path_tab,
-		t_builtin **builtin_tab)
+static void		autocomplet_cmd(const char *word, char **path_tab,
+		t_builtin **builtin_tab, t_ac_suff_inf *acs)
 {
 	t_ac_rdir_inf	acrd;
-	t_ac_suff_inf	acs;
 	char			*real_word;
 
-	acs.is_dir = 0;
-	acs.suff_len = -1;
-	if ((acs.suff = ft_strdup("")) == NULL)
-		return (NULL);
-	check_for_builtin_ac(&acrd, &acs, builtin_tab);
+	check_for_builtin_ac(&acrd, acs, builtin_tab);
 	while (*path_tab != NULL)
 	{
 		if ((real_word = build_path_to_file(*path_tab, word)) == NULL
 				|| !init_ac_rdir(real_word, &acrd, 1, 1))
 		{
 			free(real_word);
-			free(acs.suff);
-			return (NULL);
+			ft_memdel((void**)&(acs->suff));
+			return ;
 		}
-		autocomplete_with_infs(&acrd, &acs);
+		autocomplete_with_infs(&acrd, acs);
 		free(real_word);
 		delete_ac_rdir(&acrd);
 		++path_tab;
 	}
-	return (acs.suff);
 }
 
-char			*autocomplet_word(const char *word, int is_a_cmd,
+static int		init_ac_suff_inf(t_ac_suff_inf *acs)
+{
+	acs->is_dir = 0;
+	acs->is_file = 0;
+	acs->suff_len = -1;
+	if ((acs->suff = ft_strdup("")) == NULL)
+		return (0);
+	return (1);
+}
+
+void			delete_ac_suff_inf(t_ac_suff_inf *acs)
+{
+	free(acs->suff);
+	free(acs);
+}
+
+t_ac_suff_inf	*autocomplet_word(const char *word, int is_a_cmd,
 		const char *path, t_builtin **builtin_tab)
 {
-	char	*word_suffix;
-	char	*path_cpy;
-	char	**path_tab;
+	t_ac_suff_inf	*acs;
+	char			*path_cpy;
+	char			**path_tab;
 
-	word_suffix = NULL;
-	if (!is_a_cmd || ft_strchr(word, '/') != NULL)
-		word_suffix = autocomplet_from_wordpath(word, is_a_cmd);
-	else
+	if ((acs = (t_ac_suff_inf*)malloc(sizeof(t_ac_suff_inf))) == NULL)
+		return (NULL);
+	if (init_ac_suff_inf(acs))
 	{
-		if ((path_cpy = ft_strdup(path)) == NULL)
-			return (NULL);
-		path_tab = convert_path_to_tab(path_cpy);
-		if (path_tab != NULL)
-			word_suffix = autocomplet_cmd(word, path_tab, builtin_tab);
-		free(path_tab);
-		free(path_cpy);
+		if (!is_a_cmd || ft_strchr(word, '/') != NULL)
+			autocomplet_from_wordpath(word, is_a_cmd, acs);
+		else
+		{
+			if ((path_cpy = ft_strdup(path)) == NULL)
+			{
+				delete_ac_suff_inf(acs);
+				return (NULL);
+			}
+			path_tab = convert_path_to_tab(path_cpy);
+			if (path_tab != NULL)
+				autocomplet_cmd(word, path_tab, builtin_tab, acs);
+			free(path_tab);
+			free(path_cpy);
+		}
+		if (acs->suff != NULL)
+			return (acs);
 	}
-	return (word_suffix);
+	delete_ac_suff_inf(acs);
+	return (NULL);
 }

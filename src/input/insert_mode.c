@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 20:57:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/10 12:10:09 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	try_autocomplete(t_shell *shell, t_term *term)
 {
 	t_var				*path;
 	size_t				cursor;
-	char				*result;
+	t_ac_suff_inf		*result;
 	char				*curr;
 
 	if ((path = get_var(shell->env, "PATH")) == NULL)
@@ -31,18 +31,18 @@ int	try_autocomplete(t_shell *shell, t_term *term)
 		cursor--;
 	result = autocomplet_word(&(term->line[cursor]), 1, path->value
 			, &(shell->builtins));
-	if (result == NULL || result[0] == '\0')
+	if (result == NULL || result->suff == NULL || result->suff[0] == '\0')
 	{
-		free(result);
+		delete_ac_suff_inf(result);
 		return (0);
 	}
-	curr = result;
+	curr = result->suff;
 	while (*curr != '\0')
 	{
 		insert_cmdline(shell, term, *curr);
 		curr++;
 	}
-	free(result);
+	delete_ac_suff_inf(result);
 	return (1);
 }
 
