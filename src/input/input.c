@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 09:38:21 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 12:47:48 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,47 @@
 #include "input.h"
 #include "history.h"
 
+//TODO SUPPRIMER
+#include "check_enclosing_char_cmd.h"
+#include "split_cmd_semicolon.h"
+#include "str_cmd_inf.h"
+//FIN
+
 int	handle_command(t_shell *shell)
 {
 	ft_printf("COMMAND: %s\n", shell->term.line);
+	//TODO SUPPRIMER
+	{
+		t_str_cmd_inf str_cmd_inf;
+		scmd_init(&str_cmd_inf, shell->term.line);
+		t_str_cmd_err str_cmd_err = check_enclosing_char_cmd(&str_cmd_inf);
+		ft_printf("ENCLOSING CHAR ERROR: ");
+		if (str_cmd_err == SCMDERR_ENDTOOSOON)
+		{
+			ft_printf("END_TO_SOON\n");
+		}
+		else if (str_cmd_err == SCMDERR_BADCHAR)
+		{
+			ft_printf("BAD_CHAR\n");
+		}
+		else if (str_cmd_err == SCMDERR_NOERROR)
+		{
+			ft_printf("NOTHING\n");
+			t_list *all_sub_cmd = split_cmd_semicolon(&str_cmd_inf);
+			t_list *cur_sub_cmd = all_sub_cmd;
+			while (cur_sub_cmd != NULL)
+			{
+				ft_printf("SUB_COMMAND: %s\n", (char*)cur_sub_cmd->content);
+				cur_sub_cmd = cur_sub_cmd->next;
+			}
+			ft_lstfree(&all_sub_cmd);
+		}
+		else
+		{
+			ft_printf("UNKNOWN_ERROR\n");
+		}
+	}
+	//FIN
 	if (shell->term.size > 0)
 		add_history_entry(shell, shell->term.line);
 	ft_strdel(&(shell->term.def_line));
