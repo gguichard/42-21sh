@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 09:54:41 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 15:06:24 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 09:35:48 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ void		clear_history_entry(t_history *elem)
 void		clear_history(t_shell *shell)
 {
 	t_history	*curr;
-	t_history	*next;
+	t_history	*prev;
 
 	curr = shell->history;
 	while (curr != NULL)
 	{
-		next = curr->next;
+		prev = curr->prev;
 		clear_history_entry(curr);
-		curr = next;
+		curr = prev;
 	}
 	shell->history = NULL;
 	shell->history_off = NULL;

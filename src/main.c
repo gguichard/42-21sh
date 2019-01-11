@@ -6,16 +6,18 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 00:42:45 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 09:33:22 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/ioctl.h>
 #include "shell.h"
 #include "input.h"
 #include "history.h"
+#include "vars.h"
 #include "printf.h"
 
 t_shell	*g_shell = NULL;
@@ -38,6 +40,7 @@ int		init_shell(t_shell *shell, int argc, char **argv, char **environ)
 	shell->argc = argc;
 	shell->argv = argv;
 	shell->env = parse_env(environ);
+	shell->local = NULL;
 	shell->last_status = 0;
 	shell->builtins = NULL;
 	shell->history = NULL;
@@ -69,5 +72,9 @@ int		main(int argc, char **argv, char **environ)
 	}
 	wait_for_command(&shell);
 	reset_term(&shell);
+	free(shell.term.line);
+	ft_lstdel(&(shell.env), free_var);
+	ft_lstdel(&(shell.local), free_var);
+	clear_history(&shell);
 	return (0);
 }
