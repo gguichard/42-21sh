@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 10:16:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 20:52:36 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 11:22:57 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	history_copy(t_shell *shell, t_term *term, const char *line)
 	term->size = ft_strlen(line);
 	term->cursor = term->size;
 	ft_memcpy(term->line, line, term->size + 1);
-	refresh_prompt_command(shell, term);
+	refresh_cmdline(shell, term);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 00:30:07 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 11:20:50 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define INPUT_H
 
 # include "shell.h"
+# include "autocomplete.h"
 
 # define EOT_KEY 4
 # define BACKSPACE_KEY 127
@@ -59,8 +60,8 @@ int				handle_command(t_shell *shell);
 int				wait_for_command(t_shell *shell);
 void			reset_cmdline(t_shell *shell);
 int				realloc_cmdline(t_term *term);
-void			print_cmdline(t_term *term);
-void			refresh_prompt_command(t_shell *shell, t_term *term);
+void			refresh_cmdline(t_shell *shell, t_term *term);
+void			print_cmdline(t_shell *shell, t_term *term);
 void			insert_cmdline(t_shell *shell, t_term *term, char key);
 int				handle_key_mode(t_shell *shell, t_term *term, char key);
 
@@ -78,6 +79,7 @@ void			handle_esc_sequence(t_shell *shell, t_term *term
 void			init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term);
 t_ac_format		*ac_get_format(t_list *lst, t_term *term);
 void			ac_print_list(t_list *lst, t_term *term);
+void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result);
 int				handle_ac(t_shell *shell, t_term *term);
 int				handle_eot_key(t_shell *shell, t_term *term);
 int				handle_bs_key(t_shell *shell, t_term *term);

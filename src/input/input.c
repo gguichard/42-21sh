@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 09:34:10 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 09:38:21 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,11 @@ int	read_input(t_shell *shell)
 	while ((ret = read(STDIN_FILENO, &buf, 1)) > 0)
 	{
 		if (handle_esc_key(shell, &(shell->term), buf))
+		{
+			if (!(shell->term.visual_mode))
+				shell->term.ac_flag = 0;
 			continue ;
+		}
 		handle = handle_key_mode(shell, &(shell->term), buf);
 		if (handle <= 0)
 			return (handle < 0 ? handle : ret);
