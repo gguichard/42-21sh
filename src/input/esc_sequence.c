@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 11:23:09 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 12:29:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ const t_seq		g_seqs[] = {
 	{ESC_SEQ_RIGHT, move_cursor_right},
 	{ESC_SEQ_UP, history_up},
 	{ESC_SEQ_DOWN, history_down},
+	{ESC_SEQ_PAGEUP, history_up},
+	{ESC_SEQ_PAGEDOWN, history_down},
 	{ESC_HOME_KEY, move_cursor_home},
 	{ESC_END_KEY, move_cursor_end},
 	{ESC_SHIFT_LEFT, move_cursor_prev_word},

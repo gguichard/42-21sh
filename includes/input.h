@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 11:20:50 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 12:29:27 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # define ESC_SEQ_RIGHT "\033[C"
 # define ESC_SEQ_UP "\033[A"
 # define ESC_SEQ_DOWN "\033[B"
+# define ESC_SEQ_PAGEUP "\033[5~"
+# define ESC_SEQ_PAGEDOWN "\033[6~"
 # define ESC_DEL_KEY "\033[3~"
 # define ESC_HOME_KEY "\033[H"
 # define ESC_END_KEY "\033[F"
