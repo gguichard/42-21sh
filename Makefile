@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/11 10:06:57 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/11 23:35:50 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,10 @@ SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
 			input/esc_sequence.c input/history.c input/history_hooks.c \
 			input/insert_mode.c input/insert_mode_ac.c input/visual_mode.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
+			parser/parser.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
 			check_enclosing_char_cmd.c split_cmd_semicolon.c str_cmd_inf.c
-			
 SRC_DIR	=	src
 
 OBJ		=	$(SRC:.c=.o)
@@ -51,11 +51,11 @@ $(OBJ_DIR):
 	/bin/mkdir $@
 	/bin/mkdir $@/input
 	/bin/mkdir $@/autocomplete
+	/bin/mkdir $@/parser
 
 clean:
 	$(MAKE) -C libft clean
 	/bin/rm -rf $(OBJ_DIR)
-	/bin/rm -rf $(OBJ_DIR)/input
 
 fclean: clean
 	$(MAKE) -C libft fclean

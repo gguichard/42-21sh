@@ -6,10 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 18:25:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 23:35:07 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "token_inf.h"
 #include "printf.h"
 
@@ -22,7 +23,7 @@ void	next_token(t_list **tokens)
 
 int		accept_token(t_list **tokens, t_token_type type)
 {
-	if (*tokens != NULL && (*tokens)->type == type)
+	if (*tokens != NULL && ((t_token_inf *)((*tokens)->content))->type == type)
 	{
 		next_token(tokens);
 		return (1);
@@ -62,7 +63,7 @@ void	split_commands(t_list *tokens)
 	while (tokens != NULL)
 	{
 		inf = (t_token_inf *)tokens->content;
-		if (inf->type == TK_OPE && ft_strequ(inf->content, ";"))
+		if (inf->type == TK_OPE && ft_strequ(inf->token, ";"))
 		{
 			if (prev != NULL)
 				prev->next = NULL;
