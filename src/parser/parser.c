@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 16:24:19 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/11 18:25:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int		accept_token(t_list **tokens, t_token_type type)
 	return (0);
 }
 
-int		except_token(t_list **tokens, t_token_type type)
+int		expect_token(t_list **tokens, t_token_type type)
 {
 	if (accept_token(tokens, type))
 		return (1);
-	ft_printf("unexcepted token\n");
+	ft_printf("unexpected token\n");
 	return (0);
 }
 
@@ -42,6 +42,12 @@ void	parse_command(t_list **tokens)
 {
 	while (accept_token(tokens, TK_WORD))
 	{
+		if (accept_token(tokens, TK_NUM_OPT)
+				&& (!expect_token(tokens, TK_OPE)
+					|| !expect_token(tokens, TK_WORD)))
+			return ;
+		if (accept_token(tokens, TK_OPE) && !expect_token(tokens, TK_WORD))
+			return ;
 	}
 }
 
