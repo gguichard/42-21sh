@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/12 16:33:54 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/12 21:19:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "shell.h"
 #include "input.h"
 #include "history.h"
+#include "parser.h"
 
 //TODO SUPPRIMER
 #include "split_cmd_token.h"
@@ -23,44 +24,49 @@
 #include "token_inf.h"
 //FIN
 
+//TODO SUPPRIMER
+void	debug_tokens(t_list *all_sub_cmd)
+{
+	while (all_sub_cmd != NULL)
+	{
+		ft_printf("TOKEN:\n");
+		if (((t_token_inf*)all_sub_cmd->content)->type == TK_WORD)
+		{
+			ft_printf("   =WORD\n");
+		}
+		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_NUM_OPT)
+		{
+			ft_printf("   =NUM_OPT\n");
+		}
+		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_OPE)
+		{
+			ft_printf("   =OPE\n");
+		}
+		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_CMD_SEP)
+		{
+			ft_printf("   =CMD_SEP\n");
+		}
+		else
+		{
+			ft_printf("   =ERROR\n");
+		}
+		ft_printf("      =%s=\n", ((t_token_inf*)all_sub_cmd->content)->token);
+		all_sub_cmd = all_sub_cmd->next;
+	}
+}
+//FIN
+
 int	handle_command(t_shell *shell)
 {
+	t_str_cmd_inf	str_cmd_inf;
+	t_list 			*all_sub_cmd; 
+
 	ft_printf("COMMAND: %s\n", shell->term.line);
-	//TODO SUPPRIMER
-	{
-		t_str_cmd_inf str_cmd_inf;
-		scmd_init(&str_cmd_inf, shell->term.line);
-		t_list *all_sub_cmd = split_cmd_token(&str_cmd_inf);
-		t_list *cur_sub_cmd = all_sub_cmd;
-		while (cur_sub_cmd != NULL)
-		{
-			ft_printf("TOKEN:\n");
-			if (((t_token_inf*)cur_sub_cmd->content)->type == TK_WORD)
-			{
-				ft_printf("   =WORD\n");
-			}
-			else if (((t_token_inf*)cur_sub_cmd->content)->type == TK_NUM_OPT)
-			{
-				ft_printf("   =NUM_OPT\n");
-			}
-			else if (((t_token_inf*)cur_sub_cmd->content)->type == TK_OPE)
-			{
-				ft_printf("   =OPE\n");
-			}
-			else if (((t_token_inf*)cur_sub_cmd->content)->type == TK_CMD_SEP)
-			{
-				ft_printf("   =CMD_SEP\n");
-			}
-			else
-			{
-				ft_printf("   =ERROR\n");
-			}
-			ft_printf("      =%s=\n", ((t_token_inf*)cur_sub_cmd->content)->token);
-			cur_sub_cmd = cur_sub_cmd->next;
-		}
-		ft_lstfree(&all_sub_cmd);
-	}
-	//FIN
+	scmd_init(&str_cmd_inf, shell->term.line);
+	all_sub_cmd = split_cmd_token(&str_cmd_inf);
+	debug_tokens(all_sub_cmd);
+	split_commands(all_sub_cmd);
+	ft_lstfree(&all_sub_cmd);
 	if (shell->term.size > 0)
 		add_history_entry(shell, shell->term.line);
 	ft_strdel(&(shell->term.def_line));

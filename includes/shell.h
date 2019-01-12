@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 00:42:11 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/12 21:36:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <term.h>
 
+# define ERR_PREFIX "21sh"
 # define MAX_ESC_SEQ_BYTES 8
 # define CMDLINE_CAPACITY 1024
 

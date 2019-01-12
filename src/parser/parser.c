@@ -6,10 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/12 15:55:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/12 21:39:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "shell.h"
 #include "libft.h"
 #include "parser.h"
 #include "printf.h"
@@ -33,9 +34,15 @@ int		accept_token(t_list **tokens, t_token_type type)
 
 int		expect_token(t_list **tokens, t_token_type type)
 {
+	char	*curr;
+
 	if (accept_token(tokens, type))
 		return (1);
-	ft_printf("unexpected token\n");
+	curr = "newline";
+	if (*tokens != NULL)
+		curr = ((t_token_inf *)(*tokens)->content)->token;
+	ft_dprintf(2, "%s: syntax error near unexpected token `%s'\n"
+			, ERR_PREFIX, curr);
 	return (0);
 }
 
@@ -50,28 +57,16 @@ void	parse_command(t_list **tokens)
 		if (accept_token(tokens, TK_OPE) && !expect_token(tokens, TK_WORD))
 			return ;
 	}
+	if (accept_token(tokens, TK_CMD_SEP))
+		parse_command(tokens);
+	else if (*tokens != NULL)
+	{
+		ft_dprintf(2, "%s: syntax error near unexpected token `newline'\n"
+				, ERR_PREFIX);
+	}
 }
 
 void	split_commands(t_list *tokens)
 {
-	t_list		*start;
-	t_list		*prev;
-	t_token_inf	*inf;
-
-	start = tokens;
-	prev = NULL;
-	while (tokens != NULL)
-	{
-		inf = (t_token_inf *)tokens->content;
-		if (tokens->next == NULL
-				|| (inf->type == TK_OPE && ft_strequ(inf->token, ";")))
-		{
-			if (prev != NULL)
-				prev->next = NULL;
-			parse_command(&tokens);
-			start = tokens->next;
-		}
-		prev = tokens;
-		tokens = tokens->next;
-	}
+	parse_command(&tokens);
 }
