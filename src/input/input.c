@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 12:47:48 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/12 12:48:33 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 #include "history.h"
 
 //TODO SUPPRIMER
-#include "check_enclosing_char_cmd.h"
-#include "split_cmd_semicolon.h"
+#include "split_cmd_token.h"
 #include "str_cmd_inf.h"
+#include "token_inf.h"
 //FIN
 
 int	handle_command(t_shell *shell)
@@ -30,32 +30,31 @@ int	handle_command(t_shell *shell)
 	{
 		t_str_cmd_inf str_cmd_inf;
 		scmd_init(&str_cmd_inf, shell->term.line);
-		t_str_cmd_err str_cmd_err = check_enclosing_char_cmd(&str_cmd_inf);
-		ft_printf("ENCLOSING CHAR ERROR: ");
-		if (str_cmd_err == SCMDERR_ENDTOOSOON)
+		t_list *all_sub_cmd = split_cmd_token(&str_cmd_inf);
+		t_list *cur_sub_cmd = all_sub_cmd;
+		while (cur_sub_cmd != NULL)
 		{
-			ft_printf("END_TO_SOON\n");
-		}
-		else if (str_cmd_err == SCMDERR_BADCHAR)
-		{
-			ft_printf("BAD_CHAR\n");
-		}
-		else if (str_cmd_err == SCMDERR_NOERROR)
-		{
-			ft_printf("NOTHING\n");
-			t_list *all_sub_cmd = split_cmd_semicolon(&str_cmd_inf);
-			t_list *cur_sub_cmd = all_sub_cmd;
-			while (cur_sub_cmd != NULL)
+			ft_printf("TOKEN:\n");
+			if (((t_token_inf*)cur_sub_cmd->content)->type == TK_WORD)
 			{
-				ft_printf("SUB_COMMAND: %s\n", (char*)cur_sub_cmd->content);
-				cur_sub_cmd = cur_sub_cmd->next;
+				ft_printf("   |WORD\n");
 			}
-			ft_lstfree(&all_sub_cmd);
+			else if (((t_token_inf*)cur_sub_cmd->content)->type == TK_NUM_OPT)
+			{
+				ft_printf("   |NUM_OPT\n");
+			}
+			else if (((t_token_inf*)cur_sub_cmd->content)->type == TK_OPE)
+			{
+				ft_printf("   |OPE\n");
+			}
+			else
+			{
+				ft_printf("   |ERROR\n");
+			}
+			ft_printf("      |%s\n", ((t_token_inf*)cur_sub_cmd->content)->token);
+			cur_sub_cmd = cur_sub_cmd->next;
 		}
-		else
-		{
-			ft_printf("UNKNOWN_ERROR\n");
-		}
+		ft_lstfree(&all_sub_cmd);
 	}
 	//FIN
 	if (shell->term.size > 0)
