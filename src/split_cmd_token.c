@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/12 13:08:21 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/12 16:15:00 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,21 @@ static int	cur_token_is_number(t_str_cmd_inf *str_cmd_inf,
 	return (1);
 }
 
+static int	get_cur_token_len(const char *token_start)
+{
+	size_t	len;
+
+	len = 0;
+	if (is_a_sep_char(*token_start))
+	{
+		++len;
+		if ((*token_start == '>' || *token_start == '<')
+				&& *token_start == token_start[1])
+			++len;
+	}
+	return (len);
+}
+
 t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 {
 	int				last_char_was_sep;
@@ -92,6 +107,7 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 					&& str_cmd_inf->str[str_cmd_inf->pos] != '\t')
 			{
 				token_type = TK_OPE;
+				str_cmd_inf->pos += get_cur_token_len(token_start) - 1;
 				if (!add_cur_token_to_lst(&token_lst, str_cmd_inf,
 							token_start, token_type))
 					return (ft_lstfree(&token_lst));
