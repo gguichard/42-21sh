@@ -6,12 +6,12 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 23:35:07 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/12 15:55:27 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "token_inf.h"
+#include "parser.h"
 #include "printf.h"
 
 void	next_token(t_list **tokens)
@@ -63,7 +63,8 @@ void	split_commands(t_list *tokens)
 	while (tokens != NULL)
 	{
 		inf = (t_token_inf *)tokens->content;
-		if (inf->type == TK_OPE && ft_strequ(inf->token, ";"))
+		if (tokens->next == NULL
+				|| (inf->type == TK_OPE && ft_strequ(inf->token, ";")))
 		{
 			if (prev != NULL)
 				prev->next = NULL;
