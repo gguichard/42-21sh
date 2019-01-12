@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/12 12:48:33 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/12 13:11:31 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,21 @@ int	handle_command(t_shell *shell)
 			ft_printf("TOKEN:\n");
 			if (((t_token_inf*)cur_sub_cmd->content)->type == TK_WORD)
 			{
-				ft_printf("   |WORD\n");
+				ft_printf("   =WORD\n");
 			}
 			else if (((t_token_inf*)cur_sub_cmd->content)->type == TK_NUM_OPT)
 			{
-				ft_printf("   |NUM_OPT\n");
+				ft_printf("   =NUM_OPT\n");
 			}
 			else if (((t_token_inf*)cur_sub_cmd->content)->type == TK_OPE)
 			{
-				ft_printf("   |OPE\n");
+				ft_printf("   =OPE\n");
 			}
 			else
 			{
-				ft_printf("   |ERROR\n");
+				ft_printf("   =ERROR\n");
 			}
-			ft_printf("      |%s\n", ((t_token_inf*)cur_sub_cmd->content)->token);
+			ft_printf("      =%s\n", ((t_token_inf*)cur_sub_cmd->content)->token);
 			cur_sub_cmd = cur_sub_cmd->next;
 		}
 		ft_lstfree(&all_sub_cmd);

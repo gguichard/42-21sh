@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/12 12:54:46 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/12 13:08:21 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 
 	last_char_was_sep = 1;
 	token_lst = NULL;
+	token_type = TK_WORD;
 	token_start = str_cmd_inf->str;
 	while (str_cmd_inf->str[str_cmd_inf->pos] != '\0')
 	{
@@ -82,8 +83,6 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 							|| str_cmd_inf->str[str_cmd_inf->pos] == '<')
 						&& cur_token_is_number(str_cmd_inf, token_start))
 					token_type = TK_NUM_OPT;
-				else
-					token_type = TK_WORD;
 				if (!add_cur_token_to_lst(&token_lst, str_cmd_inf,
 							token_start, token_type))
 					return (ft_lstfree(&token_lst));
@@ -101,14 +100,15 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 		}
 		else
 		{
+			token_type = TK_WORD;
 			if (last_char_was_sep)
 				token_start = str_cmd_inf->str + str_cmd_inf->pos;
 			last_char_was_sep = 0;
 		}
 		scmd_move_to_next_char(str_cmd_inf);
 	}
-	token_type = TK_WORD;
-	if (!add_cur_token_to_lst(&token_lst, str_cmd_inf, token_start, token_type))
+	if (token_type == TK_WORD && !add_cur_token_to_lst(&token_lst,
+				str_cmd_inf, token_start, token_type))
 		return (ft_lstfree(&token_lst));
 	return (token_lst);
 }
