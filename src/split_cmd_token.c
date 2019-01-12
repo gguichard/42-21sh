@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/12 16:15:00 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/12 16:28:23 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,11 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 							token_start, token_type))
 					return (ft_lstfree(&token_lst));
 			}
+			token_type = TK_OPE;
 			token_start = str_cmd_inf->str + str_cmd_inf->pos;
 			if (str_cmd_inf->str[str_cmd_inf->pos] != ' '
 					&& str_cmd_inf->str[str_cmd_inf->pos] != '\t')
 			{
-				token_type = TK_OPE;
 				str_cmd_inf->pos += get_cur_token_len(token_start) - 1;
 				if (!add_cur_token_to_lst(&token_lst, str_cmd_inf,
 							token_start, token_type))
