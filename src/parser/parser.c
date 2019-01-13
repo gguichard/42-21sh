@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/13 13:52:50 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/13 14:05:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,34 @@
 #include "parser.h"
 #include "printf.h"
 
-void	next_token(t_list **tokens)
+void	next_token(t_list **curr)
 {
-	if (*tokens == NULL)
+	if (*curr == NULL)
 		return ;
-	*tokens = (*tokens)->next;
+	*curr = (*curr)->next;
 }
 
-int		accept_token(t_list **tokens, t_token_type type)
+int		accept_token(t_list **curr, t_token_type type)
 {
-	if (*tokens != NULL && ((t_token_inf *)((*tokens)->content))->type == type)
+	if (*curr != NULL && ((t_token_inf *)((*curr)->content))->type == type)
 	{
-		next_token(tokens);
+		next_token(curr);
 		return (1);
 	}
 	return (0);
 }
 
-int		expect_token(t_list **tokens, t_token_type type)
+int		expect_token(t_list **curr, t_token_type type)
 {
-	char	*curr;
+	char	*token;
 
-	if (accept_token(tokens, type))
+	if (accept_token(curr, type))
 		return (1);
-	curr = "newline";
-	if (*tokens != NULL)
-		curr = ((t_token_inf *)(*tokens)->content)->token;
+	token = "newline";
+	if (*curr != NULL)
+		token = ((t_token_inf *)(*curr)->content)->token;
 	ft_dprintf(2, "%s: syntax error near unexpected token `%s'\n"
-			, ERR_PREFIX, curr);
+			, ERR_PREFIX, token);
 	return (0);
 }
 
