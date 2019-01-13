@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/13 13:39:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/13 13:52:50 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	parse_commands(t_list *tokens)
 	int		ret;
 
 	curr = tokens;
-	if (curr == NULL || !expect_token(&curr, TK_WORD))
+	if (!expect_token(&curr, TK_WORD))
 		return ;
 	while (accept_token(&curr, TK_WORD))
 	{
@@ -69,7 +69,10 @@ void	parse_commands(t_list *tokens)
 		if (ret < 0 || (ret > 0 && !expect_token(&curr, TK_WORD)))
 			return ;
 	}
-	if (accept_token(&curr, TK_CMD_SEP) || parse_operator(&curr) > 0)
+	ret = parse_operator(&curr);
+	if (ret < 0)
+		return ;
+	if (ret > 0 || (accept_token(&curr, TK_CMD_SEP) && curr != NULL))
 		parse_commands(curr);
 	else if (curr != NULL)
 	{
