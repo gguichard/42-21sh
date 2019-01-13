@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/12 21:19:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/13 13:00:37 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	handle_command(t_shell *shell)
 	scmd_init(&str_cmd_inf, shell->term.line);
 	all_sub_cmd = split_cmd_token(&str_cmd_inf);
 	debug_tokens(all_sub_cmd);
-	split_commands(all_sub_cmd);
+	parse_commands(all_sub_cmd);
 	ft_lstfree(&all_sub_cmd);
 	if (shell->term.size > 0)
 		add_history_entry(shell, shell->term.line);

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/12 21:39:03 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/13 13:39:49 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,27 +46,34 @@ int		expect_token(t_list **tokens, t_token_type type)
 	return (0);
 }
 
-void	parse_command(t_list **tokens)
+int		parse_operator(t_list **curr)
 {
-	while (accept_token(tokens, TK_WORD))
+	if (accept_token(curr, TK_OPE))
+		return (1);
+	if (accept_token(curr, TK_NUM_OPT))
+		return (!expect_token(curr, TK_OPE) ? -1 : 1);
+	return (0);
+}
+
+void	parse_commands(t_list *tokens)
+{
+	t_list	*curr;
+	int		ret;
+
+	curr = tokens;
+	if (curr == NULL || !expect_token(&curr, TK_WORD))
+		return ;
+	while (accept_token(&curr, TK_WORD))
 	{
-		if (accept_token(tokens, TK_NUM_OPT)
-				&& (!expect_token(tokens, TK_OPE)
-					|| !expect_token(tokens, TK_WORD)))
-			return ;
-		if (accept_token(tokens, TK_OPE) && !expect_token(tokens, TK_WORD))
+		ret = parse_operator(&curr);
+		if (ret < 0 || (ret > 0 && !expect_token(&curr, TK_WORD)))
 			return ;
 	}
-	if (accept_token(tokens, TK_CMD_SEP))
-		parse_command(tokens);
-	else if (*tokens != NULL)
+	if (accept_token(&curr, TK_CMD_SEP) || parse_operator(&curr) > 0)
+		parse_commands(curr);
+	else if (curr != NULL)
 	{
 		ft_dprintf(2, "%s: syntax error near unexpected token `newline'\n"
 				, ERR_PREFIX);
 	}
-}
-
-void	split_commands(t_list *tokens)
-{
-	parse_command(&tokens);
 }
