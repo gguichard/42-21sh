@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/14 13:41:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/14 15:45:41 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,34 @@
 #include <stdlib.h>
 #include "input.h"
 #include "utils.h"
+
+size_t	get_rows(t_term *term)
+{
+	size_t	index;
+	size_t	rows;
+
+	index = 0;
+	rows = 1;
+	while (index < term->size)
+	{
+		if ((term->line)[index] == '\n'
+				|| (index + 1) % term->winsize.ws_col == 0)
+			rows++;
+		index++;
+	}
+	return (rows);
+}
+
+size_t	get_max_col(t_term *term)
+{
+	if (!ft_strchr(term->line, '\n'))
+	{
+		if ((term->row + 1) < term->rows)
+			return (term->winsize.ws_col - 1);
+		return ((term->size + term->offset) % term->winsize.ws_col);
+	}
+	return (0);
+}
 
 void	reset_cmdline(t_shell *shell)
 {
@@ -58,6 +86,7 @@ void	insert_cmdline(t_shell *shell, t_term *term, char key)
 	(term->line)[term->cursor] = key;
 	move_cursor_right(shell, term);
 	refresh_cmdline(shell, term);
+	term->rows = get_rows(term);
 }
 
 void	refresh_cmdline(t_shell *shell, t_term *term)
@@ -102,7 +131,6 @@ void	print_cmdline(t_shell *shell, t_term *term)
 	else if (term->col == term->winsize.ws_col)
 	{
 		(term->row)++;
-		(term->rows)++;
 		term->col = 0;
 		tputs(tgetstr("do", NULL), 1, t_putchar);
 	}

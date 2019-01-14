@@ -6,28 +6,19 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/14 13:34:44 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/14 15:35:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
+#include "input.h"
 #include "utils.h"
-
-int	get_max_col(t_term *term)
-{
-	/*int	cursor;
-
-	cursor = term->cursor;
-	while (cursor > 0 && (term->line)[cursor] != '\n')
-		cursor--;
-	return ((term->cursor - cursor) % term->winsize.ws_col);*/
-	return (term->winsize.ws_col - 1);
-}
 
 int	move_cursor_left(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->row == 0 && term->col == term->offset)
+	if (term->row == 0
+			&& term->col == term->offset)
 		return (0);
 	(term->cursor)--;
 	if (term->col > term->offset
@@ -49,7 +40,8 @@ int	move_cursor_left(t_shell *shell, t_term *term)
 int	move_cursor_right(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->cursor == term->size)
+	if (term->row + 1 == term->rows
+			&& term->col == get_max_col(term))
 		return (0);
 	(term->cursor)++;
 	if ((term->col + 1) < term->winsize.ws_col
@@ -71,7 +63,8 @@ int	move_cursor_right(t_shell *shell, t_term *term)
 int	move_cursor_home(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->cursor == 0)
+	if (term->row == 0
+			&& term->col == term->offset)
 		return (0);
 	term->cursor = 0;
 	if (term->row > 0)
@@ -86,9 +79,18 @@ int	move_cursor_home(t_shell *shell, t_term *term)
 
 int	move_cursor_end(t_shell *shell, t_term *term)
 {
-	if (term->cursor == term->size)
+	(void)shell;
+	if (term->row + 1 == term->rows
+			&& term->col == get_max_col(term))
 		return (0);
-	while (move_cursor_right(shell, term))
-		;
+	term->cursor = term->size;
+	if ((term->row + 1) < term->rows)
+	{
+		tputs(tparm(tgetstr("DO", NULL), term->rows - (term->row + 1))
+				, 1, t_putchar);
+		term->row = term->rows - 1;
+	}
+	term->col = get_max_col(term);
+	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
 	return (1);
 }

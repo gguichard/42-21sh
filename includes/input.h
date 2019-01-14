@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 12:29:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/14 15:30:11 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int				update_winsize(t_term *term);
 */
 int				handle_command(t_shell *shell);
 int				wait_for_command(t_shell *shell);
+size_t			get_max_col(t_term *term);
 void			reset_cmdline(t_shell *shell);
 int				realloc_cmdline(t_term *term);
 void			refresh_cmdline(t_shell *shell, t_term *term);
