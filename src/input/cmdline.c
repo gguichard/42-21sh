@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 11:26:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/14 13:41:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,15 @@
 
 void	reset_cmdline(t_shell *shell)
 {
+	show_prompt(shell);
 	ft_memset(shell->term.line, 0, shell->term.size + 1);
-	shell->term.size = 0;
-	shell->term.cursor = 0;
 	shell->term.esc_seq = 0;
 	shell->term.seq_off = 0;
-	show_prompt(shell);
+	shell->term.size = 0;
+	shell->term.cursor = 0;
+	shell->term.row = 0;
+	shell->term.col = shell->term.offset;
+	shell->term.rows = 1;
 }
 
 int		realloc_cmdline(t_term *term)
@@ -42,7 +45,7 @@ int		realloc_cmdline(t_term *term)
 
 void	insert_cmdline(t_shell *shell, t_term *term, char key)
 {
-	if (term->size >= term->capacity && !realloc_cmdline(term))
+	if (term->size == term->capacity && !realloc_cmdline(term))
 		return ;
 	if (term->size > term->cursor)
 	{
@@ -59,60 +62,49 @@ void	insert_cmdline(t_shell *shell, t_term *term, char key)
 
 void	refresh_cmdline(t_shell *shell, t_term *term)
 {
-	int	rows;
-
 	tputs(tgetstr("cr", NULL), 1, t_putchar);
-	rows = (term->cursor + term->offset) / term->winsize.ws_col;
-	if (rows > 0)
-		tputs(tparm(tgetstr("UP", NULL), rows), 1, t_putchar);
+	if (term->row > 0)
+		tputs(tparm(tgetstr("UP", NULL), term->row), 1, t_putchar);
 	tputs(tgetstr("cd", NULL), 1, t_putchar);
 	print_cmdline(shell, term);
 }
 
 void	print_select_line(t_term *term)
 {
-	size_t	select_begin;
-	size_t	select_end;
+	size_t	sl_begin;
+	size_t	sl_end;
 
-	select_begin = ft_min(term->select.end, term->select.begin);
-	select_end = ft_max(term->select.end, term->select.begin) + 1;
-	if (select_begin > 0)
-		write(STDOUT_FILENO, term->line, select_begin);
-	if (select_end > select_begin)
+	sl_begin = ft_min(term->select.end, term->select.begin);
+	sl_end = ft_max(term->select.end, term->select.begin) + 1;
+	if (sl_begin > 0)
+		write(STDOUT_FILENO, term->line, sl_begin);
+	if (sl_end > sl_begin)
 	{
 		tputs(tgetstr("mr", NULL), 1, t_putchar);
-		write(STDOUT_FILENO, &(term->line[select_begin])
-				, select_end - select_begin);
+		write(STDOUT_FILENO, &(term->line[sl_begin]), sl_end - sl_begin);
 		tputs(tgetstr("me", NULL), 1, t_putchar);
 	}
-	if (select_end < term->size)
-		write(STDOUT_FILENO, &(term->line[select_end])
-				, term->size - select_end);
+	if (sl_end < term->size)
+		write(STDOUT_FILENO, &(term->line[sl_end]), term->size - sl_end);
 }
 
 void	print_cmdline(t_shell *shell, t_term *term)
 {
-	int	rows;
-	int	curr;
-	int	offset;
-
 	show_prompt(shell);
-	if (term->visual_mode)
-		print_select_line(term);
-	else
-		write(STDOUT_FILENO, term->line, term->size);
-	if ((term->size + term->offset) % term->winsize.ws_col == 0)
+	(term->visual_mode)
+		? print_select_line(term)
+		: write(STDOUT_FILENO, term->line, term->size);
+	if (term->row + 1 < term->rows)
 	{
-		tputs(tgetstr("cr", NULL), 1, t_putchar);
+		tputs(tparm(tgetstr("UP", NULL)
+					, term->rows - (term->row + 1)), 1, t_putchar);
+	}
+	else if (term->col == term->winsize.ws_col)
+	{
+		(term->row)++;
+		(term->rows)++;
+		term->col = 0;
 		tputs(tgetstr("do", NULL), 1, t_putchar);
 	}
-	if (term->cursor < term->size)
-	{
-		rows = (term->size + term->offset) / term->winsize.ws_col;
-		curr = (term->cursor + term->offset) / term->winsize.ws_col;
-		if (curr < rows)
-			tputs(tparm(tgetstr("UP", NULL), rows - curr), 1, t_putchar);
-		offset = (term->cursor + term->offset) % term->winsize.ws_col;
-		tputs(tparm(tgetstr("ch", NULL), offset), 1, t_putchar);
-	}
+	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
 }

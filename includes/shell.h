@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/12 21:36:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/14 12:58:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ typedef struct			s_term
 	size_t				capacity;
 	size_t				size;
 	size_t				cursor;
+	size_t				col;
+	size_t				row;
+	size_t				rows;
 	size_t				offset;
 	int					ac_flag;
 	int					visual_mode;
