@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 10:44:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 11:42:37 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@ static void	del_on_cursor(t_shell *shell, t_term *term)
 
 int			handle_bs_key(t_shell *shell, t_term *term)
 {
-	if (term->cursor == 0)
+	if (!move_cursor_left(shell, term))
 		return (0);
-	move_cursor_left(shell, term);
 	del_on_cursor(shell, term);
 	return (1);
 }
 
 int			handle_del_key(t_shell *shell, t_term *term)
 {
-	if (term->cursor == term->size)
+	if (term->row + 1 == term->rows
+			&& term->col == get_max_col(term))
 		return (0);
 	del_on_cursor(shell, term);
 	return (1);
