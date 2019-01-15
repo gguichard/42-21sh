@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/14 15:45:41 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 10:44:15 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,21 @@ size_t	get_rows(t_term *term)
 {
 	size_t	index;
 	size_t	rows;
+	size_t	cursor;
 
 	index = 0;
 	rows = 1;
+	cursor = term->offset;
 	while (index < term->size)
 	{
-		if ((term->line)[index] == '\n'
-				|| (index + 1) % term->winsize.ws_col == 0)
+		if ((term->line)[index] != '\n'
+				&& (cursor + 1) % term->winsize.ws_col != 0)
+			cursor++;
+		else
+		{
+			cursor = 0;
 			rows++;
+		}
 		index++;
 	}
 	return (rows);
@@ -84,9 +91,9 @@ void	insert_cmdline(t_shell *shell, t_term *term, char key)
 	(term->size)++;
 	(term->line)[term->size] = '\0';
 	(term->line)[term->cursor] = key;
+	term->rows = get_rows(term);
 	move_cursor_right(shell, term);
 	refresh_cmdline(shell, term);
-	term->rows = get_rows(term);
 }
 
 void	refresh_cmdline(t_shell *shell, t_term *term)
@@ -120,19 +127,12 @@ void	print_select_line(t_term *term)
 void	print_cmdline(t_shell *shell, t_term *term)
 {
 	show_prompt(shell);
+	tputs(tgetstr("sc", NULL), 1, t_putchar);
 	(term->visual_mode)
 		? print_select_line(term)
 		: write(STDOUT_FILENO, term->line, term->size);
-	if (term->row + 1 < term->rows)
-	{
-		tputs(tparm(tgetstr("UP", NULL)
-					, term->rows - (term->row + 1)), 1, t_putchar);
-	}
-	else if (term->col == term->winsize.ws_col)
-	{
-		(term->row)++;
-		term->col = 0;
-		tputs(tgetstr("do", NULL), 1, t_putchar);
-	}
+	tputs(tgetstr("rc", NULL), 1, t_putchar);
+	if (term->row > 0)
+		tputs(tparm(tgetstr("DO", NULL), term->row), 1, t_putchar);
 	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
 }

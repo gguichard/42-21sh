@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/14 12:52:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 10:44:20 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	del_on_cursor(t_shell *shell, t_term *term)
 			, &(term->line[term->cursor + 1])
 			, term->size - term->cursor + 1);
 	(term->size)--;
+	term->rows = get_rows(term);
 	refresh_cmdline(shell, term);
 }
 
