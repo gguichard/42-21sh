@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/12 16:30:40 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/15 08:01:11 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 typedef enum		e_token_type
 {
+	TK_NOTHING,
 	TK_WORD,
 	TK_OPE,
 	TK_NUM_OPT,

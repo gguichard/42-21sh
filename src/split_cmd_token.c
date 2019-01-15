@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/12 16:32:34 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/15 08:02:28 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static int	add_cur_token_to_lst(t_list **token_lst, t_str_cmd_inf *str_cmd_inf,
 	t_list			*new_elem;
 	size_t			cur_token_size;
 
+	if (token_type == TK_NOTHING)
+		return (1);
 	cur_token_size = (str_cmd_inf->str + str_cmd_inf->pos) - token_start
 		+ (token_type == TK_OPE || token_type == TK_CMD_SEP ? 1 : 0);
 	new_token.token = ft_strndup(token_start, cur_token_size);
@@ -84,7 +86,7 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 
 	last_char_was_sep = 1;
 	token_lst = NULL;
-	token_type = TK_WORD;
+	token_type = TK_NOTHING;
 	token_start = str_cmd_inf->str;
 	while (str_cmd_inf->str[str_cmd_inf->pos] != '\0')
 	{

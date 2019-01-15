@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/13 13:00:37 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 08:03:32 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 //TODO SUPPRIMER
 void	debug_tokens(t_list *all_sub_cmd)
 {
+	if (all_sub_cmd == NULL)
+		ft_printf("   TOKEN NULL\n");
 	while (all_sub_cmd != NULL)
 	{
 		ft_printf("TOKEN:\n");
@@ -45,6 +47,10 @@ void	debug_tokens(t_list *all_sub_cmd)
 		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_CMD_SEP)
 		{
 			ft_printf("   =CMD_SEP\n");
+		}
+		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_NOTHING)
+		{
+			ft_printf("   =NOTHING (error)\n");
 		}
 		else
 		{
