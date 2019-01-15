@@ -6,12 +6,62 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/15 10:52:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 10:58:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 16:26:48 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "input.h"
+
+size_t	get_cursor_col(t_term *term)
+{
+	size_t	index;
+	size_t	row;
+	size_t	col;
+
+	index = 0;
+	row = 0;
+	col = term->offset;
+	while (index < term->cursor)
+	{
+		if ((term->line)[index] != '\n'
+				&& (col + 1) % term->winsize.ws_col != 0)
+			col++;
+		else
+		{
+			col = 0;
+			row++;
+		}
+		index++;
+	}
+	return (col);
+}
+
+void	update_pos(t_term *term)
+{
+	size_t	index;
+	size_t	row;
+	size_t	col;
+
+	index = 0;
+	row = 0;
+	col = term->offset;
+	while (index < term->cursor)
+	{
+		if ((term->line)[index] != '\n'
+				&& (col + 1) % term->winsize.ws_col != 0)
+			col++;
+		else
+		{
+			col = 0;
+			row++;
+		}
+		index++;
+	}
+	term->row = row;
+	term->col = col;
+	term->rows = get_rows(term);
+}
 
 size_t	get_rows(t_term *term)
 {
@@ -39,11 +89,32 @@ size_t	get_rows(t_term *term)
 
 size_t	get_max_col(t_term *term)
 {
-	if (!ft_strchr(term->line, '\n'))
+	size_t	index;
+	size_t	row;
+	size_t	col;
+
+	index = 0;
+	row = 0;
+	col = term->offset;
+	while (row < term->row)
 	{
-		if ((term->row + 1) < term->rows)
-			return (term->winsize.ws_col - 1);
-		return ((term->size + term->offset) % term->winsize.ws_col);
+		if ((term->line)[index] != '\n'
+				&& (col + 1) % term->winsize.ws_col != 0)
+			col++;
+		else
+		{
+			col = 0;
+			row++;
+		}
+		index++;
 	}
-	return (0);
+	col = 0;
+	while (col < (term->winsize.ws_col - 1))
+	{
+		if ((term->line)[index + col] == '\0'
+				|| (term->line)[index + col] == '\n')
+			break ;
+		col++;
+	}
+	return (col + (term->row == 0 ? term->offset : 0));
 }
