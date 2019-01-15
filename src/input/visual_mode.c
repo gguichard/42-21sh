@@ -6,16 +6,36 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 11:22:05 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 11:38:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "libft.h"
 #include "shell.h"
 #include "input.h"
 #include "utils.h"
 
-int	vm_toggle(t_shell *shell, t_term *term)
+void	print_select_line(t_term *term)
+{
+	size_t	sl_begin;
+	size_t	sl_end;
+
+	sl_begin = ft_min(term->select.end, term->select.begin);
+	sl_end = ft_max(term->select.end, term->select.begin) + 1;
+	if (sl_begin > 0)
+		write(STDOUT_FILENO, term->line, sl_begin);
+	if (sl_end > sl_begin)
+	{
+		tputs(tgetstr("mr", NULL), 1, t_putchar);
+		write(STDOUT_FILENO, &(term->line[sl_begin]), sl_end - sl_begin);
+		tputs(tgetstr("me", NULL), 1, t_putchar);
+	}
+	if (sl_end < term->size)
+		write(STDOUT_FILENO, &(term->line[sl_end]), term->size - sl_end);
+}
+
+int		vm_toggle(t_shell *shell, t_term *term)
 {
 	term->visual_mode = !(term->visual_mode);
 	if (!(term->visual_mode))
@@ -29,7 +49,7 @@ int	vm_toggle(t_shell *shell, t_term *term)
 	return (1);
 }
 
-int	vm_copy_hook(t_shell *shell, t_term *term, int cut)
+int		vm_copy_hook(t_shell *shell, t_term *term, int cut)
 {
 	size_t	begin;
 	size_t	end;
@@ -54,7 +74,7 @@ int	vm_copy_hook(t_shell *shell, t_term *term, int cut)
 	return (1);
 }
 
-int	vm_paste_hook(t_shell *shell, t_term *term, int before_cursor)
+int		vm_paste_hook(t_shell *shell, t_term *term, int before_cursor)
 {
 	char	*curr;
 
@@ -74,7 +94,7 @@ int	vm_paste_hook(t_shell *shell, t_term *term, int before_cursor)
 	return (1);
 }
 
-int	handle_vm_key(t_shell *shell, t_term *term, char key)
+int		handle_vm_key(t_shell *shell, t_term *term, char key)
 {
 	int	ret;
 

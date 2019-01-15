@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 11:28:36 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 11:41:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result)
 	curr = result->suff;
 	while (*curr != '\0')
 	{
+		if (*curr == ' ')
+			insert_cmdline(shell, term, '\\');
 		insert_cmdline(shell, term, *curr);
 		curr++;
 	}
@@ -33,9 +35,9 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result)
 
 int		handle_ac(t_shell *shell, t_term *term)
 {
-	t_var				*path;
-	size_t				cursor;
-	t_ac_suff_inf		*result;
+	t_var			*path;
+	size_t			cursor;
+	t_ac_suff_inf	*result;
 
 	if ((path = get_var(shell->env, "PATH")) == NULL)
 		return (0);
@@ -52,11 +54,9 @@ int		handle_ac(t_shell *shell, t_term *term)
 	ac_append(shell, term, result);
 	if ((term->ac_flag)++)
 	{
-		cursor = term->cursor;
 		move_cursor_end(shell, term);
 		ac_print_list(result->choices, term);
-		term->cursor = cursor;
-		print_cmdline(shell, term);
+		refresh_cmdline(shell, term);
 	}
 	delete_ac_suff_inf(result);
 	return (1);

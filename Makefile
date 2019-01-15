@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/12 15:10:20 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/15 10:53:41 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
 			input/esc_sequence.c input/history.c input/history_hooks.c \
 			input/insert_mode.c input/insert_mode_ac.c input/visual_mode.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
+			input/utils.c \
 			parser/parser.c parser/execute.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
