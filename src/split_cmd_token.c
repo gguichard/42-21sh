@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/15 15:47:08 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/16 11:33:47 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,36 @@ static int	process_opt_add(t_list **token_lst, t_str_cmd_inf *str_cmd_inf,
 	return (1);
 }
 
+static int	process_after_opt(t_list **token_lst, t_str_cmd_inf *str_cmd_inf)
+{
+	const char		*token_start;
+	t_str_cmd_inf	str_cmd_cpy;
+
+	str_cmd_cpy.str = str_cmd_inf->str;
+	str_cmd_cpy.pos = str_cmd_inf->pos + 1;
+	if (str_cmd_cpy.str[str_cmd_cpy.pos] == '&')
+	{
+		++(str_cmd_cpy.pos);
+		token_start = (str_cmd_cpy.str + str_cmd_cpy.pos);
+		while (ft_isdigit(str_cmd_cpy.str[str_cmd_cpy.pos]))
+			++(str_cmd_cpy.pos);
+		if (str_cmd_cpy.str[str_cmd_cpy.pos] == '-')
+			++(str_cmd_cpy.pos);
+		if (token_start != (str_cmd_cpy.str + str_cmd_cpy.pos)
+				&& (is_a_sep_char(str_cmd_cpy.str[str_cmd_cpy.pos])
+					|| str_cmd_cpy.str[str_cmd_cpy.pos] == '\0'))
+		{
+			if (!add_cur_token_to_lst(token_lst, &str_cmd_cpy,
+						token_start, TK_STR_OPT))
+				return (0);
+			str_cmd_inf->pos = str_cmd_cpy.pos - 1;
+		}
+		else
+			++(str_cmd_inf->pos);
+	}
+	return (1);
+}
+
 t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 {
 	int				last_char_was_sep;
@@ -166,6 +196,13 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 				str_cmd_inf->pos += get_cur_token_len(token_start) - 1;
 				if (!add_cur_token_to_lst(&token_lst, str_cmd_inf,
 							token_start, token_type))
+					return (ft_lstfree(&token_lst));
+			}
+			if (token_start == (str_cmd_inf->str + str_cmd_inf->pos)
+					&& (str_cmd_inf->str[str_cmd_inf->pos] == '>'
+						|| str_cmd_inf->str[str_cmd_inf->pos] == '<'))
+			{
+				if (!process_after_opt(&token_lst, str_cmd_inf))
 					return (ft_lstfree(&token_lst));
 			}
 			last_char_was_sep = 1;

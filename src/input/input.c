@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 08:03:32 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/16 11:12:47 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ void	debug_tokens(t_list *all_sub_cmd)
 		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_CMD_SEP)
 		{
 			ft_printf("   =CMD_SEP\n");
+		}
+		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_STR_OPT)
+		{
+			ft_printf("   =STR_OPT\n");
 		}
 		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_NOTHING)
 		{

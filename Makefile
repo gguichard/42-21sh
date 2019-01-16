@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/15 10:53:41 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/16 11:13:07 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ OBJ_DIR	=	.obj
 INC_DIR	=	includes
 INC		=	shell.h vars.h error.h check_path.h input.h utils.h \
 			hash_table.h convert_path_to_tab.h autocomplete.h str_cmd_inf.h \
-			split_cmd_token.h check_enclosing_char_cmd.h parser.h
+			split_cmd_token.h check_enclosing_char_cmd.h parser.h token_inf.h
 
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror -I libft/includes -I $(INC_DIR)
