@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 14:54:36 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 15:18:17 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,9 @@ int				move_cursor_down(t_shell *shell, t_term *term);
 /*
 ** UTILS.
 */
-void			update_pos_data(t_term *term);
-void			update_cursor_data(t_term *term);
 size_t			get_max_col(t_term *term);
+size_t			get_total_rows(t_term *term);
+void			update_cursor_data(t_term *term);
+void			update_pos_data(t_term *term);
 
 #endif
