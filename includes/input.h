@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 18:03:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 12:22:21 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define ESC_SHIFT_UP "\033[1;2A"
 # define ESC_SHIFT_DOWN "\033[1;2B"
 # define ESC_FN_F1 "\033OP"
+# define ESC_NL "\033\n"
 
 typedef struct	s_seq
 {
@@ -60,7 +61,6 @@ int				update_winsize(t_term *term);
 */
 int				handle_command(t_shell *shell);
 int				wait_for_command(t_shell *shell);
-size_t			get_max_col(t_term *term);
 void			reset_cmdline(t_shell *shell);
 int				realloc_cmdline(t_term *term);
 void			refresh_cmdline(t_shell *shell, t_term *term);
@@ -85,6 +85,7 @@ void			ac_print_list(t_list *lst, t_term *term);
 void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result);
 int				handle_ac(t_shell *shell, t_term *term);
 int				handle_eot_key(t_shell *shell, t_term *term);
+int				handle_new_line(t_shell *shell, t_term *term);
 int				handle_bs_key(t_shell *shell, t_term *term);
 int				handle_del_key(t_shell *shell, t_term *term);
 int				handle_key(t_shell *shell, t_term *term, char key);
@@ -113,7 +114,9 @@ int				move_cursor_down(t_shell *shell, t_term *term);
 /*
 ** UTILS.
 */
+void			update_pos_data(t_term *term);
 void			update_cursor_data(t_term *term);
 size_t			get_max_col(t_term *term);
+int				should_jump_to_new_line(t_term *term);
 
 #endif

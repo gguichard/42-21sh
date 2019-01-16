@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 19:52:57 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/08 19:34:42 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 11:24:00 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,10 @@ int	reset_term(t_shell *shell)
 
 int	update_winsize(t_term *term)
 {
-	return (ioctl(STDOUT_FILENO, TIOCGWINSZ, &(term->winsize)));
+	int	ret;
+
+	ret = ioctl(STDOUT_FILENO, TIOCGWINSZ, &(term->winsize));
+	if (ret != -1)
+		update_pos_data(term);
+	return (ret);
 }

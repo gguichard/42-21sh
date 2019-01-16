@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 14:19:25 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 18:26:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 10:18:51 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,15 @@ int			move_cursor_next_word(t_shell *shell, t_term *term)
 
 static void	fix_outbound_col(t_term *term)
 {
-	size_t	col;
 	size_t	max_col;
 
-	col = term->col;
 	max_col = get_max_col(term);
 	if (term->row == 0 && term->col < term->offset)
-		col = term->offset;
+		term->col = term->offset;
 	else if (term->col > max_col)
-		col = max_col;
-	if (col != term->col)
-	{
-		term->col = col;
-		tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
-	}
+		term->col = max_col;
+	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
+	update_cursor_data(term);
 }
 
 int			move_cursor_up(t_shell *shell, t_term *term)

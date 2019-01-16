@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 17:58:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 12:22:32 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void	reset_cmdline(t_shell *shell)
 	ft_memset(shell->term.line, 0, shell->term.size + 1);
 	show_prompt(shell);
 	shell->term.cursor = 0;
+	shell->term.size = 0;
 	shell->term.row = 0;
 	shell->term.col = shell->term.offset;
 	shell->term.rows = 1;
-	shell->term.size = 0;
 	shell->term.esc_seq = 0;
 	shell->term.seq_off = 0;
 }
@@ -72,14 +72,20 @@ void	refresh_cmdline(t_shell *shell, t_term *term)
 
 void	print_cmdline(t_shell *shell, t_term *term)
 {
+	size_t	row;
+
 	show_prompt(shell);
-	tputs(tgetstr("sc", NULL), 1, t_putchar);
+	update_pos_data(term);
 	(term->visual_mode)
 		? print_select_line(term)
 		: write(STDOUT_FILENO, term->line, term->size);
-	tputs(tgetstr("rc", NULL), 1, t_putchar);
-	update_cursor_data(term);
-	if (term->row > 0)
-		tputs(tparm(tgetstr("DO", NULL), term->row), 1, t_putchar);
+	if (should_jump_to_new_line(term))
+	{
+		tputs(tgetstr("cr", NULL), 1, t_putchar);
+		tputs(tgetstr("do", NULL), 1, t_putchar);
+	}
+	row = term->rows - (term->row + 1);
+	if (row > 0)
+		tputs(tparm(tgetstr("UP", NULL), row), 1, t_putchar);
 	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
 }
