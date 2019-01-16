@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/13 14:05:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 16:14:34 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ int		expect_token(t_list **curr, t_token_type type)
 	token = "newline";
 	if (*curr != NULL)
 		token = ((t_token_inf *)(*curr)->content)->token;
-	ft_dprintf(2, "%s: syntax error near unexpected token `%s'\n"
-			, ERR_PREFIX, token);
+	ft_dprintf(2, "%s: syntax error near unexpected token `%c'\n"
+			, ERR_PREFIX, *token);
 	return (0);
 }
 
