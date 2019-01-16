@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/16 13:06:07 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/16 15:26:45 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 ** a la liste des commandes. Retourne 1 en cas de succes et 0 en cas d'erreur.
 */
 
-static int	add_cur_token_to_lst(t_list **token_lst, t_str_cmd_inf *str_cmd_inf,
-		const char *token_start, t_token_type token_type)
+static int				add_cur_token_to_lst(t_list **token_lst,
+		t_str_cmd_inf *str_cmd_inf, const char *token_start,
+		t_token_type token_type)
 {
 	t_token_inf		new_token;
 	t_list			*new_elem;
@@ -44,7 +45,7 @@ static int	add_cur_token_to_lst(t_list **token_lst, t_str_cmd_inf *str_cmd_inf,
 	return (1);
 }
 
-static int	add_token_to_lst(t_list **token_lst, char *token_str,
+static int				add_token_to_lst(t_list **token_lst, char *token_str,
 		t_token_type token_type)
 {
 	t_token_inf		new_token;
@@ -64,13 +65,13 @@ static int	add_token_to_lst(t_list **token_lst, char *token_str,
 	return (1);
 }
 
-static int	is_a_sep_char(char c)
+static int				is_a_sep_char(char c)
 {
 	return (c == ' ' || c == '\t' || c == '|'
 			|| c == '<' || c == '>' || c == ';');
 }
 
-static int	cur_token_is_number(t_str_cmd_inf *str_cmd_inf,
+static int				cur_token_is_number(t_str_cmd_inf *str_cmd_inf,
 		const char *token_start)
 {
 	while (token_start != str_cmd_inf->str + str_cmd_inf->pos)
@@ -82,7 +83,7 @@ static int	cur_token_is_number(t_str_cmd_inf *str_cmd_inf,
 	return (1);
 }
 
-static int	get_cur_token_len(const char *token_start)
+static int				get_cur_token_len(const char *token_start)
 {
 	size_t	len;
 
@@ -99,42 +100,50 @@ static int	get_cur_token_len(const char *token_start)
 	return (len);
 }
 
-static int	process_opt_add(t_list **token_lst, t_str_cmd_inf *str_cmd_inf,
-		const char *token_start)
+static t_token_type		get_token_for_opt_add(t_str_cmd_inf *str_cmd_inf,
+		const char *token_start, int *end_by_and)
 {
-	t_str_cmd_inf	str_cmd_cpy;
-	int				end_by_ampersand;
-	t_token_type	token_type;
-
-	str_cmd_cpy.str = str_cmd_inf->str;
-	str_cmd_cpy.pos = str_cmd_inf->pos;
-	end_by_ampersand = 0;
-	token_type = TK_WORD;
 	if (str_cmd_inf->str[str_cmd_inf->pos] == '>'
 			|| str_cmd_inf->str[str_cmd_inf->pos] == '<')
 	{
 		if (cur_token_is_number(str_cmd_inf, token_start))
-			token_type = TK_NUM_OPT;
+			return (TK_NUM_OPT);
 		else if (str_cmd_inf->pos > 0
 				&& get_cur_token_len(str_cmd_inf->str + str_cmd_inf->pos) == 1
 				&& str_cmd_inf->str[str_cmd_inf->pos - 1] == '&')
 		{
-			token_type = TK_WORD;
-			--(str_cmd_cpy.pos);
-			end_by_ampersand = 1;
+			*end_by_and = 1;
+			return (TK_WORD);
 		}
 	}
+	return (TK_WORD);
+}
+
+static int				process_opt_add(t_list **token_lst,
+		t_str_cmd_inf *str_cmd_inf, const char *token_start)
+{
+	t_str_cmd_inf	str_cmd_cpy;
+	int				end_by_and;
+	t_token_type	token_type;
+
+	str_cmd_cpy.str = str_cmd_inf->str;
+	str_cmd_cpy.pos = str_cmd_inf->pos;
+	end_by_and = 0;
+	token_type = get_token_for_opt_add(str_cmd_inf, token_start, &end_by_and);
+	if (end_by_and)
+		--(str_cmd_cpy.pos);
 	if ((str_cmd_cpy.str + str_cmd_cpy.pos) != token_start
 			&& !add_cur_token_to_lst(token_lst, &str_cmd_cpy,
 				token_start, token_type))
 		return (0);
-	if (end_by_ampersand)
+	if (end_by_and)
 		if (!add_token_to_lst(token_lst, "&", TK_NUM_OPT))
 			return (0);
 	return (1);
 }
 
-static int	process_after_opt(t_list **token_lst, t_str_cmd_inf *str_cmd_inf)
+static int				process_after_opt(t_list **token_lst,
+		t_str_cmd_inf *str_cmd_inf)
 {
 	const char		*token_start;
 	t_str_cmd_inf	str_cmd_cpy;
@@ -160,7 +169,64 @@ static int	process_after_opt(t_list **token_lst, t_str_cmd_inf *str_cmd_inf)
 	return (1);
 }
 
-t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
+static int				split_sep_char(t_list **token_lst,
+		t_str_cmd_inf *str_cmd_inf, const char *token_start,
+		int last_char_was_sep)
+{
+	t_token_type	token_type;
+
+	if (!last_char_was_sep)
+		if (!process_opt_add(token_lst, str_cmd_inf, token_start))
+			return (0);
+	token_type = TK_OPE;
+	token_start = str_cmd_inf->str + str_cmd_inf->pos;
+	if (str_cmd_inf->str[str_cmd_inf->pos] != ' '
+			&& str_cmd_inf->str[str_cmd_inf->pos] != '\t')
+	{
+		if (str_cmd_inf->str[str_cmd_inf->pos] == ';')
+			token_type = TK_CMD_SEP;
+		str_cmd_inf->pos += get_cur_token_len(token_start) - 1;
+		if (!add_cur_token_to_lst(token_lst, str_cmd_inf,
+					token_start, token_type))
+			return (0);
+	}
+	if (token_start == (str_cmd_inf->str + str_cmd_inf->pos)
+			&& (str_cmd_inf->str[str_cmd_inf->pos] == '>'
+				|| str_cmd_inf->str[str_cmd_inf->pos] == '<'))
+	{
+		if (!process_after_opt(token_lst, str_cmd_inf))
+			return (0);
+	}
+	return (1);
+}
+
+static t_token_type		split_at_pos(t_list **token_lst,
+		t_str_cmd_inf *str_cmd_inf, const char **token_start,
+		int *last_char_was_sep)
+{
+	t_token_type	token_type;
+
+	if (scmd_cur_char_is_in_nothing(str_cmd_inf)
+			&& is_a_sep_char(str_cmd_inf->str[str_cmd_inf->pos])
+			&& !scmd_cur_char_is_escaped(str_cmd_inf))
+	{
+		if (!split_sep_char(token_lst, str_cmd_inf, *token_start,
+					*last_char_was_sep))
+			return (TK_NOTHING);
+		token_type = TK_OPE;
+		*last_char_was_sep = 1;
+	}
+	else
+	{
+		token_type = TK_WORD;
+		if (*last_char_was_sep)
+			*token_start = str_cmd_inf->str + str_cmd_inf->pos;
+		*last_char_was_sep = 0;
+	}
+	return (token_type);
+}
+
+t_list					*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 {
 	int				last_char_was_sep;
 	t_list			*token_lst;
@@ -173,43 +239,9 @@ t_list		*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 	token_start = str_cmd_inf->str;
 	while (str_cmd_inf->str[str_cmd_inf->pos] != '\0')
 	{
-		if (scmd_cur_char_is_in_nothing(str_cmd_inf)
-				&& is_a_sep_char(str_cmd_inf->str[str_cmd_inf->pos])
-				&& !scmd_cur_char_is_escaped(str_cmd_inf))
-		{
-			if (!last_char_was_sep)
-			{
-				if (!process_opt_add(&token_lst, str_cmd_inf, token_start))
-					return (ft_lstfree(&token_lst));
-			}
-			token_type = TK_OPE;
-			token_start = str_cmd_inf->str + str_cmd_inf->pos;
-			if (str_cmd_inf->str[str_cmd_inf->pos] != ' '
-					&& str_cmd_inf->str[str_cmd_inf->pos] != '\t')
-			{
-				if (str_cmd_inf->str[str_cmd_inf->pos] == ';')
-					token_type = TK_CMD_SEP;
-				str_cmd_inf->pos += get_cur_token_len(token_start) - 1;
-				if (!add_cur_token_to_lst(&token_lst, str_cmd_inf,
-							token_start, token_type))
-					return (ft_lstfree(&token_lst));
-			}
-			if (token_start == (str_cmd_inf->str + str_cmd_inf->pos)
-					&& (str_cmd_inf->str[str_cmd_inf->pos] == '>'
-						|| str_cmd_inf->str[str_cmd_inf->pos] == '<'))
-			{
-				if (!process_after_opt(&token_lst, str_cmd_inf))
-					return (ft_lstfree(&token_lst));
-			}
-			last_char_was_sep = 1;
-		}
-		else
-		{
-			token_type = TK_WORD;
-			if (last_char_was_sep)
-				token_start = str_cmd_inf->str + str_cmd_inf->pos;
-			last_char_was_sep = 0;
-		}
+		if ((token_type = split_at_pos(&token_lst, str_cmd_inf, &token_start,
+						&last_char_was_sep)) == TK_NOTHING)
+			return (ft_lstfree(&token_lst));
 		scmd_move_to_next_char(str_cmd_inf);
 	}
 	if (token_type == TK_WORD && !add_cur_token_to_lst(&token_lst,
