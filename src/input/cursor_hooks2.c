@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 14:19:25 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 11:49:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 18:26:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 
 int			move_cursor_prev_word(t_shell *shell, t_term *term)
 {
-	if (term->row == 0
-			&& term->col == term->offset)
+	if (term->cursor == 0)
 		return (0);
 	while (term->line[term->cursor - 1] == ' '
 			&& move_cursor_left(shell, term))
@@ -30,8 +29,7 @@ int			move_cursor_prev_word(t_shell *shell, t_term *term)
 
 int			move_cursor_next_word(t_shell *shell, t_term *term)
 {
-	if (term->row + 1 == term->rows
-			&& term->col == get_max_col(term))
+	if (term->cursor == term->size)
 		return (0);
 	while (term->line[term->cursor] != ' '
 			&& move_cursor_right(shell, term))

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 10:25:02 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 17:59:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@
 int	move_cursor_left(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->row == 0
-			&& term->col == term->offset)
+	if (term->cursor == 0)
 		return (0);
 	(term->cursor)--;
 	if (term->col > term->offset
@@ -40,8 +39,7 @@ int	move_cursor_left(t_shell *shell, t_term *term)
 int	move_cursor_right(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->row + 1 == term->rows
-			&& term->col == get_max_col(term))
+	if (term->cursor == term->size)
 		return (0);
 	(term->cursor)++;
 	if ((term->col + 1) < term->winsize.ws_col
@@ -63,8 +61,7 @@ int	move_cursor_right(t_shell *shell, t_term *term)
 int	move_cursor_home(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->row == 0
-			&& term->col == term->offset)
+	if (term->cursor == 0)
 		return (0);
 	term->cursor = 0;
 	if (term->row > 0)
@@ -80,8 +77,7 @@ int	move_cursor_home(t_shell *shell, t_term *term)
 int	move_cursor_end(t_shell *shell, t_term *term)
 {
 	(void)shell;
-	if (term->row + 1 == term->rows
-			&& term->col == get_max_col(term))
+	if (term->cursor == term->size)
 		return (0);
 	term->cursor = term->size;
 	if ((term->row + 1) < term->rows)

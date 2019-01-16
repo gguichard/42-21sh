@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 11:38:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/15 17:58:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 
 void	reset_cmdline(t_shell *shell)
 {
-	show_prompt(shell);
 	ft_memset(shell->term.line, 0, shell->term.size + 1);
-	shell->term.esc_seq = 0;
-	shell->term.seq_off = 0;
-	shell->term.size = 0;
+	show_prompt(shell);
 	shell->term.cursor = 0;
 	shell->term.row = 0;
 	shell->term.col = shell->term.offset;
 	shell->term.rows = 1;
+	shell->term.size = 0;
+	shell->term.esc_seq = 0;
+	shell->term.seq_off = 0;
 }
 
 int		realloc_cmdline(t_term *term)
@@ -56,7 +56,6 @@ void	insert_cmdline(t_shell *shell, t_term *term, char key)
 		(term->size)++;
 		(term->line)[term->size] = '\0';
 		(term->line)[term->cursor] = key;
-		term->rows = get_rows(term);
 		move_cursor_right(shell, term);
 		refresh_cmdline(shell, term);
 	}
@@ -79,6 +78,7 @@ void	print_cmdline(t_shell *shell, t_term *term)
 		? print_select_line(term)
 		: write(STDOUT_FILENO, term->line, term->size);
 	tputs(tgetstr("rc", NULL), 1, t_putchar);
+	update_cursor_data(term);
 	if (term->row > 0)
 		tputs(tparm(tgetstr("DO", NULL), term->row), 1, t_putchar);
 	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
