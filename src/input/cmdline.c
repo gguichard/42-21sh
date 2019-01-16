@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 12:22:32 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 14:54:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,7 @@ void	print_cmdline(t_shell *shell, t_term *term)
 	(term->visual_mode)
 		? print_select_line(term)
 		: write(STDOUT_FILENO, term->line, term->size);
-	if (should_jump_to_new_line(term))
-	{
-		tputs(tgetstr("cr", NULL), 1, t_putchar);
-		tputs(tgetstr("do", NULL), 1, t_putchar);
-	}
+	ft_putchar(' ');
 	row = term->rows - (term->row + 1);
 	if (row > 0)
 		tputs(tparm(tgetstr("UP", NULL), row), 1, t_putchar);

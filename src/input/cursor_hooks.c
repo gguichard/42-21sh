@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 17:59:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 13:10:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int	move_cursor_right(t_shell *shell, t_term *term)
 	(void)shell;
 	if (term->cursor == term->size)
 		return (0);
-	(term->cursor)++;
 	if ((term->col + 1) < term->winsize.ws_col
 			&& (term->line)[term->cursor] != '\n')
 	{
@@ -55,6 +54,7 @@ int	move_cursor_right(t_shell *shell, t_term *term)
 		tputs(tgetstr("cr", NULL), 1, t_putchar);
 		tputs(tgetstr("do", NULL), 1, t_putchar);
 	}
+	(term->cursor)++;
 	return (1);
 }
 

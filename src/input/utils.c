@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/15 10:52:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 12:23:59 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 14:54:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,25 +85,6 @@ void	update_cursor_data(t_term *term)
 		index++;
 	}
 	term->cursor = index + (term->col - col);
-}
-
-int		should_jump_to_new_line(t_term *term)
-{
-	size_t	col;
-	size_t	index;
-
-	col = term->offset;
-	index = 0;
-	while (index < term->size)
-	{
-		if ((col + 1) % term->winsize.ws_col != 0
-				&& (term->line)[index] != '\n')
-			col++;
-		else
-			col = 0;
-		index++;
-	}
-	return (col == 0 && (term->line)[index - 1] != '\n');
 }
 
 size_t	get_max_col(t_term *term)

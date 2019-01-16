@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 11:12:47 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/16 12:29:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	debug_tokens(t_list *all_sub_cmd)
 int	handle_command(t_shell *shell)
 {
 	t_str_cmd_inf	str_cmd_inf;
-	t_list 			*all_sub_cmd; 
+	t_list			*all_sub_cmd;
 
 	ft_printf("COMMAND: %s\n", shell->term.line);
 	scmd_init(&str_cmd_inf, shell->term.line);
