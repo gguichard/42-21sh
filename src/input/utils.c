@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/15 10:52:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 15:26:22 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/16 15:59:39 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ size_t			get_max_col(t_term *term)
 	size_t	col;
 	size_t	index;
 
-	col = get_col_offset(term, NULL);
-	index = 0;
+	col = get_col_offset(term, &index);
 	while (col < (term->winsize.ws_col - 1))
 	{
 		if ((term->line)[index] == '\0'
