@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/14 12:58:03 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 14:13:15 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct			s_term
 	int					seq_off;
 	char				*line;
 	char				*def_line;
+	char				*multiline;
 	size_t				capacity;
 	size_t				size;
 	size_t				cursor;

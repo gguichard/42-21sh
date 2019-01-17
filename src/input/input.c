@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 13:52:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 14:58:13 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,21 +68,47 @@ void	debug_tokens(t_list *all_sub_cmd)
 
 int	handle_command(t_shell *shell)
 {
+	char			*line;
 	t_str_cmd_inf	str_cmd_inf;
 	t_list			*all_sub_cmd;
+	size_t			base_len;
 
-	ft_printf("COMMAND: %s\n", shell->term.line);
-	scmd_init(&str_cmd_inf, shell->term.line);
-	all_sub_cmd = split_cmd_token(&str_cmd_inf);
-	debug_tokens(all_sub_cmd);
-	if (all_sub_cmd != NULL)
+	if (shell->term.multiline == NULL)
+		line = ft_strdup(shell->term.line);
+	else
 	{
-		parse_commands(all_sub_cmd);
-		ft_lstfree(&all_sub_cmd);
+		base_len = ft_strlen(shell->term.multiline);
+		line = (char *)malloc((base_len + shell->term.size + 2) * sizeof(char));
+		if (line != NULL)
+		{
+			ft_memcpy(line, shell->term.multiline, base_len);
+			ft_memcpy(line + base_len + 1, shell->term.line, shell->term.size);
+			line[base_len + 1 + shell->term.size] = '\0';
+			line[base_len] = '\n';
+		}
+		ft_strdel(&(shell->term.multiline));
 	}
-	if (shell->term.size > 0)
-		add_history_entry(shell, shell->term.line);
-	ft_strdel(&(shell->term.def_line));
+	if (line != NULL)
+	{
+		scmd_init(&str_cmd_inf, line);
+		all_sub_cmd = split_cmd_token(&str_cmd_inf);
+		if (all_sub_cmd != NULL)
+		{
+			if (parse_commands(all_sub_cmd)
+					&& !scmd_cur_char_is_in_nothing(&str_cmd_inf))
+				shell->term.multiline = line;
+			else
+			{
+				ft_printf("COMMAND: %s\n", line);
+				debug_tokens(all_sub_cmd);
+			}
+			add_history_entry(shell, line);
+			ft_lstfree(&all_sub_cmd);
+		}
+		ft_strdel(&(shell->term.def_line));
+		if (line != shell->term.multiline)
+			ft_strdel(&line);
+	}
 	return (1);
 }
 
