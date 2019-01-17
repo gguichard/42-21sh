@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/16 11:13:07 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/17 13:47:38 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
 			input/insert_mode.c input/insert_mode_ac.c input/visual_mode.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
 			input/utils.c \
-			parser/parser.c parser/execute.c \
+			lexer/parsing.c parser/execute.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
 			check_enclosing_char_cmd.c split_cmd_token.c str_cmd_inf.c
@@ -30,7 +30,7 @@ OBJ_DIR	=	.obj
 INC_DIR	=	includes
 INC		=	shell.h vars.h error.h check_path.h input.h utils.h \
 			hash_table.h convert_path_to_tab.h autocomplete.h str_cmd_inf.h \
-			split_cmd_token.h check_enclosing_char_cmd.h parser.h token_inf.h
+			split_cmd_token.h check_enclosing_char_cmd.h lexer.h token_inf.h
 
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror -I libft/includes -I $(INC_DIR)
@@ -52,6 +52,7 @@ $(OBJ_DIR):
 	/bin/mkdir $@
 	/bin/mkdir $@/input
 	/bin/mkdir $@/autocomplete
+	/bin/mkdir $@/lexer
 	/bin/mkdir $@/parser
 
 clean:

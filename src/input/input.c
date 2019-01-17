@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 10:24:57 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 13:52:13 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "shell.h"
 #include "input.h"
 #include "history.h"
-#include "parser.h"
+#include "lexer.h"
 
 //TODO SUPPRIMER
 #include "split_cmd_token.h"
