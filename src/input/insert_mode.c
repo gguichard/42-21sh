@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 10:32:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 11:52:19 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 		cursor--;
 	result = autocomplet_word(&(term->line[cursor]), 1, path->value
 			, &(shell->builtins));
-	if (result == NULL || result->suff == NULL)
+	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{
 		delete_ac_suff_inf(result);
 		return (0);
@@ -54,7 +54,8 @@ int		handle_ac(t_shell *shell, t_term *term)
 	ac_append(shell, term, result);
 	if ((term->ac_flag)++)
 	{
-		move_cursor_end(shell, term);
+		tputs(tparm(tgetstr("do", NULL), term->rows - term->row), 1, t_putchar);
+		tputs(tgetstr("cr", NULL), 1, t_putchar);
 		ac_print_list(result->choices, term);
 		refresh_cmdline(shell, term);
 	}

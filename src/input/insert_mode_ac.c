@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 09:39:10 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 09:59:39 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 11:45:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void		ac_print_list(t_list *lst, t_term *term)
 
 	if ((fmt = ac_get_format(lst, term)) == NULL)
 		return ;
-	ft_putchar('\n');
 	row = 0;
 	while (row < fmt->max_row)
 	{
