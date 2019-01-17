@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 11:34:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 10:32:56 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int		handle_ac(t_shell *shell, t_term *term)
 
 int		handle_new_line(t_shell *shell, t_term *term)
 {
+	if (term->visual_mode)
+		return (0);
 	insert_cmdline(shell, term, '\n');
 	return (1);
 }

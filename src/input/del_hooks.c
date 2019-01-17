@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 16:06:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 18:02:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 10:32:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	del_on_cursor(t_shell *shell, t_term *term)
 
 int			handle_bs_key(t_shell *shell, t_term *term)
 {
-	if (!move_cursor_left(shell, term))
+	if (term->visual_mode || !move_cursor_left(shell, term))
 		return (0);
 	del_on_cursor(shell, term);
 	return (1);
@@ -33,7 +33,7 @@ int			handle_bs_key(t_shell *shell, t_term *term)
 
 int			handle_del_key(t_shell *shell, t_term *term)
 {
-	if (term->cursor == term->size)
+	if (term->visual_mode || term->cursor == term->size)
 		return (0);
 	del_on_cursor(shell, term);
 	return (1);
