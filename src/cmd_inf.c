@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_inf.h                                          :+:      :+:    :+:   */
+/*   cmd_inf.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/18 10:20:19 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/18 16:16:25 by fwerner          ###   ########.fr       */
+/*   Created: 2019/01/18 16:22:42 by fwerner           #+#    #+#             */
+/*   Updated: 2019/01/18 16:40:38 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CMD_INF_H
-# define CMD_INF_H
+#include <stdlib.h>
+#include "libft.h"
+#include "cmd_inf.h"
 
-typedef struct s_cmd_inf	t_cmd_inf;
-
-struct						s_cmd_inf
+void	del_cmd(void *content, size_t content_size)
 {
-	t_list					*arg_lst;
-	t_cmd_inf				*pipe_cmd;
-};
-
-void						del_cmd(void *content, size_t content_size);
-
-#endif
+	(void)content_size;
+	ft_lstfree(&(((t_cmd_inf*)content)->arg_lst));
+	if (((t_cmd_inf*)content)->pipe_cmd != NULL)
+		del_cmd(((t_cmd_inf*)content)->pipe_cmd, 0);
+	free(content);
+}

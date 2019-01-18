@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 15:51:10 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 16:43:57 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	print_cmd(t_cmd_inf *cmd_inf, int padding)
 void	debug_tokens(t_list *all_sub_cmd)
 {
 	t_list	*cmd_lst;
+	t_list	*cur_cmd;
 
 	cmd_lst = NULL;
 	if (all_sub_cmd == NULL)
@@ -93,11 +94,13 @@ void	debug_tokens(t_list *all_sub_cmd)
 		all_sub_cmd = all_sub_cmd->next;
 	}
 	ft_printf("PARSED COMMAND:\n");
-	while (cmd_lst != NULL)
+	cur_cmd = cmd_lst;
+	while (cur_cmd != NULL)
 	{
-		print_cmd((t_cmd_inf*)(cmd_lst->content), 0);
-		cmd_lst = cmd_lst->next;
+		print_cmd((t_cmd_inf*)(cur_cmd->content), 0);
+		cur_cmd = cur_cmd->next;
 	}
+	ft_lstdel(&cmd_lst, del_cmd);
 }
 //FIN
 

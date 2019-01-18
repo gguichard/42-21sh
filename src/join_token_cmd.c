@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/18 15:39:29 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/18 16:36:19 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,14 @@ t_list				*join_token_cmd(t_list *token_lst)
 	{
 		if (!set_cur_cmd(&cur_cmd, &token_lst))
 		{
-			//del
+			ft_lstdel(&token_lst, del_cmd);
 			return (NULL);
 		}
 		else if (cur_cmd.arg_lst != NULL)
 		{
 			if ((new_elem = ft_lstnew(&cur_cmd, sizeof(t_cmd_inf))) == NULL)
 			{
-				//del
+				ft_lstdel(&token_lst, del_cmd);
 				return (NULL);
 			}
 			ft_lstpush(&cmd_lst, new_elem);

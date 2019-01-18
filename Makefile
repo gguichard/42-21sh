@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/18 15:48:43 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/18 16:36:40 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ SRC		=	main.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
 			misc/error.c misc/check_path.c misc/hash_table.c \
 			misc/convert_path_to_tab.c misc/utils.c \
-			misc/check_enclosing_char_cmd.c join_token_cmd.c
+			misc/check_enclosing_char_cmd.c join_token_cmd.c \
+			cmd_inf.c
 
 OBJ_DIR	=	.obj
 OBJ		=	$(SRC:.c=.o)
