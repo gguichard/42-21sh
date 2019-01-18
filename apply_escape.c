@@ -2,7 +2,32 @@
 #include "str_cmd_inf.h"
 #include "apply_escape.h"
 
-char	*apply_escape(const char *str)
+static int	need_to_remove_cur_char(t_str_cmd_inf *str_cmd_inf)
+{
+	t_str_cmd_inf	str_cmd_old;
+
+	str_cmd_old.is_in_quote = str_cmd_inf->is_in_quote;
+	str_cmd_old.is_in_doublequote = str_cmd_inf->is_in_doublequote;
+	str_cmd_old.is_in_var_bracket = str_cmd_inf->is_in_var_bracket;
+	str_cmd_old.str = str_cmd_inf->str;
+	str_cmd_old.pos = str_cmd_inf->pos;
+	if (str_cmd_old.str[str_cmd_old.pos] == '\"')
+	{
+		scmd_move_to_next_char(str_cmd_inf);
+		--(str_cmd_inf->pos);
+		return (str_cmd_old.is_in_doublequote
+				!= str_cmd_inf->is_in_doublequote);
+	}
+	else if (str_cmd_old.str[str_cmd_old.pos] == '\'')
+	{
+		scmd_move_to_next_char(str_cmd_inf);
+		--(str_cmd_inf->pos);
+		return (str_cmd_old.is_in_quote != str_cmd_inf->is_in_quote);
+	}
+	return (0);
+}
+
+char		*apply_escape(const char *str)
 {
 	t_str_cmd_inf	str_cmd_inf;
 	char			*new_str;
@@ -31,7 +56,15 @@ char	*apply_escape(const char *str)
 			if (str_cmd_inf.str[str_cmd_inf.pos] != '\0')
 				str_cmd_inf.pos += (cur_move == 2 ? 0 : 1);
 		}
-		scmd_move_to_next_char(&str_cmd_inf);
+		else if (need_to_remove_cur_char(&str_cmd_inf))
+		{
+			ft_memmove(new_str + str_cmd_inf.pos,
+					new_str + str_cmd_inf.pos + 1,
+					str_len + 1 - str_cmd_inf.pos - 1);
+			--str_len;
+		}
+		else
+			++(str_cmd_inf.pos);
 	}
 	return (new_str);
 }
