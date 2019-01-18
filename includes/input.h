@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 15:50:09 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 19:49:42 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@
 # include "autocomplete.h"
 
 # define EOT_KEY 4
+# define BELL_KEY 7
+# define BACKSPACE_KEY 8
 # define FORM_FEED_KEY 12
-# define BACKSPACE_KEY 127
+# define DELETE_KEY 127
 # define ESC_SEQ_LEFT "\033[D"
 # define ESC_SEQ_RIGHT "\033[C"
 # define ESC_SEQ_UP "\033[A"
@@ -117,6 +119,7 @@ int				move_cursor_down(t_shell *shell, t_term *term);
 */
 int				handle_new_line(t_shell *shell, t_term *term);
 int				handle_screen_clear(t_shell *shell, t_term *term);
+int				handle_bell(t_shell *shell, t_term *term);
 
 /*
 ** UTILS.

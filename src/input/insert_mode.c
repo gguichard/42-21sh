@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 15:51:29 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 19:49:51 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int		handle_key(t_shell *shell, t_term *term, char key)
 		insert_cmdline(shell, term, key);
 	else if (key == EOT_KEY)
 		return (handle_eot_key(shell, term) ? -1 : 1);
-	else if (key == BACKSPACE_KEY)
+	else if (key == BACKSPACE_KEY || key == DELETE_KEY)
 		ret = handle_bs_key(shell, term);
 	else if (key == '\t')
 		ret = handle_ac(shell, term);
