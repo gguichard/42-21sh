@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 11:28:36 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 15:40:45 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	handle_signal(int sig)
 		update_winsize(&(g_shell->term));
 	if (sig == SIGINT)
 	{
+		ft_strdel(&(g_shell->term.multiline));
 		if (g_shell->term.visual_mode)
 			vm_toggle(g_shell, &(g_shell->term));
 		ft_putchar('\n');
@@ -57,9 +58,11 @@ int		main(int argc, char **argv, char **environ)
 		signal(SIGWINCH, handle_signal);
 	wait_for_command(&shell);
 	reset_term(&shell);
-	free(shell.term.line);
 	ft_lstdel(&(shell.env), free_var);
 	ft_lstdel(&(shell.local), free_var);
+	ft_strdel(&(shell.term.line));
+	ft_strdel(&(shell.term.multiline));
+	ft_strdel(&(shell.term.def_line));
 	clear_history(&shell);
 	return (0);
 }

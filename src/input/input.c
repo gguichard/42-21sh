@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 14:58:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/17 20:43:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,53 +66,57 @@ void	debug_tokens(t_list *all_sub_cmd)
 }
 //FIN
 
-int	handle_command(t_shell *shell)
+char	*get_command_line(t_term *term)
+{
+	size_t	ml_len;
+	char	*line;
+
+	if (term->multiline == NULL)
+		return (ft_strdup(term->line));
+	ml_len = ft_strlen(term->multiline);
+	line = (char *)malloc((ml_len + term->size + 2) * sizeof(char));
+	if (line != NULL)
+	{
+		ft_memcpy(line, term->multiline, ml_len);
+		ft_memcpy(line + ml_len + 1, term->line, term->size);
+		line[ml_len + 1 + term->size] = '\0';
+		line[ml_len] = '\n';
+	}
+	ft_strdel(&(term->multiline));
+	return (line);
+}
+
+int		handle_command(t_shell *shell)
 {
 	char			*line;
 	t_str_cmd_inf	str_cmd_inf;
 	t_list			*all_sub_cmd;
-	size_t			base_len;
 
-	if (shell->term.multiline == NULL)
-		line = ft_strdup(shell->term.line);
-	else
+	ft_strdel(&(shell->term.def_line));
+	line = get_command_line(&(shell->term));
+	if (line == NULL)
+		return (0);
+	scmd_init(&str_cmd_inf, line);
+	all_sub_cmd = split_cmd_token(&str_cmd_inf);
+	if (all_sub_cmd != NULL)
 	{
-		base_len = ft_strlen(shell->term.multiline);
-		line = (char *)malloc((base_len + shell->term.size + 2) * sizeof(char));
-		if (line != NULL)
+		if (parse_commands(all_sub_cmd)
+				&& !scmd_cur_char_is_in_nothing(&str_cmd_inf))
+			shell->term.multiline = line;
+		else
 		{
-			ft_memcpy(line, shell->term.multiline, base_len);
-			ft_memcpy(line + base_len + 1, shell->term.line, shell->term.size);
-			line[base_len + 1 + shell->term.size] = '\0';
-			line[base_len] = '\n';
+			ft_printf("COMMAND: %s\n", line);
+			debug_tokens(all_sub_cmd);
 		}
-		ft_strdel(&(shell->term.multiline));
+		ft_lstdel(&all_sub_cmd, del_token);
 	}
-	if (line != NULL)
-	{
-		scmd_init(&str_cmd_inf, line);
-		all_sub_cmd = split_cmd_token(&str_cmd_inf);
-		if (all_sub_cmd != NULL)
-		{
-			if (parse_commands(all_sub_cmd)
-					&& !scmd_cur_char_is_in_nothing(&str_cmd_inf))
-				shell->term.multiline = line;
-			else
-			{
-				ft_printf("COMMAND: %s\n", line);
-				debug_tokens(all_sub_cmd);
-			}
-			add_history_entry(shell, line);
-			ft_lstfree(&all_sub_cmd);
-		}
-		ft_strdel(&(shell->term.def_line));
-		if (line != shell->term.multiline)
-			ft_strdel(&line);
-	}
+	add_history_entry(shell, line);
+	if (line != shell->term.multiline)
+		ft_strdel(&line);
 	return (1);
 }
 
-int	handle_key_mode(t_shell *shell, t_term *term, char key)
+int		handle_key_mode(t_shell *shell, t_term *term, char key)
 {
 	if (term->visual_mode)
 		return (handle_vm_key(shell, term, key));
@@ -120,7 +124,7 @@ int	handle_key_mode(t_shell *shell, t_term *term, char key)
 		return (handle_key(shell, term, key));
 }
 
-int	read_input(t_shell *shell)
+int		read_input(t_shell *shell)
 {
 	int		ret;
 	char	buf;
@@ -141,7 +145,7 @@ int	read_input(t_shell *shell)
 	return (ret);
 }
 
-int	wait_for_command(t_shell *shell)
+int		wait_for_command(t_shell *shell)
 {
 	int	ret;
 
