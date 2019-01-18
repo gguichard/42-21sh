@@ -6,12 +6,12 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 15:09:50 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 13:45:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 09:44:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
+#ifndef LEXER_H
+# define LEXER_H
 
 # include "libft.h"
 # include "token_inf.h"

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 15:30:41 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 09:26:19 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ int		handle_command(t_shell *shell)
 	if (all_sub_cmd != NULL)
 	{
 		if (parse_commands(all_sub_cmd)
-				&& !scmd_cur_char_is_in_nothing(&str_cmd_inf))
+				&& (!scmd_cur_char_is_in_nothing(&str_cmd_inf)
+					|| scmd_cur_char_is_escaped(&str_cmd_inf)))
 			shell->term.multiline = line;
 		else
 		{
