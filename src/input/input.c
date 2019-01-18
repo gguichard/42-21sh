@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 09:57:05 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:00:28 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,43 @@
 //TODO SUPPRIMER
 #include "split_cmd_token.h"
 #include "str_cmd_inf.h"
+#include "cmd_inf.h"
+#include "join_token_cmd.h"
+#include "apply_escape.h"
 #include "token_inf.h"
 //FIN
 
 //TODO SUPPRIMER
+void	print_cmd(t_cmd_inf *cmd_inf, int padding)
+{
+	t_list	*args;
+	char	*tmp;
+
+	ft_printf("%*s|", padding, "");
+	args = cmd_inf->arg_lst;
+	while (args != NULL)
+	{
+		tmp = apply_escape((char*)(args->content));
+		ft_printf(" \"%s\"", tmp);
+		free(tmp);
+		args = args->next;
+	}
+	ft_printf("\n");
+	if (cmd_inf->pipe_cmd != NULL)
+	{
+		print_cmd(cmd_inf->pipe_cmd, padding + 4);
+	}
+}
+
 void	debug_tokens(t_list *all_sub_cmd)
 {
+	t_list	*cmd_lst;
+
+	cmd_lst = NULL;
 	if (all_sub_cmd == NULL)
 		ft_printf("   TOKEN NULL\n");
+	else
+		cmd_lst = join_token_cmd(all_sub_cmd);
 	while (all_sub_cmd != NULL)
 	{
 		ft_printf("TOKEN:\n");
@@ -62,6 +91,12 @@ void	debug_tokens(t_list *all_sub_cmd)
 		}
 		ft_printf("      =%s=\n", ((t_token_inf*)all_sub_cmd->content)->token);
 		all_sub_cmd = all_sub_cmd->next;
+	}
+	ft_printf("PARSED COMMAND:\n");
+	while (cmd_lst != NULL)
+	{
+		print_cmd((t_cmd_inf*)(cmd_lst->content), 0);
+		cmd_lst = cmd_lst->next;
 	}
 }
 //FIN
