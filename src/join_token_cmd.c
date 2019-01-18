@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/18 15:18:52 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/18 15:39:29 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 					return (0);
 				}
 			}
-			else
-			{
-				return (1);
-			}
+		}
+		else if (get_tk(*token_lst)->type == TK_CMD_SEP)
+		{
+			return (1);
 		}
 		if (*token_lst != NULL)
 			*token_lst = (*token_lst)->next;
