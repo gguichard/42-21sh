@@ -6,19 +6,15 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 15:40:45 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 19:30:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
 #include <signal.h>
-#include <sys/ioctl.h>
 #include "shell.h"
 #include "input.h"
 #include "history.h"
 #include "vars.h"
-#include "printf.h"
 
 t_shell	*g_shell = NULL;
 
