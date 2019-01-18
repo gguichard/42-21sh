@@ -241,11 +241,11 @@ t_list					*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 	{
 		if ((token_type = split_at_pos(&token_lst, str_cmd_inf, &token_start,
 						&last_char_was_sep)) == TK_NOTHING)
-			return (ft_lstfree(&token_lst));
+			return (ft_lstdel(&token_lst, del_token));
 		scmd_move_to_next_char(str_cmd_inf);
 	}
 	if (token_type == TK_WORD && !add_cur_token_to_lst(&token_lst,
 				str_cmd_inf, token_start, token_type))
-		return (ft_lstfree(&token_lst));
+		return (ft_lstdel(&token_lst, del_token));
 	return (token_lst);
 }

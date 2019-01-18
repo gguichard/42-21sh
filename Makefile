@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/17 15:23:44 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/18 09:05:52 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ SRC		=	main.c env.c vars.c shell_vars.c prompt.c \
 			lexer/lexer.c lexer/parsing.c parser/execute.c \
 			error.c check_path.c hash_table.c convert_path_to_tab.c utils.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
-			check_enclosing_char_cmd.c split_cmd_token.c str_cmd_inf.c
+			check_enclosing_char_cmd.c split_cmd_token.c str_cmd_inf.c \
+			token_inf.c apply_escape.c
 SRC_DIR	=	src
 
 OBJ		=	$(SRC:.c=.o)
@@ -30,7 +31,8 @@ OBJ_DIR	=	.obj
 INC_DIR	=	includes
 INC		=	shell.h vars.h error.h check_path.h input.h utils.h \
 			hash_table.h convert_path_to_tab.h autocomplete.h str_cmd_inf.h \
-			split_cmd_token.h check_enclosing_char_cmd.h lexer.h token_inf.h
+			split_cmd_token.h check_enclosing_char_cmd.h lexer.h token_inf.h \
+			apply_escape.h
 
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror -I libft/includes -I $(INC_DIR)

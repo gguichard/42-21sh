@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 09:26:19 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 09:57:05 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int		handle_command(t_shell *shell)
 	t_str_cmd_inf	str_cmd_inf;
 	t_list			*all_sub_cmd;
 
+	ft_strdel(&(shell->term.def_line));
 	line = get_command_line(&(shell->term));
 	if (line == NULL)
 		return (0);
@@ -108,10 +109,9 @@ int		handle_command(t_shell *shell)
 			ft_printf("COMMAND: %s\n", line);
 			debug_tokens(all_sub_cmd);
 		}
-		add_history_entry(shell, line);
-		ft_lstfree(&all_sub_cmd);
+		ft_lstdel(&all_sub_cmd, del_token);
 	}
-	ft_strdel(&(shell->term.def_line));
+	add_history_entry(shell, line);
 	if (line != shell->term.multiline)
 		ft_strdel(&line);
 	return (1);

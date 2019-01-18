@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_inf.h                                        :+:      :+:    :+:   */
+/*   token_inf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,25 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOKEN_INF_H
-# define TOKEN_INF_H
+#include <stdlib.h>
+#include "token_inf.h"
 
-typedef enum		e_token_type
+void	del_token(void *content, size_t content_size)
 {
-	TK_NOTHING,
-	TK_WORD,
-	TK_OPE,
-	TK_NUM_OPT,
-	TK_STR_OPT,
-	TK_CMD_SEP
-}					t_token_type;
-
-typedef struct		s_token_inf
-{
-	char			*token;
-	t_token_type	type;
-}					t_token_inf;
-
-void				del_token(void *content, size_t content_size);
-
-#endif
+	(void)content_size;
+	free(((t_token_inf*)content)->token);
+	free(content);
+}
