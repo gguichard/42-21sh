@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 15:34:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:30:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,5 @@ void	print_cmdline(t_shell *shell, t_term *term)
 	row = term->rows - (term->row + 1);
 	if (row > 0)
 		tputs(tparm(tgetstr("UP", NULL), row), 1, t_putchar);
-	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
+	move_cursor_to_col(term);
 }

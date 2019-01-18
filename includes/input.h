@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 15:18:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:32:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int				handle_vm_key(t_shell *shell, t_term *term, char key);
 /*
 ** HOOKS.
 */
+int				move_cursor_to_col(t_term *term);
 int				move_cursor_left(t_shell *shell, t_term *term);
 int				move_cursor_right(t_shell *shell, t_term *term);
 int				move_cursor_home(t_shell *shell, t_term *term);

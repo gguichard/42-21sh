@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 14:19:25 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 10:04:03 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:32:38 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	fix_outbound_col(t_term *term)
 		term->col = term->offset;
 	else if (term->col > max_col)
 		term->col = max_col;
-	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
+	move_cursor_to_col(term);
 	update_cursor_data(term);
 }
 

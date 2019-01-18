@@ -6,13 +6,21 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 13:10:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:33:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "input.h"
 #include "utils.h"
+
+int	move_cursor_to_col(t_term *term)
+{
+	tputs(tgetstr("cr", NULL), 1, t_putchar);
+	if (term->col > 0)
+		tputs(tparm(tgetstr("RI", NULL), term->col), 1, t_putchar);
+	return (1);
+}
 
 int	move_cursor_left(t_shell *shell, t_term *term)
 {
@@ -31,7 +39,7 @@ int	move_cursor_left(t_shell *shell, t_term *term)
 		(term->row)--;
 		term->col = get_max_col(term);
 		tputs(tgetstr("up", NULL), 1, t_putchar);
-		tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
+		move_cursor_to_col(term);
 	}
 	return (1);
 }
@@ -51,8 +59,8 @@ int	move_cursor_right(t_shell *shell, t_term *term)
 	{
 		(term->row)++;
 		term->col = 0;
-		tputs(tgetstr("cr", NULL), 1, t_putchar);
 		tputs(tgetstr("do", NULL), 1, t_putchar);
+		move_cursor_to_col(term);
 	}
 	(term->cursor)++;
 	return (1);
@@ -70,7 +78,7 @@ int	move_cursor_home(t_shell *shell, t_term *term)
 		term->row = 0;
 	}
 	term->col = term->offset;
-	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
+	move_cursor_to_col(term);
 	return (1);
 }
 
@@ -87,6 +95,6 @@ int	move_cursor_end(t_shell *shell, t_term *term)
 		term->row = term->rows - 1;
 	}
 	term->col = get_max_col(term);
-	tputs(tparm(tgetstr("ch", NULL), term->col), 1, t_putchar);
+	move_cursor_to_col(term);
 	return (1);
 }
