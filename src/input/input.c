@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 15:00:28 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/18 15:51:10 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,8 @@ int		handle_command(t_shell *shell)
 
 int		handle_key_mode(t_shell *shell, t_term *term, char key)
 {
+	if (key == FORM_FEED_KEY)
+		return (handle_screen_clear(shell, term));
 	if (term->visual_mode)
 		return (handle_vm_key(shell, term, key));
 	else

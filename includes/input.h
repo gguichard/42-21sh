@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 15:32:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:50:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "autocomplete.h"
 
 # define EOT_KEY 4
+# define FORM_FEED_KEY 12
 # define BACKSPACE_KEY 127
 # define ESC_SEQ_LEFT "\033[D"
 # define ESC_SEQ_RIGHT "\033[C"
@@ -85,7 +86,6 @@ void			ac_print_list(t_list *lst, t_term *term);
 void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result);
 int				handle_ac(t_shell *shell, t_term *term);
 int				handle_eot_key(t_shell *shell, t_term *term);
-int				handle_new_line(t_shell *shell, t_term *term);
 int				handle_bs_key(t_shell *shell, t_term *term);
 int				handle_del_key(t_shell *shell, t_term *term);
 int				handle_key(t_shell *shell, t_term *term, char key);
@@ -111,6 +111,12 @@ int				move_cursor_prev_word(t_shell *shell, t_term *term);
 int				move_cursor_next_word(t_shell *shell, t_term *term);
 int				move_cursor_up(t_shell *shell, t_term *term);
 int				move_cursor_down(t_shell *shell, t_term *term);
+
+/*
+** MISC HOOKS.
+*/
+int				handle_new_line(t_shell *shell, t_term *term);
+int				handle_screen_clear(t_shell *shell, t_term *term);
 
 /*
 ** UTILS.

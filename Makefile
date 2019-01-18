@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/18 15:33:52 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/18 15:48:43 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRC		=	main.c \
 			input/history.c input/history_hooks.c \
 			input/insert_mode.c input/insert_mode_ac.c input/visual_mode.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
-			input/utils.c \
+			input/misc_hooks.c input/utils.c \
 			lexer/lexer.c lexer/parsing.c \
 			execute/execute.c \
 			parser/split_cmd_token.c parser/str_cmd_inf.c \

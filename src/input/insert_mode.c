@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 15:39:58 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/18 15:51:29 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,6 @@ int		handle_ac(t_shell *shell, t_term *term)
 		refresh_cmdline(shell, term);
 	}
 	delete_ac_suff_inf(result);
-	return (1);
-}
-
-int		handle_new_line(t_shell *shell, t_term *term)
-{
-	if (term->visual_mode)
-		return (0);
-	insert_cmdline(shell, term, '\n');
 	return (1);
 }
 
