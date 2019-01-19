@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/19 12:30:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/19 13:06:16 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 void	reset_cmdline(t_shell *shell)
 {
 	ft_memset(shell->term.line, 0, shell->term.size + 1);
+	if (shell->term.multiline == NULL)
+		shell->term.prompt = PROMPT_DEF;
 	show_prompt(shell);
 	shell->term.cursor = 0;
 	shell->term.size = 0;

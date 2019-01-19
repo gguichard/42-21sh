@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/19 12:32:05 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/19 13:06:23 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,6 @@ int		handle_command(t_shell *shell)
 			shell->term.multiline = line;
 		else
 		{
-			shell->term.prompt = PROMPT_DEF;
 			ft_printf("COMMAND: %s\n", line);
 			debug_tokens(all_sub_cmd);
 		}
