@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 14:13:15 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/19 12:29:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,16 @@
 
 # define ERR_PREFIX "21sh"
 # define MAX_ESC_SEQ_BYTES 8
-# define CMDLINE_CAPACITY 1024
+# define CMDLINE_DEF_CAPACITY 1024
+
+typedef enum			e_prompt
+{
+	PROMPT_DEF = 0,
+	PROMPT_ESCAPED,
+	PROMPT_QUOTE,
+	PROMPT_DQUOTE,
+	PROMPT_HEREDOC
+}						t_prompt;
 
 typedef struct			s_select
 {
@@ -38,6 +47,7 @@ typedef struct			s_term
 	int					seq_off;
 	char				*line;
 	char				*def_line;
+	t_prompt			prompt;
 	char				*multiline;
 	size_t				capacity;
 	size_t				size;

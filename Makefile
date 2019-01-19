@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/18 19:39:19 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/19 12:21:40 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ SRC_DIR	=	src
 SRC		=	main.c \
 			vars/env.c vars/vars.c vars/shell_vars.c \
 			term/setup.c term/prompt.c \
-			input/input.c input/cmdline.c input/esc_sequence.c \
-			input/history.c input/history_hooks.c \
+			input/input.c input/multiline.c input/cmdline.c \
+			input/esc_sequence.c input/history.c input/history_hooks.c \
 			input/insert_mode.c input/insert_mode_ac.c input/visual_mode.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
 			input/misc_hooks.c input/utils.c \

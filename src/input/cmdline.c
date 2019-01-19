@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 15:30:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/19 12:30:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,16 @@ int		realloc_cmdline(t_term *term)
 {
 	char	*tmp;
 
-	tmp = (char *)ft_memalloc(term->capacity + CMDLINE_CAPACITY + 1);
+	tmp = (char *)ft_memalloc(term->capacity + CMDLINE_DEF_CAPACITY + 1);
 	if (tmp == NULL)
 		return (0);
 	if (term->line != NULL)
+	{
 		ft_memcpy(tmp, term->line, term->size);
-	free(term->line);
+		free(term->line);
+	}
 	term->line = tmp;
-	term->capacity += CMDLINE_CAPACITY;
+	term->capacity += CMDLINE_DEF_CAPACITY;
 	return (1);
 }
 
