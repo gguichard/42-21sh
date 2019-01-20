@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/19 12:29:48 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/20 13:54:07 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,8 @@ void	show_prompt(t_shell *shell)
 	if (prompt == NULL)
 		shell->term.offset = 0;
 	else
+	{
 		shell->term.offset = write(STDOUT_FILENO, prompt, ft_strlen(prompt));
+		free(prompt);
+	}
 }
