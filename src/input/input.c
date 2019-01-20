@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/19 13:06:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/20 13:50:32 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,11 @@ int		wait_for_command(t_shell *shell)
 		if (!(shell->term.legacy_mode))
 			ret = read_input(shell);
 		else
+		{
 			ret = get_next_line(STDIN_FILENO, &(shell->term.line));
+			if (ret > 0)
+				shell->term.size = ft_strlen(shell->term.line);
+		}
 		if (ret > 0)
 			handle_command(shell);
 	}
