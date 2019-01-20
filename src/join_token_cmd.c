@@ -36,6 +36,7 @@ static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 {
 	cmd_inf->arg_lst = NULL;
 	cmd_inf->pipe_cmd = NULL;
+	cmd_inf->redirect_lst = NULL;
 	while (*token_lst != NULL)
 	{
 		if (get_tk(*token_lst)->type == TK_WORD)

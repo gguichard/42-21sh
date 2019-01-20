@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_inf.h                                          :+:      :+:    :+:   */
+/*   redirect_inf.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,18 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CMD_INF_H
-# define CMD_INF_H
+#ifndef REDIRECT_INF_H
+# define REDIRECT_INF_H
 
-typedef struct s_cmd_inf	t_cmd_inf;
+# define FD_ERROR		-1
+# define FD_DEFAULT		-2
+# define FD_AMPERSAND	-3
+# define FD_NOTSET		-4
 
-struct						s_cmd_inf
+typedef enum			e_redirect_type
 {
-	t_list					*arg_lst;
-	t_cmd_inf				*pipe_cmd;
-	t_list					*redirect_lst;
-};
+	RD_L,
+	RD_R,
+	RD_LR,
+	RD_LL,
+	RD_RR
+}						t_redirect_type;
 
-void						del_cmd(void *content, size_t content_size);
+typedef struct			s_redirect_inf
+{
+	int					from_fd;
+	t_redirect_type		red_type;
+	int					to_fd;
+	int					close_to_fd;
+	char				*to_word;
+}						t_redirect_inf;
+
+void					del_redirect(void *content, size_t content_size);
 
 #endif

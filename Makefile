@@ -29,7 +29,7 @@ SRC		=	main.c \
 			misc/error.c misc/check_path.c misc/hash_table.c \
 			misc/convert_path_to_tab.c misc/utils.c \
 			misc/check_enclosing_char_cmd.c \
-			join_token_cmd.c cmd_inf.c
+			join_token_cmd.c cmd_inf.c redirect_inf.c
 
 OBJ_DIR	=	.obj
 OBJ		=	$(SRC:.c=.o)

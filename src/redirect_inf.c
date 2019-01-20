@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_inf.c                                          :+:      :+:    :+:   */
+/*   redirect_inf.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,16 +11,11 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "libft.h"
 #include "redirect_inf.h"
-#include "cmd_inf.h"
 
-void	del_cmd(void *content, size_t content_size)
+void	del_redirect(void *content, size_t content_size)
 {
 	(void)content_size;
-	ft_lstfree(&(((t_cmd_inf*)content)->arg_lst));
-	if (((t_cmd_inf*)content)->pipe_cmd != NULL)
-		del_cmd(((t_cmd_inf*)content)->pipe_cmd, 0);
-	ft_lstdel(&(((t_cmd_inf*)content)->redirect_lst), del_redirect);
+	free(((t_redirect_inf*)content)->to_word);
 	free(content);
 }
