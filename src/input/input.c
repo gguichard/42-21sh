@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/20 13:50:32 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/20 14:20:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int		read_input(t_shell *shell)
 		}
 		handle = handle_key_mode(shell, &(shell->term), buf);
 		if (handle <= 0)
-			return (handle < 0 ? handle : ret);
+			return (handle < 0 ? 0 : ret);
 	}
 	return (ret);
 }
@@ -191,8 +191,6 @@ int		wait_for_command(t_shell *shell)
 {
 	int	ret;
 
-	if (!realloc_cmdline(&(shell->term)))
-		return (0);
 	ret = 1;
 	while (ret > 0)
 	{
@@ -207,6 +205,10 @@ int		wait_for_command(t_shell *shell)
 		}
 		if (ret > 0)
 			handle_command(shell);
+		else if (shell->term.multiline != NULL)
+			ret = handle_multiline_eot(&(shell->term));
+		if (shell->term.legacy_mode)
+			ft_strdel(&(shell->term.line));
 	}
 	ft_putendl("exit");
 	return (ret);

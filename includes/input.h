@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/19 12:23:00 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/20 14:03:11 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int				update_winsize(t_term *term);
 ** COMMAND LINE.
 */
 int				handle_command(t_shell *shell);
+int				handle_multiline_eot(t_term *term);
 int				is_multiline(t_term *term, t_str_cmd_inf *str_cmd_inf);
 int				wait_for_command(t_shell *shell);
 void			reset_cmdline(t_shell *shell);
