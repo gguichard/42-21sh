@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 17:39:09 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 17:54:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	locate_and_exec(t_shell *shell, t_cmd_inf *cmd_inf, char **args)
 		fork_child(shell, cmd_inf, locate, args);
 		setup_term(shell);
 	}
+	free(locate);
 }
 
 void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf)
@@ -76,6 +77,7 @@ void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf)
 
 	args = arg_lst_to_tab(cmd_inf->arg_lst);
 	locate_and_exec(shell, cmd_inf, args);
+	ft_memdel((void *)&args);
 	if (cmd_inf->pipe_cmd != NULL)
 		execute_cmd_inf(shell, cmd_inf->pipe_cmd);
 }
@@ -94,4 +96,5 @@ void	execute_all(t_shell *shell, t_list *all_sub_cmd)
 		execute_cmd_inf(shell, cmd_inf);
 		cur_cmd = cur_cmd->next;
 	}
+	ft_lstdel(&cmd_lst, del_cmd);
 }
