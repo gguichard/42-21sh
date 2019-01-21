@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/16 15:26:45 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 11:54:34 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ static int				process_opt_add(t_list **token_lst,
 	return (1);
 }
 
-static int				process_after_opt(t_list **token_lst,
+static int				process_after_ope(t_list **token_lst,
 		t_str_cmd_inf *str_cmd_inf)
 {
 	const char		*token_start;
@@ -194,7 +194,7 @@ static int				split_sep_char(t_list **token_lst,
 			&& (str_cmd_inf->str[str_cmd_inf->pos] == '>'
 				|| str_cmd_inf->str[str_cmd_inf->pos] == '<'))
 	{
-		if (!process_after_opt(token_lst, str_cmd_inf))
+		if (!process_after_ope(token_lst, str_cmd_inf))
 			return (0);
 	}
 	return (1);
