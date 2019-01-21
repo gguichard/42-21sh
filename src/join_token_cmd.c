@@ -6,10 +6,11 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 08:40:14 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 09:22:06 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <limits.h>
 #include <stdlib.h>
 #include "libft.h"
 #include "cmd_inf.h"
@@ -33,44 +34,61 @@ static int			add_arg(t_cmd_inf *cmd_inf, const char *arg)
 	return (1);
 }
 
-static int			add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf,
-		t_token_inf* tk_lopt, t_token_inf *tk_ope, t_token_inf *tk_ropt)
+static void			process_lopt_redirect(t_redirect_inf *new_red,
+		t_token_inf *tk_lopt)
 {
-	t_redirect_inf	new_red;
-	long int		tmp_fd;
-	char			*tmp_fd_end;
-	t_list			*new_elem;
+	long int	tmp_fd;
 
 	if (tk_lopt == NULL)
-		new_red.from_fd = FD_DEFAULT;
+		new_red->from_fd = FD_DEFAULT;
 	else if (ft_strequ(tk_lopt->token, "&"))
-		new_red.from_fd = FD_AMPERSAND;
+		new_red->from_fd = FD_AMPERSAND;
 	else
 	{
-		if ((tmp_fd = ft_strtol(tk_lopt->token, NULL, 10)) > 2147483647)
-			new_red.from_fd = FD_ERROR;
+		if ((tmp_fd = ft_strtol(tk_lopt->token, NULL, 10)) > INT_MAX)
+			new_red->from_fd = FD_ERROR;
 		else
-			new_red.from_fd = tmp_fd;
+			new_red->from_fd = tmp_fd;
 	}
-	new_red.red_type = redirection_str_to_type(tk_ope->token);
+}
+
+static int			process_ropt_redirect(t_redirect_inf *new_red,
+		t_token_inf *tk_ropt)
+{
+	long int		tmp_fd;
+	char			*tmp_fd_end;
+
 	if (tk_ropt->type == TK_STR_OPT)
 	{
-		new_red.to_word = NULL;
-		if ((tmp_fd = ft_strtol(tk_ropt->token + 1, &tmp_fd_end, 10)) > 2147483647)
-			new_red.to_fd = FD_ERROR;
+		new_red->to_word = NULL;
+		if ((tmp_fd = ft_strtol(tk_ropt->token + 1, &tmp_fd_end, 10)) > INT_MAX)
+			new_red->to_fd = FD_ERROR;
 		else if (tmp_fd_end == (tk_ropt->token + 1))
-			new_red.to_fd = FD_DEFAULT;
+			new_red->to_fd = FD_DEFAULT;
 		else
-			new_red.to_fd = tmp_fd;
-		new_red.close_to_fd = (*tmp_fd_end == '-');
+			new_red->to_fd = tmp_fd;
+		new_red->close_to_fd = (*tmp_fd_end == '-');
 	}
 	else
 	{
-		new_red.to_fd = FD_NOTSET;
-		new_red.close_to_fd = 0;
-		if ((new_red.to_word = ft_strdup(tk_ropt->token)) == NULL)
+		new_red->to_fd = FD_NOTSET;
+		new_red->close_to_fd = 0;
+		if ((new_red->to_word = ft_strdup(tk_ropt->token)) == NULL)
 			return (0);
 	}
+	return (1);
+}
+
+static int			add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf,
+		t_token_inf *tk_lopt, t_token_inf *tk_ope, t_token_inf *tk_ropt)
+{
+	t_redirect_inf	new_red;
+	t_list			*new_elem;
+
+	process_lopt_redirect(&new_red, tk_lopt);
+	new_red.red_type = redirection_str_to_type(tk_ope->token);
+	if (!process_ropt_redirect(&new_red, tk_ropt))
+		return (0);
 	if ((new_elem = ft_lstnew(&new_red, sizeof(t_redirect_inf))) == NULL)
 	{
 		free(new_red.to_word);
@@ -101,13 +119,9 @@ static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 			if (get_tk(*token_lst)->token[0] == '<'
 					|| get_tk(*token_lst)->token[0] == '>')
 			{
-				if ((*token_lst)->next == NULL)
-				{
-					ft_lstfree(&(cmd_inf->arg_lst));
-					ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
-					return (0);
-				}
-				if (!add_redirect_inf_to_cmd(cmd_inf, NULL, get_tk(*token_lst), get_tk((*token_lst)->next)))
+				if ((*token_lst)->next == NULL
+						|| !add_redirect_inf_to_cmd(cmd_inf, NULL,
+							get_tk(*token_lst), get_tk((*token_lst)->next)))
 				{
 					ft_lstfree(&(cmd_inf->arg_lst));
 					ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
@@ -139,13 +153,10 @@ static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 		}
 		else if (get_tk(*token_lst)->type == TK_NUM_OPT)
 		{
-			if ((*token_lst)->next == NULL || (*token_lst)->next->next == NULL)
-			{
-				ft_lstfree(&(cmd_inf->arg_lst));
-				ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
-				return (0);
-			}
-			if (!add_redirect_inf_to_cmd(cmd_inf, get_tk(*token_lst), get_tk((*token_lst)->next), get_tk((*token_lst)->next->next)))
+			if ((*token_lst)->next == NULL || (*token_lst)->next->next == NULL
+					|| !add_redirect_inf_to_cmd(cmd_inf, get_tk(*token_lst),
+						get_tk((*token_lst)->next),
+						get_tk((*token_lst)->next->next)))
 			{
 				ft_lstfree(&(cmd_inf->arg_lst));
 				ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
