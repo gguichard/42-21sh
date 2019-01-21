@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 08:54:22 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 09:52:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,8 @@ int		wait_for_command(t_shell *shell)
 {
 	int	ret;
 
+	if (!realloc_cmdline(&(shell->term)))
+		return (0);
 	ret = 1;
 	while (ret > 0)
 	{
