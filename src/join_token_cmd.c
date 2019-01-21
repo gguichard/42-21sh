@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 09:22:06 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 11:44:43 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@
 
 static t_token_inf	*get_tk(t_list *lst)
 {
-	return ((t_token_inf*)(lst->content));
+	if (lst != NULL)
+		return ((t_token_inf*)(lst->content));
+	else
+		return (NULL);
 }
 
 static int			add_arg(t_cmd_inf *cmd_inf, const char *arg)
@@ -85,6 +88,8 @@ static int			add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf,
 	t_redirect_inf	new_red;
 	t_list			*new_elem;
 
+	if (tk_ropt == NULL)
+		return (0);
 	process_lopt_redirect(&new_red, tk_lopt);
 	new_red.red_type = redirection_str_to_type(tk_ope->token);
 	if (!process_ropt_redirect(&new_red, tk_ropt))
@@ -96,6 +101,15 @@ static int			add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf,
 	}
 	ft_lstpush(&(cmd_inf->redirect_lst), new_elem);
 	return (1);
+}
+
+static t_list		*get_ropt_elem(t_list *tk_lst)
+{
+	if (get_tk(tk_lst)->type == TK_STR_OPT
+			&& ft_strequ(get_tk(tk_lst)->token, "&"))
+		return (tk_lst->next);
+	else
+		return (tk_lst);
 }
 
 static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
@@ -121,13 +135,14 @@ static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 			{
 				if ((*token_lst)->next == NULL
 						|| !add_redirect_inf_to_cmd(cmd_inf, NULL,
-							get_tk(*token_lst), get_tk((*token_lst)->next)))
+							get_tk(*token_lst),
+							get_tk(get_ropt_elem((*token_lst)->next))))
 				{
 					ft_lstfree(&(cmd_inf->arg_lst));
 					ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
 					return (0);
 				}
-				*token_lst = (*token_lst)->next;
+				*token_lst = get_ropt_elem((*token_lst)->next);
 			}
 			else if (ft_strequ(get_tk(*token_lst)->token, "|"))
 			{
@@ -156,13 +171,13 @@ static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 			if ((*token_lst)->next == NULL || (*token_lst)->next->next == NULL
 					|| !add_redirect_inf_to_cmd(cmd_inf, get_tk(*token_lst),
 						get_tk((*token_lst)->next),
-						get_tk((*token_lst)->next->next)))
+						get_tk(get_ropt_elem((*token_lst)->next->next))))
 			{
 				ft_lstfree(&(cmd_inf->arg_lst));
 				ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
 				return (0);
 			}
-			*token_lst = (*token_lst)->next->next;
+			*token_lst = get_ropt_elem((*token_lst)->next->next);
 		}
 		else if (get_tk(*token_lst)->type == TK_CMD_SEP)
 		{
@@ -185,14 +200,14 @@ t_list				*join_token_cmd(t_list *token_lst)
 	{
 		if (!set_cur_cmd(&cur_cmd, &token_lst))
 		{
-			ft_lstdel(&token_lst, del_cmd);
+			ft_lstdel(&cmd_lst, del_cmd);
 			return (NULL);
 		}
 		else if (cur_cmd.arg_lst != NULL)
 		{
 			if ((new_elem = ft_lstnew(&cur_cmd, sizeof(t_cmd_inf))) == NULL)
 			{
-				ft_lstdel(&token_lst, del_cmd);
+				ft_lstdel(&cmd_lst, del_cmd);
 				return (NULL);
 			}
 			ft_lstpush(&cmd_lst, new_elem);
