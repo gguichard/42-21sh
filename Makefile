@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/21 09:25:28 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/21 10:41:03 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRC		=	main.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
 			input/misc_hooks.c input/utils.c \
 			lexer/tokens.c lexer/grammar.c \
-			execute/binaries.c \
+			execute/binaries.c execute/execute.c \
 			parser/split_cmd_token.c parser/str_cmd_inf.c \
 			parser/token_inf.c parser/apply_escape.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
