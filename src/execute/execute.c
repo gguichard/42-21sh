@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 15:44:48 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 17:39:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 void	fork_child(t_shell *shell, t_cmd_inf *cmd_inf, char *path, char **args)
 {
+	char	**environ;
+
 	shell->last_fork_pid = fork();
 	if (shell->last_fork_pid < 0)
 		ft_dprintf(2, "%s: unable to fork\n", ERR_PREFIX);
@@ -31,8 +33,13 @@ void	fork_child(t_shell *shell, t_cmd_inf *cmd_inf, char *path, char **args)
 	}
 	else
 	{
+		environ = NULL;
 		if (fork_redirect(cmd_inf))
-			execve(path, args, NULL);
+		{
+			environ = get_environ_from_list(shell->env);
+			execve(path, args, environ);
+		}
+		free(environ);
 		exit(0);
 	}
 }
