@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 16:22:42 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 08:30:30 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 12:04:56 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #include "libft.h"
 #include "redirect_inf.h"
 
-void	del_redirect(void *content, size_t content_size)
+void				del_redirect(void *content, size_t content_size)
 {
 	(void)content_size;
 	free(((t_redirect_inf*)content)->to_word);
 	free(content);
 }
 
-t_redirect_type			redirection_str_to_type(const char *str)
+t_redirect_type		redirection_str_to_type(const char *str)
 {
 	if (ft_strequ(str, "<"))
 		return (RD_L);
