@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:51:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 00:28:09 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 00:38:39 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,22 @@ static void	redirect_close_fd(t_redirect_inf *redirect_inf)
 		close(STDERR_FILENO);
 }
 
+static int	redirect_input(t_redirect_inf *redirect_inf)
+{
+	int	fd;
+
+	fd = open(redirect_inf->to_word, O_RDONLY);
+	if (fd < 0)
+	{
+		ft_dprintf(2, "%s: %s: %s", ERR_PREFIX, redirect_inf->to_word,
+				"Unable to open\n");
+		return (0);
+	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (1);
+}
+
 int			fork_redirect(t_cmd_inf *cmd_inf)
 {
 	t_list			*curr;
@@ -99,6 +115,11 @@ int			fork_redirect(t_cmd_inf *cmd_inf)
 			if (redirect_inf->close_to_fd)
 				redirect_close_fd(redirect_inf);
 			else if (!redirect_to_fd(redirect_inf))
+				return (0);
+		}
+		else if (redirect_inf->red_type == RD_L)
+		{
+			if (!redirect_input(redirect_inf))
 				return (0);
 		}
 		curr = curr->next;
