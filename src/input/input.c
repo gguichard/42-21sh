@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/20 14:20:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 08:54:22 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "split_cmd_token.h"
 #include "str_cmd_inf.h"
 #include "cmd_inf.h"
+#include "redirect_inf.h"
 #include "join_token_cmd.h"
 #include "apply_escape.h"
 #include "token_inf.h"
@@ -31,6 +32,7 @@
 void	print_cmd(t_cmd_inf *cmd_inf, int padding)
 {
 	t_list	*args;
+	t_list	*redirects;
 	char	*tmp;
 
 	ft_printf("%*s|", padding, "");
@@ -43,6 +45,13 @@ void	print_cmd(t_cmd_inf *cmd_inf, int padding)
 		args = args->next;
 	}
 	ft_printf("\n");
+	redirects = cmd_inf->redirect_lst;
+	while (redirects != NULL)
+	{
+		t_redirect_inf *red = (t_redirect_inf*)(redirects->content);
+		ft_printf("%*s> %d _%d_ %d || %s (%d)\n", padding, "", red->from_fd, red->red_type, red->to_fd, red->to_word, red->close_to_fd);
+		redirects = redirects->next;
+	}
 	if (cmd_inf->pipe_cmd != NULL)
 	{
 		print_cmd(cmd_inf->pipe_cmd, padding + 4);

@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 10:20:19 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/18 16:16:25 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 08:29:32 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ typedef enum			e_redirect_type
 	RD_R,
 	RD_LR,
 	RD_LL,
-	RD_RR
+	RD_RR,
+	RD_ERROR
 }						t_redirect_type;
 
 typedef struct			s_redirect_inf
@@ -37,5 +38,7 @@ typedef struct			s_redirect_inf
 }						t_redirect_inf;
 
 void					del_redirect(void *content, size_t content_size);
+
+t_redirect_type			redirection_str_to_type(const char *str);
 
 #endif
