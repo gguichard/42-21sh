@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:51:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 16:26:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 16:39:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,11 @@ int			fork_redirect(t_cmd_inf *cmd_inf)
 	while (curr != NULL)
 	{
 		redirect_inf = (t_redirect_inf *)curr->content;
-		if (redirect_inf->red_type == RD_R && redirect_inf->close_to_fd)
-			redirect_close_fd(redirect_inf);
-		else if (redirect_inf->red_type == RD_R
-				|| redirect_inf->red_type == RD_RR)
+		if (redirect_inf->red_type == RD_R || redirect_inf->red_type == RD_RR)
 		{
-			if (!redirect_to_file(redirect_inf))
+			if (redirect_inf->close_to_fd)
+				redirect_close_fd(redirect_inf);
+			else if (!redirect_to_file(redirect_inf))
 				return (0);
 		}
 		curr = curr->next;
