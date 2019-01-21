@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 11:54:34 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 13:51:27 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,6 @@ static int				get_cur_token_len(const char *token_start)
 		++len;
 		if ((*token_start == '>' || *token_start == '<')
 				&& *token_start == token_start[1])
-			++len;
-		else if (*token_start == '<' && token_start[1] == '>')
 			++len;
 	}
 	return (len);

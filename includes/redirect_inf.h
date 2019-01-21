@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 10:20:19 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 08:29:32 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 13:49:57 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ typedef enum			e_redirect_type
 {
 	RD_L,
 	RD_R,
-	RD_LR,
 	RD_LL,
 	RD_RR,
 	RD_ERROR

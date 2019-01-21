@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 16:22:42 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 12:04:56 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 13:50:21 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ t_redirect_type		redirection_str_to_type(const char *str)
 		return (RD_L);
 	else if (ft_strequ(str, ">"))
 		return (RD_R);
-	else if (ft_strequ(str, "<>"))
-		return (RD_LR);
 	else if (ft_strequ(str, "<<"))
 		return (RD_LL);
 	else if (ft_strequ(str, ">>"))
