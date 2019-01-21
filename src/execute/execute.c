@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 11:28:00 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 11:31:48 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ void	fork_child(t_shell *shell, char *path, char **args)
 	if (shell->last_fork_pid < 0)
 		ft_dprintf(2, "%s: unable to fork\n", ERR_PREFIX);
 	else if (shell->last_fork_pid > 0)
-		waitpid(shell->last_fork_pid, NULL, 0);
+	{
+		waitpid(shell->last_fork_pid, &(shell->last_status), 0);
+		shell->last_fork_pid = 0;
+	}
 	else
 	{
 		execve(path, args, NULL);
