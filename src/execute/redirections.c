@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:51:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 16:03:10 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 16:26:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "check_path.h"
 #include "libft.h"
 
-int	redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
+int			redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
 {
 	t_error	error;
 	int		fd;
@@ -56,24 +56,51 @@ int	redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
 	return (fd);
 }
 
-int	fork_redirect(t_cmd_inf *cmd_inf)
+static void	redirect_close_fd(t_redirect_inf *redirect_inf)
 {
-	int				fd;
+	if (redirect_inf->from_fd >= 0)
+		close(redirect_inf->from_fd);
+	if (redirect_inf->from_fd == FD_AMPERSAND
+			|| redirect_inf->from_fd == FD_DEFAULT)
+		close(STDOUT_FILENO);
+	if (redirect_inf->from_fd == FD_AMPERSAND)
+		close(STDERR_FILENO);
+}
+
+static int	redirect_to_file(t_redirect_inf *redirect_inf)
+{
+	int	fd;
+
+	fd = redirect_file(redirect_inf, redirect_inf->red_type == RD_RR);
+	if (fd < 0)
+		return (0);
+	if (redirect_inf->from_fd >= 0)
+		dup2(fd, redirect_inf->from_fd);
+	if (redirect_inf->from_fd == FD_AMPERSAND
+			|| redirect_inf->from_fd == FD_DEFAULT)
+		dup2(fd, STDOUT_FILENO);
+	if (redirect_inf->from_fd == FD_AMPERSAND)
+		dup2(fd, STDERR_FILENO);
+	close(fd);
+	return (1);
+}
+
+int			fork_redirect(t_cmd_inf *cmd_inf)
+{
 	t_list			*curr;
 	t_redirect_inf	*redirect_inf;
 
 	curr = cmd_inf->redirect_lst;
 	while (curr != NULL)
 	{
-		fd = -1;
 		redirect_inf = (t_redirect_inf *)curr->content;
-		if (redirect_inf->red_type == RD_R || redirect_inf->red_type == RD_RR)
+		if (redirect_inf->red_type == RD_R && redirect_inf->close_to_fd)
+			redirect_close_fd(redirect_inf);
+		else if (redirect_inf->red_type == RD_R
+				|| redirect_inf->red_type == RD_RR)
 		{
-			fd = redirect_file(redirect_inf, redirect_inf->red_type == RD_RR);
-			if (fd < 0)
+			if (!redirect_to_file(redirect_inf))
 				return (0);
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
 		}
 		curr = curr->next;
 	}
