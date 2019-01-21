@@ -6,10 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 12:40:55 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 19:37:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 16:01:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include <stdlib.h>
 #include "shell.h"
 #include "convert_path_to_tab.h"
@@ -37,11 +38,13 @@ static t_error	check_is_valid_path(const char *file_path)
 {
 	t_error	error;
 
-	error = check_file_for_exec(file_path);
-	if (error == ERRC_NOEXECRIGHT)
+	error = check_file_for_right(file_path, X_OK);
+	if (error == ERRC_FILENOTFOUND)
+		error = ERRC_CMDNOTFOUND;
+	else if (error == ERRC_NONEEDEDRIGHT)
 	{
-		if (check_dir_of_file_for_cd(file_path) == ERRC_NOEXECRIGHT)
-			return (ERRC_FILENOTFOUND);
+		if (check_dir_of_file_for_cd(file_path) == ERRC_NONEEDEDRIGHT)
+			return (ERRC_CMDNOTFOUND);
 	}
 	return (error);
 }
@@ -66,7 +69,7 @@ char			*search_binary(const char *path, const char *binary
 					&& (*error = ERRC_UNEXPECTED) == ERRC_UNEXPECTED)
 				break ;
 			*error = check_is_valid_path(file_path);
-			if (*error == ERRC_NOERROR || *error == ERRC_NOEXECRIGHT)
+			if (*error == ERRC_NOERROR || *error == ERRC_NONEEDEDRIGHT)
 				break ;
 			ft_strdel(&file_path);
 		}

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 10:47:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 12:11:44 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,101 +18,7 @@
 #include "history.h"
 #include "lexer.h"
 #include "execute.h"
-
-//TODO SUPPRIMER
 #include "split_cmd_token.h"
-#include "str_cmd_inf.h"
-#include "cmd_inf.h"
-#include "redirect_inf.h"
-#include "join_token_cmd.h"
-#include "apply_escape.h"
-#include "token_inf.h"
-//FIN
-
-//TODO SUPPRIMER
-void	print_cmd(t_cmd_inf *cmd_inf, int padding)
-{
-	t_list	*args;
-	t_list	*redirects;
-	char	*tmp;
-
-	ft_printf("%*s|", padding, "");
-	args = cmd_inf->arg_lst;
-	while (args != NULL)
-	{
-		tmp = apply_escape((char*)(args->content));
-		ft_printf(" \"%s\"", tmp);
-		free(tmp);
-		args = args->next;
-	}
-	ft_printf("\n");
-	redirects = cmd_inf->redirect_lst;
-	while (redirects != NULL)
-	{
-		t_redirect_inf *red = (t_redirect_inf*)(redirects->content);
-		ft_printf("%*s> %d _%d_ %d || %s (%d)\n", padding, "", red->from_fd, red->red_type, red->to_fd, red->to_word, red->close_to_fd);
-		redirects = redirects->next;
-	}
-	if (cmd_inf->pipe_cmd != NULL)
-	{
-		print_cmd(cmd_inf->pipe_cmd, padding + 4);
-	}
-}
-
-void	debug_tokens(t_list *all_sub_cmd)
-{
-	t_list	*cmd_lst;
-	t_list	*cur_cmd;
-
-	cmd_lst = NULL;
-	if (all_sub_cmd == NULL)
-		ft_printf("   TOKEN NULL\n");
-	else
-		cmd_lst = join_token_cmd(all_sub_cmd);
-	while (all_sub_cmd != NULL)
-	{
-		ft_printf("TOKEN:\n");
-		if (((t_token_inf*)all_sub_cmd->content)->type == TK_WORD)
-		{
-			ft_printf("   =WORD\n");
-		}
-		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_NUM_OPT)
-		{
-			ft_printf("   =NUM_OPT\n");
-		}
-		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_OPE)
-		{
-			ft_printf("   =OPE\n");
-		}
-		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_CMD_SEP)
-		{
-			ft_printf("   =CMD_SEP\n");
-		}
-		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_STR_OPT)
-		{
-			ft_printf("   =STR_OPT\n");
-		}
-		else if (((t_token_inf*)all_sub_cmd->content)->type == TK_NOTHING)
-		{
-			ft_printf("   =NOTHING (error)\n");
-		}
-		else
-		{
-			ft_printf("   =ERROR\n");
-		}
-		ft_printf("      =%s=\n", ((t_token_inf*)all_sub_cmd->content)->token);
-		all_sub_cmd = all_sub_cmd->next;
-	}
-	ft_printf("PARSED COMMAND:\n");
-	cur_cmd = cmd_lst;
-	while (cur_cmd != NULL)
-	{
-		print_cmd((t_cmd_inf*)(cur_cmd->content), 0);
-		cur_cmd = cur_cmd->next;
-	}
-	ft_lstdel(&cmd_lst, del_cmd);
-}
-//FIN
 
 char	*get_command_line(t_term *term)
 {
@@ -148,18 +54,17 @@ int		handle_command(t_shell *shell)
 	all_sub_cmd = split_cmd_token(&str_cmd_inf);
 	if (all_sub_cmd != NULL)
 	{
-		if (parse_commands(all_sub_cmd)
-				&& is_multiline(&(shell->term), &str_cmd_inf))
-			shell->term.multiline = line;
-		else
+		if (parse_commands(all_sub_cmd))
 		{
-			ft_printf("COMMAND: %s\n", line);
-			debug_tokens(all_sub_cmd);
-			execute_cmd(shell, all_sub_cmd);
+			if (is_multiline(&(shell->term), &str_cmd_inf))
+				shell->term.multiline = line;
+			else
+				execute_all(shell, all_sub_cmd);
 		}
 		ft_lstdel(&all_sub_cmd, del_token);
 	}
-	add_history_entry(shell, line);
+	if (shell->term.size > 0)
+		add_history_entry(shell, line);
 	if (line != shell->term.multiline)
 		ft_strdel(&line);
 	return (1);
