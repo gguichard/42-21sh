@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:51:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 16:39:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 00:28:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,24 +56,13 @@ int			redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
 	return (fd);
 }
 
-static void	redirect_close_fd(t_redirect_inf *redirect_inf)
-{
-	if (redirect_inf->from_fd >= 0)
-		close(redirect_inf->from_fd);
-	if (redirect_inf->from_fd == FD_AMPERSAND
-			|| redirect_inf->from_fd == FD_DEFAULT)
-		close(STDOUT_FILENO);
-	if (redirect_inf->from_fd == FD_AMPERSAND)
-		close(STDERR_FILENO);
-}
-
-static int	redirect_to_file(t_redirect_inf *redirect_inf)
+static int	redirect_to_fd(t_redirect_inf *redirect_inf)
 {
 	int	fd;
 
-	fd = redirect_file(redirect_inf, redirect_inf->red_type == RD_RR);
+	fd = redirect_inf->to_fd;
 	if (fd < 0)
-		return (0);
+		fd = redirect_file(redirect_inf, redirect_inf->red_type == RD_RR);
 	if (redirect_inf->from_fd >= 0)
 		dup2(fd, redirect_inf->from_fd);
 	if (redirect_inf->from_fd == FD_AMPERSAND
@@ -83,6 +72,17 @@ static int	redirect_to_file(t_redirect_inf *redirect_inf)
 		dup2(fd, STDERR_FILENO);
 	close(fd);
 	return (1);
+}
+
+static void	redirect_close_fd(t_redirect_inf *redirect_inf)
+{
+	if (redirect_inf->from_fd >= 0)
+		close(redirect_inf->from_fd);
+	if (redirect_inf->from_fd == FD_AMPERSAND
+			|| redirect_inf->from_fd == FD_DEFAULT)
+		close(STDOUT_FILENO);
+	if (redirect_inf->from_fd == FD_AMPERSAND)
+		close(STDERR_FILENO);
 }
 
 int			fork_redirect(t_cmd_inf *cmd_inf)
@@ -98,7 +98,7 @@ int			fork_redirect(t_cmd_inf *cmd_inf)
 		{
 			if (redirect_inf->close_to_fd)
 				redirect_close_fd(redirect_inf);
-			else if (!redirect_to_file(redirect_inf))
+			else if (!redirect_to_fd(redirect_inf))
 				return (0);
 		}
 		curr = curr->next;
