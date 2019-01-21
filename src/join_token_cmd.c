@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 11:44:43 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 14:29:14 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,77 +112,75 @@ static t_list		*get_ropt_elem(t_list *tk_lst)
 		return (tk_lst);
 }
 
-static int			set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
+static int			del_cur_cmd(t_cmd_inf *cmd_inf)
 {
+	ft_lstfree(&(cmd_inf->arg_lst));
+	ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
+	return (0);
+}
+
+static int			process_tk_ope(t_cmd_inf *cmd_inf, t_list **token_lst)
+{
+	if (get_tk(*token_lst)->token[0] == '<'
+			|| get_tk(*token_lst)->token[0] == '>')
+	{
+		if ((*token_lst)->next == NULL
+				|| !add_redirect_inf_to_cmd(cmd_inf, NULL,
+					get_tk(*token_lst),
+					get_tk(get_ropt_elem((*token_lst)->next))))
+			return (del_cur_cmd(cmd_inf));
+		*token_lst = get_ropt_elem((*token_lst)->next);
+	}
+	else if (ft_strequ(get_tk(*token_lst)->token, "|"))
+	{
+		if ((cmd_inf->pipe_cmd = (t_cmd_inf*)malloc(sizeof(t_cmd_inf)))
+				== NULL)
+			return (del_cur_cmd(cmd_inf));
+		*token_lst = (*token_lst)->next;
+		if (set_cur_cmd(cmd_inf->pipe_cmd, token_lst))
+			return (1);
+		else
+			return (del_cur_cmd(cmd_inf));
+	}
+	return (-1);
+}
+
+static int			process_tk(t_cmd_inf *cmd_inf, t_list **token_lst)
+{
+	if (get_tk(*token_lst)->type == TK_WORD)
+	{
+		if (!add_arg(cmd_inf, get_tk(*token_lst)->token))
+			return (del_cur_cmd(cmd_inf));
+	}
+	else if (get_tk(*token_lst)->type == TK_OPE)
+	{
+		return (process_tk_ope(cmd_inf, token_lst));
+	}
+	else if (get_tk(*token_lst)->type == TK_NUM_OPT)
+	{
+		if ((*token_lst)->next == NULL || (*token_lst)->next->next == NULL
+				|| !add_redirect_inf_to_cmd(cmd_inf, get_tk(*token_lst),
+					get_tk((*token_lst)->next),
+					get_tk(get_ropt_elem((*token_lst)->next->next))))
+			return (del_cur_cmd(cmd_inf));
+		*token_lst = get_ropt_elem((*token_lst)->next->next);
+	}
+	else if (get_tk(*token_lst)->type == TK_CMD_SEP)
+		return (1);
+	return (-1);
+}
+
+int					set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
+{
+	int		tmp_ret;
+
 	cmd_inf->arg_lst = NULL;
 	cmd_inf->pipe_cmd = NULL;
 	cmd_inf->redirect_lst = NULL;
 	while (*token_lst != NULL)
 	{
-		if (get_tk(*token_lst)->type == TK_WORD)
-		{
-			if (!add_arg(cmd_inf, get_tk(*token_lst)->token))
-			{
-				ft_lstfree(&(cmd_inf->arg_lst));
-				ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
-				return (0);
-			}
-		}
-		else if (get_tk(*token_lst)->type == TK_OPE)
-		{
-			if (get_tk(*token_lst)->token[0] == '<'
-					|| get_tk(*token_lst)->token[0] == '>')
-			{
-				if ((*token_lst)->next == NULL
-						|| !add_redirect_inf_to_cmd(cmd_inf, NULL,
-							get_tk(*token_lst),
-							get_tk(get_ropt_elem((*token_lst)->next))))
-				{
-					ft_lstfree(&(cmd_inf->arg_lst));
-					ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
-					return (0);
-				}
-				*token_lst = get_ropt_elem((*token_lst)->next);
-			}
-			else if (ft_strequ(get_tk(*token_lst)->token, "|"))
-			{
-				if ((cmd_inf->pipe_cmd = (t_cmd_inf*)malloc(sizeof(t_cmd_inf)))
-						== NULL)
-				{
-					ft_lstfree(&(cmd_inf->arg_lst));
-					ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
-					return (0);
-				}
-				*token_lst = (*token_lst)->next;
-				if (set_cur_cmd(cmd_inf->pipe_cmd, token_lst))
-				{
-					return (1);
-				}
-				else
-				{
-					ft_lstfree(&(cmd_inf->arg_lst));
-					ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
-					return (0);
-				}
-			}
-		}
-		else if (get_tk(*token_lst)->type == TK_NUM_OPT)
-		{
-			if ((*token_lst)->next == NULL || (*token_lst)->next->next == NULL
-					|| !add_redirect_inf_to_cmd(cmd_inf, get_tk(*token_lst),
-						get_tk((*token_lst)->next),
-						get_tk(get_ropt_elem((*token_lst)->next->next))))
-			{
-				ft_lstfree(&(cmd_inf->arg_lst));
-				ft_lstdel(&(cmd_inf->redirect_lst), del_redirect);
-				return (0);
-			}
-			*token_lst = get_ropt_elem((*token_lst)->next->next);
-		}
-		else if (get_tk(*token_lst)->type == TK_CMD_SEP)
-		{
-			return (1);
-		}
+		if ((tmp_ret = process_tk(cmd_inf, token_lst)) != -1)
+			return (tmp_ret);
 		if (*token_lst != NULL)
 			*token_lst = (*token_lst)->next;
 	}
