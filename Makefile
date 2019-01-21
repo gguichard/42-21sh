@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/21 09:12:20 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/21 09:25:28 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,7 @@ fclean: clean
 	/bin/rm -f $(NAME)
 
 re:
-	make fclean
-	make all
+	$(MAKE) fclean
+	$(MAKE) all
 
 .PHONY: all clean fclean re
