@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 15:26:54 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/04 15:45:52 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/21 14:51:59 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef enum	e_error
 	ERRC_TOOMANYARGS,
 	ERRC_NOTADIR,
 	ERRC_ISADIR,
-	ERRC_NOEXECRIGHT
+	ERRC_NONEEDEDRIGHT
 }				t_error;
 
 /*

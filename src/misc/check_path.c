@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 08:11:17 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/03 16:43:33 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/21 14:50:33 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_error		check_dir_for_cd(const char *path)
 		else if (!S_ISDIR(stat_buf.st_mode))
 			return (del_then_ret_err(cur_path, ERRC_NOTADIR));
 		else if (access(cur_path, X_OK) == -1)
-			return (del_then_ret_err(cur_path, ERRC_NOEXECRIGHT));
+			return (del_then_ret_err(cur_path, ERRC_NONEEDEDRIGHT));
 		if (cur_slash != NULL && ++cur_slash != NULL)
 			*(cur_slash - (cur_path == (cur_slash - 1) ? 0 : 1)) = old_char;
 	}
@@ -74,7 +74,7 @@ t_error		check_dir_of_file_for_cd(const char *path)
 	return (del_then_ret_err(path_cpy, check_cd_ret));
 }
 
-t_error		check_file_for_exec(const char *path)
+t_error		check_file_for_right(const char *path, int right)
 {
 	char			*path_cpy;
 	size_t			path_size;
@@ -96,7 +96,7 @@ t_error		check_file_for_exec(const char *path)
 		return (del_then_ret_err(path_cpy, ERRC_NOTADIR));
 	else if (S_ISDIR(stat_buf.st_mode))
 		return (del_then_ret_err(path_cpy, ERRC_ISADIR));
-	else if (access(path_cpy, X_OK) == -1)
-		return (del_then_ret_err(path_cpy, ERRC_NOEXECRIGHT));
+	else if (access(path_cpy, right) == -1)
+		return (del_then_ret_err(path_cpy, ERRC_NONEEDEDRIGHT));
 	return (del_then_ret_err(path_cpy, ERRC_NOERROR));
 }
