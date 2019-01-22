@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 12:57:44 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/22 15:22:36 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,6 @@
 #include "token_inf.h"
 #include "redirect_inf.h"
 #include "join_token_cmd.h"
-
-static t_token_inf	*get_tk(t_list *lst)
-{
-	if (lst != NULL)
-		return ((t_token_inf*)(lst->content));
-	else
-		return (NULL);
-}
 
 static int			add_arg(t_cmd_inf *cmd_inf, const char *arg)
 {

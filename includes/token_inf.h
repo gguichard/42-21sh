@@ -6,12 +6,14 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/16 09:42:15 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/22 15:25:11 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_INF_H
 # define TOKEN_INF_H
+
+#include "libft.h"
 
 typedef enum		e_token_type
 {
@@ -30,5 +32,7 @@ typedef struct		s_token_inf
 }					t_token_inf;
 
 void				del_token(void *content, size_t content_size);
+
+t_token_inf			*get_tk(t_list *lst);
 
 #endif

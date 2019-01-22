@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 16:33:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 16:20:36 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ void				*delete_ac_suff_inf(t_ac_suff_inf *acs);
 ** Le parametre is_a_cmd doit valoir true si le word doit etre un executable,
 ** false s'il peut etre un fichier quelconque.
 */
-t_ac_suff_inf		*autocomplet_word(const char *word, int is_a_cmd,
+t_ac_suff_inf		*autocomplete_word(const char *word, int is_a_cmd,
 		const char *path, t_builtin **builtin_tab);
 
+t_ac_suff_inf		*autocomplete_cmdline(const char *cmd, const char *path,
+		t_builtin **builtin_tab, char *ending_char);
 #endif

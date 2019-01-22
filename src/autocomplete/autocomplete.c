@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/10 16:45:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 14:21:42 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ static void		autocomplete_with_infs(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 ** executable ou un dossier.
 */
 
-static void		autocomplet_from_wordpath(const char *word, int is_a_cmd,
+static void		autocomplete_from_wordpath(const char *word, int is_a_cmd,
 		t_ac_suff_inf *acs)
 {
 	t_ac_rdir_inf	acrd;
@@ -311,7 +311,7 @@ static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 ** commande builtin ou se trouvant dans le path.
 */
 
-static void		autocomplet_cmd(const char *word, char **path_tab,
+static void		autocomplete_cmd(const char *word, char **path_tab,
 		t_builtin **builtin_tab, t_ac_suff_inf *acs)
 {
 	t_ac_rdir_inf	acrd;
@@ -360,7 +360,7 @@ void			*delete_ac_suff_inf(t_ac_suff_inf *acs)
 	return (NULL);
 }
 
-t_ac_suff_inf	*autocomplet_word(const char *word, int is_a_cmd,
+t_ac_suff_inf	*autocomplete_word(const char *word, int is_a_cmd,
 		const char *path, t_builtin **builtin_tab)
 {
 	t_ac_suff_inf	*acs;
@@ -372,14 +372,14 @@ t_ac_suff_inf	*autocomplet_word(const char *word, int is_a_cmd,
 	if (init_ac_suff_inf(acs))
 	{
 		if (!is_a_cmd || ft_strchr(word, '/') != NULL)
-			autocomplet_from_wordpath(word, is_a_cmd, acs);
+			autocomplete_from_wordpath(word, is_a_cmd, acs);
 		else
 		{
 			if ((path_cpy = ft_strdup(path)) == NULL)
 				return (delete_ac_suff_inf(acs));
 			path_tab = convert_path_to_tab(path_cpy);
 			if (path_tab != NULL)
-				autocomplet_cmd(word, path_tab, builtin_tab, acs);
+				autocomplete_cmd(word, path_tab, builtin_tab, acs);
 			free(path_tab);
 			free(path_cpy);
 		}
