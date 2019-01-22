@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 10:52:10 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 10:55:05 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@
 
 int	accept_str_opt(t_list **curr)
 {
+	int	expect_word;
+
 	if (*curr != NULL
 			&& ((t_token_inf *)((*curr)->content))->type == TK_STR_OPT)
 	{
+		expect_word = ft_strequ("&"
+				, ((t_token_inf *)((*curr)->content))->token);
 		next_token(curr);
-		if (ft_strequ("&", ((t_token_inf *)((*curr)->content))->token))
-			return (expect_token(curr, TK_WORD));
-		return (1);
+		return (!expect_word ? 1 : expect_token(curr, TK_WORD));
 	}
 	return (0);
 }
