@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 16:51:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 17:58:36 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf, char *path)
 	bin_path = get_cmd_inf_path(cmd_inf, path, &error);
 	if (error != ERRC_NOERROR)
 	{
-		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX,
-				cmd_inf->arg_lst->content, error_to_str(error));
+		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
+				, cmd_inf->arg_lst->content, error_to_str(error));
 		return ;
 	}
 	args = arg_lst_to_tab(cmd_inf->arg_lst);

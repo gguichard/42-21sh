@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 11:58:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 13:15:21 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 17:59:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,11 +118,9 @@ static int	redirect_to_fd(t_redirect_inf *redirect_inf)
 int			redirect_output(t_redirect_inf *redirect_inf)
 {
 	if (redirect_inf->close_to_fd && redirect_inf->to_fd == FD_DEFAULT)
-		redirect_close_fd(redirect_inf);
-	else
 	{
-		if (!redirect_to_fd(redirect_inf))
-			return (0);
+		redirect_close_fd(redirect_inf);
+		return (1);
 	}
-	return (1);
+	return (redirect_to_fd(redirect_inf));
 }
