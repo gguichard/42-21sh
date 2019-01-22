@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 16:04:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 15:53:43 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:35:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ const char	*error_to_str(t_error error)
 		return ("No such file or directory");
 	else if (error == ERRC_CMDNOTFOUND)
 		return ("Command not found");
-	else if (error == ERRC_NONEEDEDRIGHT)
+	else if (error == ERRC_NONEEDEDRIGHTS)
 		return ("Permission denied");
 	else if (error == ERRC_ISADIR)
 		return ("Is a directory");

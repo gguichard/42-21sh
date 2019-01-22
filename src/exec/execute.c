@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 17:54:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:33:35 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	locate_and_exec(t_shell *shell, t_cmd_inf *cmd_inf, char **args)
 	else
 	{
 		locate = args[0];
-		error = check_file_for_right(locate, X_OK);
+		error = check_file_rights(locate, FT_FILE, X_OK);
 	}
 	if (error != ERRC_NOERROR)
 		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX, args[0], error_to_str(error));

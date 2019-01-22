@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 11:58:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 12:05:51 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:35:36 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,10 @@ static int	redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
 		return (-1);
 	if (fd == FD_NOTSET)
 	{
-		error = check_file_for_right(redirect_inf->to_word, W_OK);
+		error = check_file_rights(redirect_inf->to_word, FT_FILE, W_OK);
 		if (error == ERRC_FILENOTFOUND)
-			error = check_dir_of_file_for_cd(redirect_inf->to_word);
+			error = check_dir_of_file_rights(redirect_inf->to_word
+					, X_OK | W_OK);
 		// TODO: check droit ecriture ^
 		if (error != ERRC_NOERROR)
 		{
@@ -89,17 +90,27 @@ static int	redirect_fd(t_redirect_inf *redirect_inf)
 static int	redirect_to_fd(t_redirect_inf *redirect_inf)
 {
 	int	fd;
+	int	dup_ret;
 
 	fd = redirect_fd(redirect_inf);
 	if (fd < 0)
 		return (0);
+	dup_ret = 1;
 	if (redirect_inf->from_fd >= 0)
-		dup2(fd, redirect_inf->from_fd);
-	if (redirect_inf->from_fd == FD_AMPERSAND
-			|| redirect_inf->from_fd == FD_DEFAULT)
-		dup2(fd, STDOUT_FILENO);
-	if (redirect_inf->from_fd == FD_AMPERSAND)
-		dup2(fd, STDERR_FILENO);
+		dup_ret = dup2(fd, redirect_inf->from_fd);
+	else
+	{
+		if (redirect_inf->from_fd == FD_AMPERSAND
+				|| redirect_inf->from_fd == FD_DEFAULT)
+			dup_ret = dup2(fd, STDOUT_FILENO);
+		if (dup_ret > 0 && redirect_inf->from_fd == FD_AMPERSAND)
+			dup_ret = dup2(fd, STDERR_FILENO);
+	}
+	if (dup_ret < 0)
+	{
+		ft_dprintf(2, "%s: %d: Bad file descriptor\n", ERR_PREFIX, fd);
+		return (0);
+	}
 	if (redirect_inf->close_to_fd)
 		close(fd);
 	return (1);

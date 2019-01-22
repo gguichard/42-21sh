@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 08:10:24 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 12:16:24 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/22 12:32:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,29 @@
 
 # include "error.h"
 
-# define DS_IS_A_FILE	1
-# define DS_IS_A_DIR	2
-# define DS_IS_ANY		3
+# define FT_FILE	1
+# define FT_DIR		2
+# define FT_ANY		3
 
 /*
 ** Retourne ERRC_NOERROR (qui vaut 0) si le chemin pointe vers
 ** un dossier valide pour cd et a les droits demandes, ou
 ** un code d'erreur sinon.
 */
-t_error		check_dir_for_cd_and_right(const char *path, int right);
+t_error		check_dir_rights(const char *path, int rights);
 
 /*
 ** Retourne ERRC_NOERROR (qui vaut 0) si le dossier du fichier pointe par
 ** le chemin est valide pour cd et a les droits demandes, ou
 ** un code d'erreur sinon.
 */
-t_error		check_dir_of_file_for_cd_and_right(const char *path, int right);
+t_error		check_dir_of_file_rights(const char *path, int rights);
 
 /*
 ** Retourne ERRC_NOERROR (qui vaut 0) si le chemin pointe vers
-** un fichier qui a les droits demandes et correspond au type de dir_stat, ou
+** un fichier qui a les droits demandes et correspond au type de file_type, ou
 ** un code d'erreur sinon.
 */
-t_error		check_file_for_right(const char *path, int dir_stat, int right);
+t_error		check_file_rights(const char *path, int file_type, int rights);
 
 #endif

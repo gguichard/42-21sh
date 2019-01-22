@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 08:11:17 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 12:18:11 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/22 12:35:59 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "error.h"
 #include "check_path.h"
 
-t_error		check_dir_for_cd_and_right(const char *path, int right)
+t_error		check_dir_rights(const char *path, int rights)
 {
 	struct stat		stat_buf;
 	char			*cur_path;
@@ -39,15 +39,15 @@ t_error		check_dir_for_cd_and_right(const char *path, int right)
 			return (del_then_ret_err(cur_path, ERRC_FILENOTFOUND));
 		else if (!S_ISDIR(stat_buf.st_mode))
 			return (del_then_ret_err(cur_path, ERRC_NOTADIR));
-		else if (access(cur_path, X_OK | right) == -1)
-			return (del_then_ret_err(cur_path, ERRC_NONEEDEDRIGHT));
+		else if (access(cur_path, rights) == -1)
+			return (del_then_ret_err(cur_path, ERRC_NONEEDEDRIGHTS));
 		if (cur_slash != NULL && ++cur_slash != NULL)
 			*(cur_slash - (cur_path == (cur_slash - 1) ? 0 : 1)) = old_char;
 	}
 	return (del_then_ret_err(cur_path, ERRC_NOERROR));
 }
 
-t_error		check_dir_of_file_for_cd_and_right(const char *path, int right)
+t_error		check_dir_of_file_rights(const char *path, int rights)
 {
 	char			*path_cpy;
 	size_t			path_size;
@@ -70,12 +70,12 @@ t_error		check_dir_of_file_for_cd_and_right(const char *path, int right)
 	if ((last_slash = ft_strrchr(path_cpy, '/')) != NULL)
 	{
 		last_slash[1] = '\0';
-		check_cd_ret = check_dir_for_cd_and_right(path_cpy, right);
+		check_cd_ret = check_dir_rights(path_cpy, rights);
 	}
 	return (del_then_ret_err(path_cpy, check_cd_ret));
 }
 
-t_error		check_file_for_right(const char *path, int dir_stat, int right)
+t_error		check_file_rights(const char *path, int file_type, int rights)
 {
 	char			*path_cpy;
 	size_t			path_size;
@@ -89,17 +89,17 @@ t_error		check_file_for_right(const char *path, int dir_stat, int right)
 		return (del_then_ret_err(path_cpy, ERRC_NOERROR));
 	if ((end_with_slash = (path_cpy[path_size - 1] == '/')))
 		path_cpy[path_size - 1] = '\0';
-	if ((check_cd_ret = check_dir_of_file_for_cd_and_right(path_cpy, 0))
+	if ((check_cd_ret = check_dir_of_file_rights(path_cpy, 0))
 			!= ERRC_NOERROR)
 		return (del_then_ret_err(path_cpy, check_cd_ret));
 	if (stat(path_cpy, &stat_buf) == -1)
 		return (del_then_ret_err(path_cpy, ERRC_FILENOTFOUND));
-	else if ((end_with_slash || dir_stat == DS_IS_A_DIR)
+	else if ((end_with_slash || file_type == FT_DIR)
 			&& !S_ISDIR(stat_buf.st_mode))
 		return (del_then_ret_err(path_cpy, ERRC_NOTADIR));
-	else if (dir_stat == DS_IS_A_FILE && S_ISDIR(stat_buf.st_mode))
+	else if (file_type == FT_FILE && S_ISDIR(stat_buf.st_mode))
 		return (del_then_ret_err(path_cpy, ERRC_ISADIR));
-	else if (access(path_cpy, right) == -1)
-		return (del_then_ret_err(path_cpy, ERRC_NONEEDEDRIGHT));
+	else if (access(path_cpy, rights) == -1)
+		return (del_then_ret_err(path_cpy, ERRC_NONEEDEDRIGHTS));
 	return (del_then_ret_err(path_cpy, ERRC_NOERROR));
 }

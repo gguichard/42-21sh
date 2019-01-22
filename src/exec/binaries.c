@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 12:40:55 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 16:01:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:33:15 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ static t_error	check_is_valid_path(const char *file_path)
 {
 	t_error	error;
 
-	error = check_file_for_right(file_path, X_OK);
+	error = check_file_rights(file_path, FT_FILE, X_OK);
 	if (error == ERRC_FILENOTFOUND)
 		error = ERRC_CMDNOTFOUND;
-	else if (error == ERRC_NONEEDEDRIGHT)
+	else if (error == ERRC_NONEEDEDRIGHTS)
 	{
-		if (check_dir_of_file_for_cd(file_path) == ERRC_NONEEDEDRIGHT)
+		if (check_dir_of_file_rights(file_path, X_OK) == ERRC_NONEEDEDRIGHTS)
 			return (ERRC_CMDNOTFOUND);
 	}
 	return (error);
@@ -69,7 +69,7 @@ char			*search_binary(const char *path, const char *binary
 					&& (*error = ERRC_UNEXPECTED) == ERRC_UNEXPECTED)
 				break ;
 			*error = check_is_valid_path(file_path);
-			if (*error == ERRC_NOERROR || *error == ERRC_NONEEDEDRIGHT)
+			if (*error == ERRC_NOERROR || *error == ERRC_NONEEDEDRIGHTS)
 				break ;
 			ft_strdel(&file_path);
 		}
