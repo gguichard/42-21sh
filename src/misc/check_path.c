@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 08:11:17 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 12:35:59 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:42:19 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_error		check_dir_rights(const char *path, int rights)
 			return (del_then_ret_err(cur_path, ERRC_FILENOTFOUND));
 		else if (!S_ISDIR(stat_buf.st_mode))
 			return (del_then_ret_err(cur_path, ERRC_NOTADIR));
-		else if (access(cur_path, rights) == -1)
+		else if (access(cur_path, X_OK | rights) == -1)
 			return (del_then_ret_err(cur_path, ERRC_NONEEDEDRIGHTS));
 		if (cur_slash != NULL && ++cur_slash != NULL)
 			*(cur_slash - (cur_path == (cur_slash - 1) ? 0 : 1)) = old_char;
