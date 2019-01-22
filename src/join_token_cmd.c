@@ -6,13 +6,14 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 10:40:27 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/22 12:57:44 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 #include <stdlib.h>
 #include "libft.h"
+#include "apply_escape.h"
 #include "cmd_inf.h"
 #include "token_inf.h"
 #include "redirect_inf.h"
@@ -29,11 +30,18 @@ static t_token_inf	*get_tk(t_list *lst)
 static int			add_arg(t_cmd_inf *cmd_inf, const char *arg)
 {
 	t_list	*new_elem;
+	char	*escaped_arg;
 
-	if ((new_elem = ft_lstnew(arg,
-					sizeof(char) * (ft_strlen(arg) + 1))) == NULL)
+	if ((escaped_arg = apply_escape(arg)) == NULL)
 		return (0);
+	if ((new_elem = ft_lstnew(escaped_arg,
+					sizeof(char) * (ft_strlen(escaped_arg) + 1))) == NULL)
+	{
+		free(escaped_arg);
+		return (0);
+	}
 	ft_lstpush(&(cmd_inf->arg_lst), new_elem);
+	free(escaped_arg);
 	return (1);
 }
 
