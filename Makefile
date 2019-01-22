@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/22 11:47:17 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/22 12:08:51 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,9 @@ SRC		=	main.c \
 			input/cursor_hooks.c input/cursor_hooks2.c input/del_hooks.c \
 			input/misc_hooks.c input/utils.c \
 			lexer/tokens.c lexer/grammar.c \
-			execute/binaries.c execute/execute.c execute/redirections.c \
-			execute/utils.c \
+			exec/binaries.c exec/execute.c \
+			exec/redirections.c exec/redir_output.c exec/redir_input.c \
+			exec/utils.c \
 			parser/split_cmd_token.c parser/str_cmd_inf.c \
 			parser/token_inf.c parser/apply_escape.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
@@ -62,7 +63,7 @@ $(OBJ_DIR):
 	/bin/mkdir $@/input
 	/bin/mkdir $@/lexer
 	/bin/mkdir $@/parser
-	/bin/mkdir $@/execute
+	/bin/mkdir $@/exec
 	/bin/mkdir $@/autocomplete
 	/bin/mkdir $@/misc
 
