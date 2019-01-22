@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 13:51:27 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/22 11:38:13 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,8 @@ static int				process_after_ope(t_list **token_lst,
 		if (str_cmd_cpy.str[str_cmd_cpy.pos] == '-')
 			++(str_cmd_cpy.pos);
 		if (!is_a_sep_char(str_cmd_cpy.str[str_cmd_cpy.pos])
-				&& str_cmd_cpy.str[str_cmd_cpy.pos] != '\0')
+				&& str_cmd_cpy.str[str_cmd_cpy.pos] != '\0'
+				&& token_start[1] != '-')
 			str_cmd_cpy.pos = token_start - str_cmd_cpy.str + 1;
 		if (!add_cur_token_to_lst(token_lst, &str_cmd_cpy,
 					token_start, TK_STR_OPT))
