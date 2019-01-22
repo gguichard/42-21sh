@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 14:39:11 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 17:38:34 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 14:15:57 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "shell.h"
 #include "vars.h"
 
-t_list	*parse_env(char **environ)
+t_list		*parse_env(char **environ)
 {
 	int		index;
 	t_list	*lst;
@@ -60,7 +60,7 @@ static char	*env_key_equal_value(t_var *var)
 	return (pair);
 }
 
-char	**get_environ_from_list(t_list *env)
+char		**get_environ_from_list(t_list *env)
 {
 	size_t	size;
 	char	**environ;
