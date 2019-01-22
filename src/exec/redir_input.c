@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 12:06:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 14:08:45 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 17:47:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@
 
 static int	redirect_file_input(t_redirect_inf *redirect_inf)
 {
-	t_error	error;
 	int		fd;
+	t_error	error;
 
-	error = check_file_rights(redirect_inf->to_word, FT_FILE, R_OK);
-	if (error != ERRC_NOERROR)
-	{
-		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX, redirect_inf->to_word
-				, error_to_str(error));
-		return (-1);
-	}
 	fd = open(redirect_inf->to_word, O_RDONLY);
 	if (fd < 0)
-		ft_dprintf(2, "%s: %s: %s", ERR_PREFIX, redirect_inf->to_word,
-				"Unable to open\n");
+	{
+		error = check_file_rights(redirect_inf->to_word, FT_FILE, R_OK);
+		if (error != ERRC_NOERROR)
+			ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX, redirect_inf->to_word
+					, error_to_str(error));
+		else
+			ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX, redirect_inf->to_word,
+					"Unable to open");
+	}
 	return (fd);
 }
 
