@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 11:32:16 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 18:52:44 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,30 @@
 
 t_shell	*g_shell = NULL;
 
+static void	kill_forked_pids(t_shell *shell)
+{
+	t_list	*curr;
+
+	if (shell->fork_pids != NULL)
+	{
+		curr = shell->fork_pids;
+		while (curr != NULL)
+		{
+			kill(*((pid_t *)curr->content), SIGINT);
+			curr = curr->next;
+		}
+	}
+}
+
 void	handle_signal(int sig)
 {
 	if (sig == SIGWINCH)
 		update_winsize(&(g_shell->term));
 	if (sig == SIGINT)
 	{
-		if (g_shell->last_fork_pid > 0)
-			kill(g_shell->last_fork_pid, SIGINT);
+		kill_forked_pids(g_shell);
 		ft_putchar('\n');
-		if (g_shell->last_fork_pid == 0)
+		if (g_shell->fork_pids == NULL)
 		{
 			ft_strdel(&(g_shell->term.multiline));
 			if (g_shell->term.visual_mode)

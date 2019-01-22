@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 17:58:36 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 18:45:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,18 @@ void		child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 static void	simple_fork(t_shell *shell, t_cmd_inf *cmd_inf
 		, const char *bin_path, char **args)
 {
-	shell->last_fork_pid = fork();
-	if (shell->last_fork_pid < 0)
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
 		ft_dprintf(2, "%s: %s: Unable to fork\n", ERR_PREFIX, bin_path);
-	else if (shell->last_fork_pid == 0)
+	else if (pid == 0)
 		child_exec_cmd_inf(shell, cmd_inf, bin_path, args);
 	else
 	{
-		waitpid(shell->last_fork_pid, &(shell->last_status), 0);
-		shell->last_fork_pid = 0;
+		shell->fork_pids = ft_lstnew(&pid, sizeof(pid_t));
+		waitpid(pid, &(shell->last_status), 0);
+		ft_lstfree(&(shell->fork_pids));
 	}
 }
 

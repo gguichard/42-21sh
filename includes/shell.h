@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 11:03:44 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 18:44:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct			s_shell
 	t_term				term;
 	t_history			*history;
 	t_history			*history_off;
-	pid_t				last_fork_pid;
+	t_list				*fork_pids;
 }						t_shell;
 
 void					handle_signal(int sig);

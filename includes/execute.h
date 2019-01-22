@@ -6,13 +6,14 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 16:47:33 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 18:23:30 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTE_H
 # define EXECUTE_H
 
+# include <unistd.h>
 # include "shell.h"
 # include "libft.h"
 # include "cmd_inf.h"
@@ -26,6 +27,7 @@ typedef struct	s_pipe
 	int			*left_pipefd;
 	int			right_pipefd[2];
 	t_cmd_inf	*cmd_inf;
+	pid_t		fork_pid;
 }				t_pipe;
 
 void			child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf

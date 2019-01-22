@@ -6,13 +6,14 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 16:53:41 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 18:52:12 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include "execute.h"
+#include "input.h"
 #include "libft.h"
 
 static void		del_pipe(void *content, size_t content_size)
@@ -21,12 +22,12 @@ static void		del_pipe(void *content, size_t content_size)
 
 	(void)content_size;
 	pipe = (t_pipe *)content;
-	pipe->left_pipefd = NULL;
-	if (!(pipe->is_rightmost))
+	if (pipe->left_pipefd != NULL)
 	{
-		close(pipe->right_pipefd[0]);
-		close(pipe->right_pipefd[1]);
+		close((pipe->left_pipefd)[0]);
+		close((pipe->left_pipefd)[1]);
 	}
+	pipe->left_pipefd = NULL;
 	free(content);
 }
 
@@ -59,11 +60,59 @@ static t_list	*create_pipeline(t_cmd_inf *cmd_inf)
 	return (pipeline);
 }
 
+static void		pipe_fork(t_shell *shell, t_pipe *pipe, const char *bin_path
+		, char **args)
+{
+	pipe->fork_pid = fork();
+	if (pipe->fork_pid < 0)
+		ft_dprintf(2, "%s: %s: Unable to fork pipeline\n", ERR_PREFIX
+				, bin_path);
+	else if (pipe->fork_pid > 0)
+	{
+		if (pipe->left_pipefd != NULL)
+		{
+			close((pipe->left_pipefd)[0]);
+			close((pipe->left_pipefd)[1]);
+			pipe->left_pipefd = NULL;
+		}
+	}
+	else
+	{
+		if (!(pipe->is_leftmost))
+		{
+			dup2((pipe->left_pipefd)[0], STDIN_FILENO);
+			close((pipe->left_pipefd)[1]);
+		}
+		if (!(pipe->is_rightmost))
+		{
+			dup2((pipe->right_pipefd)[1], STDOUT_FILENO);
+			close((pipe->right_pipefd)[0]);
+		}
+		child_exec_cmd_inf(shell, pipe->cmd_inf, bin_path, args);
+	}
+}
+
 static void		exec_pipe(t_shell *shell, t_pipe *pipe, const char *path)
 {
-	(void)shell;
-	(void)pipe;
-	(void)path;
+	t_error		error;
+	char		*bin_path;
+	char		**args;
+
+	error = ERRC_UNEXPECTED;
+	bin_path = get_cmd_inf_path(pipe->cmd_inf, path, &error);
+	args = NULL;
+	if (error == ERRC_NOERROR
+			&& (args = arg_lst_to_tab(pipe->cmd_inf->arg_lst)) == NULL)
+		error = ERRC_UNEXPECTED;
+	if (error != ERRC_NOERROR)
+	{
+		free(bin_path);
+		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
+				, pipe->cmd_inf->arg_lst->content, error_to_str(error));
+		return ;
+	}
+	pipe_fork(shell, pipe, bin_path, args);
+	free(args);
 }
 
 void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf
@@ -79,12 +128,25 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf
 		ft_dprintf(2, "%s: Unable to init pipeline\n", ERR_PREFIX);
 		return ;
 	}
+	reset_term(shell);
 	curr = pipeline;
 	while (curr != NULL)
 	{
 		pipe = (t_pipe *)curr->content;
 		exec_pipe(shell, pipe, path);
+		if (pipe->fork_pid > 0)
+			ft_lstpush(&(shell->fork_pids)
+					, ft_lstnew(&(pipe->fork_pid), sizeof(pid_t)));
 		curr = curr->next;
 	}
+	curr = shell->fork_pids;
+	while (curr != NULL)
+	{
+		waitpid(*((pid_t *)curr->content), NULL, 0);
+		free(curr->content);
+		curr = curr->next;
+	}
+	shell->fork_pids = NULL;
 	ft_lstdel(&pipeline, del_pipe);
+	setup_term(shell);
 }
