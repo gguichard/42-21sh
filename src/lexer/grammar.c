@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 19:39:03 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 10:52:10 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,32 @@
 #include "libft.h"
 #include "lexer.h"
 
-int		parse_command_part(t_list **curr)
+int	accept_str_opt(t_list **curr)
+{
+	if (*curr != NULL
+			&& ((t_token_inf *)((*curr)->content))->type == TK_STR_OPT)
+	{
+		next_token(curr);
+		if (ft_strequ("&", ((t_token_inf *)((*curr)->content))->token))
+			return (expect_token(curr, TK_WORD));
+		return (1);
+	}
+	return (0);
+}
+
+int	parse_operator(t_list **curr)
+{
+	int	ret;
+
+	ret = 0;
+	if (accept_token(curr, TK_OPE))
+		ret = 1;
+	else if (accept_token(curr, TK_NUM_OPT))
+		ret = !expect_token(curr, TK_OPE) ? -1 : 1;
+	return (ret);
+}
+
+int	parse_command_part(t_list **curr)
 {
 	int	ret;
 
@@ -23,12 +48,12 @@ int		parse_command_part(t_list **curr)
 	ret = parse_operator(curr);
 	if (ret < 0)
 		return (-1);
-	if (ret > 0 && !accept_token(curr, TK_STR_OPT))
+	if (ret > 0 && !accept_str_opt(curr))
 		return (!expect_token(curr, TK_WORD) ? -1 : 1);
 	return (ret);
 }
 
-int		parse_commands(t_list *tokens)
+int	parse_commands(t_list *tokens)
 {
 	t_list	*curr;
 	int		ret;
