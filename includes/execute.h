@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 18:23:30 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 00:35:50 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ typedef struct	s_pipe
 {
 	int			is_leftmost;
 	int			is_rightmost;
-	int			*left_pipefd;
-	int			right_pipefd[2];
+	int			fildes[2];
+	int			in_fd;
+	int			out_fd;
 	t_cmd_inf	*cmd_inf;
 	pid_t		fork_pid;
 }				t_pipe;
