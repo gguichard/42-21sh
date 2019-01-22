@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 11:38:13 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/22 13:48:21 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ static t_token_type		get_token_for_opt_add(t_str_cmd_inf *str_cmd_inf,
 			return (TK_NUM_OPT);
 		else if (str_cmd_inf->pos > 0
 				&& get_cur_token_len(str_cmd_inf->str + str_cmd_inf->pos) == 1
+				&& str_cmd_inf->str[str_cmd_inf->pos] == '>'
 				&& str_cmd_inf->str[str_cmd_inf->pos - 1] == '&')
 		{
 			*end_by_and = 1;
