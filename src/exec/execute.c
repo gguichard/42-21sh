@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 12:33:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:43:45 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ void	locate_and_exec(t_shell *shell, t_cmd_inf *cmd_inf, char **args)
 		locate = search_binary(path->value, args[0], &error);
 	else
 	{
-		locate = args[0];
+		if ((locate = ft_strdup(args[0])) == NULL)
+			return ;
 		error = check_file_rights(locate, FT_FILE, X_OK);
 	}
 	if (error != ERRC_NOERROR)
