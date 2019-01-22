@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 10:55:05 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/22 11:02:49 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	accept_str_opt(t_list **curr)
 		expect_word = ft_strequ("&"
 				, ((t_token_inf *)((*curr)->content))->token);
 		next_token(curr);
-		return (!expect_word ? 1 : expect_token(curr, TK_WORD));
+		return (!expect_word);
 	}
 	return (0);
 }
