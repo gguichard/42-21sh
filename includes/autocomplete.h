@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 16:20:36 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 08:41:03 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include "libft.h"
+# include "str_cmd_inf.h"
 # include "shell.h"
 
 typedef enum		e_ac_suff_type
@@ -68,6 +69,7 @@ void				*delete_ac_suff_inf(t_ac_suff_inf *acs);
 t_ac_suff_inf		*autocomplete_word(const char *word, int is_a_cmd,
 		const char *path, t_builtin **builtin_tab);
 
-t_ac_suff_inf		*autocomplete_cmdline(const char *cmd, const char *path,
-		t_builtin **builtin_tab, char *ending_char);
+t_ac_suff_inf		*autocomplete_cmdline(t_str_cmd_inf *scmd, const char *path,
+		t_builtin **builtin_tab);
+
 #endif

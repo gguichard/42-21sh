@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:17:37 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 16:48:58 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 08:50:30 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@
 #include "shell.h"
 #include "autocomplete.h"
 
-t_ac_suff_inf	*autocomplete_cmdline(const char *cmd, const char *path,
-		t_builtin **builtin_tab, char *ending_char)
+t_ac_suff_inf	*autocomplete_cmdline(t_str_cmd_inf *scmd, const char *path,
+		t_builtin **builtin_tab)
 {
-	t_str_cmd_inf	str_cmd_inf;
 	t_list			*all_tokens;
 	t_list			*cur_token;
 	const char		*last_word;
@@ -28,8 +27,7 @@ t_ac_suff_inf	*autocomplete_cmdline(const char *cmd, const char *path,
 	int				word_is_cmd;
 	t_ac_suff_inf	*result;
 
-	scmd_init(&str_cmd_inf, cmd);
-	all_tokens = split_cmd_token(&str_cmd_inf);
+	all_tokens = split_cmd_token(scmd);
 	last_word = "";
 	word_is_cmd = -1;
 	cur_token = all_tokens;
@@ -51,9 +49,9 @@ t_ac_suff_inf	*autocomplete_cmdline(const char *cmd, const char *path,
 			word_is_cmd = 0;
 		cur_token = cur_token->next;
 	}
-	if (last_word[0] != '\0' && scmd_cur_char_is_in_nothing(&str_cmd_inf)
-			&& (str_cmd_inf.str[str_cmd_inf.pos - 1] == ' '
-				|| str_cmd_inf.str[str_cmd_inf.pos - 1] == '\t'))
+	if (last_word[0] != '\0' && scmd_cur_char_is_in_nothing(scmd)
+			&& (scmd->str[scmd->pos - 1] == ' '
+				|| scmd->str[scmd->pos - 1] == '\t'))
 	{
 		last_word = "";
 		word_is_cmd = (word_is_cmd == -1 ? 1 : 0);
@@ -67,14 +65,5 @@ t_ac_suff_inf	*autocomplete_cmdline(const char *cmd, const char *path,
 			builtin_tab);
 	free(real_word);
 	ft_lstdel(&all_tokens, del_token);
-	if (ending_char != NULL)
-	{
-		if (str_cmd_inf.is_in_quote)
-			*ending_char = '\'';
-		else if (str_cmd_inf.is_in_doublequote)
-			*ending_char = '\"';
-		else
-			*ending_char = '\0';
-	}
 	return (result);
 }

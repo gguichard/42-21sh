@@ -6,32 +6,35 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 16:39:10 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 08:49:28 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "str_cmd_inf.h"
 #include "shell.h"
 #include "input.h"
 #include "vars.h"
 #include "utils.h"
 
 void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
-		, char ending_char)
+		, t_str_cmd_inf *scmd)
 {
 	char	*curr;
 
 	curr = result->suff;
 	while (*curr != '\0')
 	{
-		if (*curr == ' ')
+		if (*curr == ' ' && scmd_cur_char_is_in_nothing(scmd))
 			insert_cmdline(shell, term, '\\');
 		insert_cmdline(shell, term, *curr);
 		curr++;
 	}
 	if (result->suff_type == ACS_TYPE_FILE)
 	{
-		if (ending_char != '\0')
-			insert_cmdline(shell, term, ending_char);
+		if (scmd->is_in_quote)
+			insert_cmdline(shell, term, '\'');
+		else if (scmd->is_in_doublequote)
+			insert_cmdline(shell, term, '\"');
 		insert_cmdline(shell, term, ' ');
 	}
 	else if (result->suff_type == ACS_TYPE_DIR)
@@ -42,18 +45,19 @@ int		handle_ac(t_shell *shell, t_term *term)
 {
 	t_var			*path;
 	t_ac_suff_inf	*result;
-	char			ending_char;
+	t_str_cmd_inf	scmd;
 
 	if ((path = get_var(shell->env, "PATH")) == NULL)
 		return (0);
-	result = autocomplete_cmdline(term->line, path->value
-			, &(shell->builtins), &ending_char);
+	scmd_init(&scmd, term->line);
+	result = autocomplete_cmdline(&scmd, path->value
+			, &(shell->builtins));
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{
 		delete_ac_suff_inf(result);
 		return (0);
 	}
-	ac_append(shell, term, result, ending_char);
+	ac_append(shell, term, result, &scmd);
 	if ((term->ac_flag)++)
 	{
 		tputs(tparm(tgetstr("do", NULL), term->rows - term->row), 1, t_putchar);

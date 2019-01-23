@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 16:36:31 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 08:49:09 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void			init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term);
 t_ac_format		*ac_get_format(t_list *lst, t_term *term);
 void			ac_print_list(t_list *lst, t_term *term);
 void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
-		, char ending_char);
+		, t_str_cmd_inf *scmd);
 int				handle_ac(t_shell *shell, t_term *term);
 int				handle_eot_key(t_shell *shell, t_term *term);
 int				handle_bs_key(t_shell *shell, t_term *term);
