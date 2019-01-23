@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/22 16:45:07 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/23 16:06:45 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRC		=	main.c \
 			autocomplete/autocomplete_cmdline.c \
 			misc/error.c misc/check_path.c misc/hash_table.c \
 			misc/convert_path_to_tab.c misc/utils.c \
+			builtins/change_dir.c \
 			join_token_cmd.c cmd_inf.c redirect_inf.c
 
 OBJ_DIR	=	.obj
@@ -67,6 +68,7 @@ $(OBJ_DIR):
 	/bin/mkdir $@/exec
 	/bin/mkdir $@/autocomplete
 	/bin/mkdir $@/misc
+	/bin/mkdir $@/builtins
 
 clean:
 	$(MAKE) -C libft clean

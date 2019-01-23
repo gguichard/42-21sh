@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 18:44:03 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 16:18:58 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,7 @@ int						init_shell(t_shell *shell, int argc, char **argv
 t_list					*parse_env(char **environ);
 
 void					show_prompt(t_shell *shell);
+
+int						builtin_cd(t_shell *shell, int argc, char **argv);
 
 #endif
