@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 08:49:28 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 09:05:00 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 		, t_str_cmd_inf *scmd)
 {
 	char	*curr;
+	int		is_at_end_of_cmd;
 
+	is_at_end_of_cmd = (scmd->str[scmd->pos] == '\0');
 	curr = result->suff;
 	while (*curr != '\0')
 	{
@@ -29,7 +31,7 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 		insert_cmdline(shell, term, *curr);
 		curr++;
 	}
-	if (result->suff_type == ACS_TYPE_FILE)
+	if (result->suff_type == ACS_TYPE_FILE && is_at_end_of_cmd)
 	{
 		if (scmd->is_in_quote)
 			insert_cmdline(shell, term, '\'');
@@ -46,12 +48,16 @@ int		handle_ac(t_shell *shell, t_term *term)
 	t_var			*path;
 	t_ac_suff_inf	*result;
 	t_str_cmd_inf	scmd;
+	char			old_char;
 
 	if ((path = get_var(shell->env, "PATH")) == NULL)
 		return (0);
+	old_char = (term->line)[term->cursor];
+	term->line[term->cursor] = '\0';
 	scmd_init(&scmd, term->line);
 	result = autocomplete_cmdline(&scmd, path->value
 			, &(shell->builtins));
+	term->line[term->cursor] = old_char;
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{
 		delete_ac_suff_inf(result);
