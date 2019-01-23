@@ -6,14 +6,14 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 15:25:11 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 10:36:36 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_INF_H
 # define TOKEN_INF_H
 
-#include "libft.h"
+# include "libft.h"
 
 typedef enum		e_token_type
 {

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 09:05:00 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 09:27:38 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 			, &(shell->builtins));
 	term->line[term->cursor] = old_char;
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
-	{
-		delete_ac_suff_inf(result);
-		return (0);
-	}
+		return (!!delete_ac_suff_inf(result));
 	ac_append(shell, term, result, &scmd);
 	if ((term->ac_flag)++)
 	{
