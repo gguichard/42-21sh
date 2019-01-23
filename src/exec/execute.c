@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 18:45:33 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 10:54:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,17 +106,15 @@ void		execute_all(t_shell *shell, t_list *all_sub_cmd)
 	t_cmd_inf	*cmd_inf;
 
 	path = get_var(shell->env, "PATH");
-	if (path == NULL)
-		return ;
 	cmd_lst = join_token_cmd(all_sub_cmd);
 	cur_cmd = cmd_lst;
 	while (cur_cmd != NULL)
 	{
 		cmd_inf = (t_cmd_inf *)cur_cmd->content;
 		if (cmd_inf->pipe_cmd == NULL)
-			execute_cmd_inf(shell, cmd_inf, path->value);
+			execute_cmd_inf(shell, cmd_inf, path == NULL ? "" : path->value);
 		else
-			execute_pipeline(shell, cmd_inf, path->value);
+			execute_pipeline(shell, cmd_inf, path == NULL ? "" : path->value);
 		cur_cmd = cur_cmd->next;
 	}
 	ft_lstdel(&cmd_lst, del_cmd);
