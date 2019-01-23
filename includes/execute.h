@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 00:35:50 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 10:03:42 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ typedef struct	s_pipe
 	int			in_fd;
 	int			out_fd;
 	t_cmd_inf	*cmd_inf;
-	pid_t		fork_pid;
 }				t_pipe;
 
 void			child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
