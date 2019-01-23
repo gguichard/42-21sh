@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 11:58:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 17:59:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 11:09:53 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ static void	redirect_close_fd(t_redirect_inf *redirect_inf)
 
 static int	redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
 {
-	t_error	error;
 	int		fd;
 	int		oflag;
+	t_error	error;
 
 	fd = redirect_inf->to_fd;
 	if (fd == FD_ERROR)
@@ -39,16 +39,6 @@ static int	redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
 		return (-1);
 	if (fd == FD_NOTSET)
 	{
-		error = check_file_rights(redirect_inf->to_word, FT_FILE, W_OK);
-		if (error == ERRC_FILENOTFOUND)
-			error = check_dir_of_file_rights(redirect_inf->to_word
-					, X_OK | W_OK);
-		if (error != ERRC_NOERROR)
-		{
-			ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX, redirect_inf->to_word
-					, error_to_str(error));
-			return (-1);
-		}
 		oflag = O_CREAT | O_WRONLY;
 		if (append_to_file)
 			oflag |= O_APPEND;
@@ -57,8 +47,12 @@ static int	redirect_file(t_redirect_inf *redirect_inf, int append_to_file)
 		fd = open(redirect_inf->to_word, oflag, 0644);
 		if (fd < 0)
 		{
-			ft_dprintf(2, "%s: %s: Unable to open\n", ERR_PREFIX
-					, redirect_inf->to_word);
+			error = check_file_rights(redirect_inf->to_word, FT_FILE, W_OK);
+			if (error == ERRC_FILENOTFOUND)
+				error = check_dir_of_file_rights(redirect_inf->to_word
+						, X_OK | W_OK);
+			ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX, redirect_inf->to_word
+					, error_to_str(error));
 			return (-1);
 		}
 	}
