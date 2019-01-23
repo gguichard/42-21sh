@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 14:13:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 16:25:14 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ int		handle_ac(t_shell *shell, t_term *term)
 			, &(shell->builtins));
 	term->line[term->cursor] = old_char;
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
+	{
+		scmd_delete(scmd.sub_var_bracket);
 		return (!!delete_ac_suff_inf(result));
+	}
 	ac_append(shell, term, result, &scmd);
 	if ((term->ac_flag)++)
 	{
@@ -69,6 +72,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 		go_to_prompt(term);
 		print_input(shell, term);
 	}
+	scmd_delete(scmd.sub_var_bracket);
 	delete_ac_suff_inf(result);
 	return (1);
 }

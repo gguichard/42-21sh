@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 08:57:59 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/18 09:00:01 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 16:23:49 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,6 @@ char			*apply_escape(const char *str)
 		else
 			++(str_cmd_inf.pos);
 	}
+	scmd_delete(str_cmd_inf.sub_var_bracket);
 	return (new_str);
 }
