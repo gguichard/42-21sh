@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 09:27:38 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 14:13:56 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int		handle_ac(t_shell *shell, t_term *term)
 		tputs(tparm(tgetstr("do", NULL), term->rows - term->row), 1, t_putchar);
 		tputs(tgetstr("cr", NULL), 1, t_putchar);
 		ac_print_list(result->choices, term);
-		refresh_cmdline(shell, term);
+		go_to_prompt(term);
+		print_input(shell, term);
 	}
 	delete_ac_suff_inf(result);
 	return (1);

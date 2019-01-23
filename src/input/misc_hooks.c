@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 15:40:38 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 19:47:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 13:51:19 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int		handle_new_line(t_shell *shell, t_term *term)
 int		handle_screen_clear(t_shell *shell, t_term *term)
 {
 	tputs(tgetstr("cl", NULL), 1, t_putchar);
-	print_cmdline(shell, term);
+	go_to_prompt(term);
+	print_input(shell, term);
 	return (1);
 }
 

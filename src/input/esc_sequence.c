@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:03:22 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 11:33:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 14:12:18 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void			handle_esc_sequence(t_shell *shell, t_term *term
 			term->cursor = term->size - 1;
 		}
 		term->select.end = term->cursor;
-		refresh_cmdline(shell, term);
+		go_to_prompt(term);
+		print_input(shell, term);
 	}
 }

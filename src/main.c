@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 18:52:44 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 13:40:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	handle_signal(int sig)
 	if (sig == SIGINT)
 	{
 		kill_forked_pids(g_shell);
+		move_cursor_end(g_shell, &(g_shell->term));
 		ft_putchar('\n');
 		if (g_shell->fork_pids == NULL)
 		{

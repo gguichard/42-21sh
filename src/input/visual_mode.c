@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/15 15:09:15 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 14:13:07 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ int		vm_toggle(t_shell *shell, t_term *term)
 {
 	term->visual_mode = !(term->visual_mode);
 	if (!(term->visual_mode))
-		refresh_cmdline(shell, term);
+	{
+		go_to_prompt(term);
+		print_input(shell, term);
+	}
 	else
 	{
 		if (term->size > 0 && term->cursor >= term->size)

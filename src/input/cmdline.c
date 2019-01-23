@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/20 14:16:47 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/23 13:49:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ int		realloc_cmdline(t_term *term)
 
 void	insert_cmdline(t_shell *shell, t_term *term, char key)
 {
+	size_t	row;
+
+	(void)shell;
 	if (term->size < term->capacity || realloc_cmdline(term))
 	{
 		if (term->size > term->cursor)
@@ -61,21 +64,26 @@ void	insert_cmdline(t_shell *shell, t_term *term, char key)
 		(term->size)++;
 		(term->line)[term->size] = '\0';
 		(term->line)[term->cursor] = key;
-		move_cursor_right(shell, term);
-		refresh_cmdline(shell, term);
+		ft_putstr(term->line + term->cursor);
+		ft_putchar(' ');
+		(term->cursor)++;
+		update_pos_data(term);
+		row = term->rows - (term->row + 1);
+		if (row > 0)
+			tputs(tparm(tgetstr("UP", NULL), row), 1, t_putchar);
+		move_cursor_to_col(term);
 	}
 }
 
-void	refresh_cmdline(t_shell *shell, t_term *term)
+void	go_to_prompt(t_term *term)
 {
 	tputs(tgetstr("cr", NULL), 1, t_putchar);
 	if (term->row > 0)
 		tputs(tparm(tgetstr("UP", NULL), term->row), 1, t_putchar);
 	tputs(tgetstr("cd", NULL), 1, t_putchar);
-	print_cmdline(shell, term);
 }
 
-void	print_cmdline(t_shell *shell, t_term *term)
+void	print_input(t_shell *shell, t_term *term)
 {
 	size_t	row;
 

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 08:49:09 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/23 14:15:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ int				is_multiline(t_term *term, t_str_cmd_inf *str_cmd_inf);
 int				wait_for_command(t_shell *shell);
 void			reset_cmdline(t_shell *shell);
 int				realloc_cmdline(t_term *term);
-void			refresh_cmdline(t_shell *shell, t_term *term);
-void			print_cmdline(t_shell *shell, t_term *term);
+void			go_to_prompt(t_term *term);
+void			print_input(t_shell *shell, t_term *term);
 void			insert_cmdline(t_shell *shell, t_term *term, char key);
 int				handle_key_mode(t_shell *shell, t_term *term, char key);
 
