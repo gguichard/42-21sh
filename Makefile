@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/23 16:06:45 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/24 00:41:58 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ SRC		=	main.c \
 			autocomplete/autocomplete_cmdline.c \
 			misc/error.c misc/check_path.c misc/hash_table.c \
 			misc/convert_path_to_tab.c misc/utils.c \
-			builtins/change_dir.c \
+			builtins/change_dir.c builtins/utils.c \
 			join_token_cmd.c cmd_inf.c redirect_inf.c
 
 OBJ_DIR	=	.obj
