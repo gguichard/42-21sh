@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/20 13:54:07 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 09:55:02 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ void	show_prompt(t_shell *shell)
 		prompt = ft_strdup("dquote> ");
 	else if (shell->term.prompt == PROMPT_HEREDOC)
 		prompt = ft_strdup("heredoc> ");
+	else if (shell->term.prompt == PROMPT_BRACKET)
+		prompt = ft_strdup("bracket> ");
+	else if (shell->term.prompt == PROMPT_OPE)
+		prompt = ft_strdup("pipe> ");
 	else
 		prompt = ft_strdup("$> ");
 	if (shell->term.visual_mode)

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 16:24:36 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/24 13:06:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,20 @@ char	*get_command_line(t_term *term)
 {
 	size_t	ml_len;
 	char	*line;
+	int		add_nl;
 
 	if (term->multiline == NULL)
 		return (ft_strdup(term->line));
+	add_nl = term->prompt != PROMPT_OPE;
 	ml_len = ft_strlen(term->multiline);
-	line = (char *)malloc((ml_len + term->size + 2) * sizeof(char));
+	line = (char *)malloc((ml_len + term->size + add_nl + 1) * sizeof(char));
 	if (line != NULL)
 	{
 		ft_memcpy(line, term->multiline, ml_len);
-		ft_memcpy(line + ml_len + 1, term->line, term->size);
-		line[ml_len + 1 + term->size] = '\0';
-		line[ml_len] = '\n';
+		ft_memcpy(line + ml_len + add_nl, term->line, term->size);
+		line[ml_len + add_nl + term->size] = '\0';
+		if (add_nl)
+			line[ml_len] = '\n';
 	}
 	ft_strdel(&(term->multiline));
 	return (line);
@@ -56,7 +59,7 @@ int		handle_command(t_shell *shell)
 	{
 		if (parse_commands(all_sub_cmd))
 		{
-			if (is_multiline(&(shell->term), &str_cmd_inf))
+			if (is_multiline(&(shell->term), &str_cmd_inf, all_sub_cmd))
 				shell->term.multiline = line;
 			else
 				execute_all(shell, all_sub_cmd);

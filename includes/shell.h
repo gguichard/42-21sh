@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 00:42:32 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 09:55:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ typedef enum			e_prompt
 	PROMPT_ESCAPED,
 	PROMPT_QUOTE,
 	PROMPT_DQUOTE,
-	PROMPT_HEREDOC
+	PROMPT_HEREDOC,
+	PROMPT_BRACKET,
+	PROMPT_OPE
 }						t_prompt;
 
 typedef struct			s_select
