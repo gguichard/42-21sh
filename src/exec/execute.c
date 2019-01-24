@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 10:54:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 15:39:12 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf, char *path)
 		return ;
 	}
 	args = arg_lst_to_tab(cmd_inf->arg_lst);
-	if (args != NULL)
+	if (args != NULL || cmd_inf->arg_lst == NULL)
 	{
 		reset_term(shell);
 		simple_fork(shell, cmd_inf, bin_path, args);
@@ -107,6 +107,13 @@ void		execute_all(t_shell *shell, t_list *all_sub_cmd)
 
 	path = get_var(shell->env, "PATH");
 	cmd_lst = join_token_cmd(all_sub_cmd);
+	cur_cmd = cmd_lst;
+	while (cur_cmd != NULL)
+	{
+		cmd_inf = (t_cmd_inf *)cur_cmd->content;
+		process_redir(cmd_inf->redirect_lst);
+		cur_cmd = cur_cmd->next;
+	}
 	cur_cmd = cmd_lst;
 	while (cur_cmd != NULL)
 	{
