@@ -6,15 +6,15 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 10:42:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 20:45:53 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
-#include "execute.h"
-#include "input.h"
 #include "libft.h"
+#include "input.h"
+#include "execute.h"
 
 static t_list	*create_pipeline(t_cmd_inf *cmd_inf)
 {
@@ -50,8 +50,7 @@ static void		pipe_fork(t_shell *shell, t_list *curr, const char *bin_path
 	pipe = (t_pipe *)curr->content;
 	pid = fork();
 	if (pid < 0)
-		ft_dprintf(2, "%s: %s: Unable to fork pipeline\n", ERR_PREFIX
-				, bin_path);
+		ft_dprintf(2, "%s: %s: Unable to fork\n", ERR_PREFIX, bin_path);
 	else if (pid > 0)
 		ft_lstpush(&(shell->fork_pids), ft_lstnew(&(pid), sizeof(pid_t)));
 	else
@@ -105,7 +104,7 @@ static void		setup_pipes(t_shell *shell, t_list *pipeline, const char *path)
 	while (curr != NULL)
 	{
 		curr_pipe = (t_pipe *)curr->content;
-		if (curr->next != NULL)
+		if (curr->next != NULL && curr_pipe->cmd_inf->arg_lst != NULL)
 		{
 			next_pipe = (t_pipe *)curr->next->content;
 			if (pipe(next_pipe->fildes) == 0)
@@ -114,7 +113,8 @@ static void		setup_pipes(t_shell *shell, t_list *pipeline, const char *path)
 				next_pipe->in_fd = (next_pipe->fildes)[0];
 			}
 		}
-		exec_pipe(shell, curr, path);
+		if (curr_pipe->cmd_inf->arg_lst != NULL)
+			exec_pipe(shell, curr, path);
 		if (!(curr_pipe->is_leftmost))
 		{
 			close((curr_pipe->fildes)[0]);
@@ -143,7 +143,7 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf
 	curr = shell->fork_pids;
 	while (curr != NULL)
 	{
-		waitpid(*((pid_t *)curr->content), NULL, 0);
+		waitpid(*((pid_t *)curr->content), &(shell->last_status), 0);
 		next = curr->next;
 		free(curr->content);
 		free(curr);
