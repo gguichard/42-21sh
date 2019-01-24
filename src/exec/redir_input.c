@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 12:06:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 17:31:10 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 18:08:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	redirect_input(t_redirect_inf *redirect_inf)
 	}
 	else if (fd == FD_AMPERSAND)
 	{
-		ft_dprintf(2, "%s: %s: Ambiguous redirection\n", ERR_PREFIX
+		ft_dprintf(2, "%s: %s: Ambiguous redirect\n", ERR_PREFIX
 				, redirect_inf->to_word);
 		return (0);
 	}

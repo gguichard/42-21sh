@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 11:58:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 16:21:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 18:11:05 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static int	redirect_to_fd(t_redirect_inf *redirect_inf)
 		if (dup_ret < 0)
 			ft_dprintf(2, "%s: %d: Bad file descriptor\n", ERR_PREFIX, fd);
 	}
-	if (redirect_inf->close_to_fd)
+	if (redirect_inf->close_to_fd || redirect_inf->to_fd == FD_NOTSET)
 		close(fd);
 	if (dup_ret < 0)
 		return (0);
