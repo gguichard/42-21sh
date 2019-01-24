@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 11:02:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 13:08:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,62 +14,82 @@
 #include "libft.h"
 #include "lexer.h"
 
-int	accept_str_opt(t_list **curr)
+static int	expect_ope_right(int is_redir, t_list **curr)
 {
-	int	expect_word;
-
-	if (*curr != NULL
-			&& ((t_token_inf *)((*curr)->content))->type == TK_STR_OPT)
+	if (!is_redir)
+		return (*curr == NULL || expect_token(curr, TK_WORD));
+	else
 	{
-		expect_word = ft_strequ("&"
-				, ((t_token_inf *)((*curr)->content))->token);
-		next_token(curr);
-		return (!expect_word);
+		if (accept_token(curr, TK_STR_OPT))
+			return (1);
+		return (expect_token(curr, TK_WORD));
+	}
+}
+
+static int	accept_operator(t_list **curr)
+{
+	int	is_redir;
+
+	if (accept_token(curr, TK_NUM_OPT))
+	{
+		is_redir = is_redirection(*curr);
+		return (!expect_token(curr, TK_OPE)
+				|| !expect_ope_right(is_redir, curr) ? -1 : 1);
+	}
+	else
+	{
+		is_redir = is_redirection(*curr);
+		if (accept_token(curr, TK_OPE))
+			return (!expect_ope_right(is_redir, curr) ? -1 : 1);
 	}
 	return (0);
 }
 
-int	parse_operator(t_list **curr)
+static int	parse_command_part(t_list **curr, int is_beginning)
 {
-	int	ret;
+	int	word_before;
 
-	ret = 0;
-	if (accept_token(curr, TK_OPE))
-		ret = 1;
-	else if (accept_token(curr, TK_NUM_OPT))
-		ret = !expect_token(curr, TK_OPE) ? -1 : 1;
-	return (ret);
+	word_before = 0;
+	while (accept_token(curr, TK_WORD))
+		word_before = 1;
+	if (*curr == NULL || is_token(curr, TK_CMD_SEP))
+		return (0);
+	if (is_beginning && !word_before
+			&& ft_strequ("|", ((t_token_inf *)(*curr)->content)->token))
+	{
+		expect_token(curr, TK_WORD);
+		return (-1);
+	}
+	return (accept_operator(curr));
 }
 
-int	parse_command_part(t_list **curr)
+static int	parse_command(t_list **curr)
 {
 	int	ret;
+	int	is_beginning;
 
-	while (accept_token(curr, TK_WORD))
-		continue ;
-	ret = parse_operator(curr);
+	is_beginning = 1;
+	while ((ret = parse_command_part(curr, is_beginning)) > 0)
+		is_beginning = 0;
 	if (ret < 0)
 		return (-1);
-	if (ret > 0 && !accept_str_opt(curr))
-		return (!expect_token(curr, TK_WORD) ? -1 : 1);
-	return (ret);
+	return (*curr != NULL);
 }
 
-int	parse_commands(t_list *tokens)
+int			parse_commands(t_list *tokens)
 {
 	t_list	*curr;
 	int		ret;
 
 	curr = tokens;
-	if (!expect_token(&curr, TK_WORD))
-		return (0);
 	ret = 0;
-	while ((ret = parse_command_part(&curr)) > 0)
-		continue ;
+	while ((ret = parse_command(&curr)) > 0)
+	{
+		if (!accept_token(&curr, TK_CMD_SEP))
+			return (0);
+	}
 	if (ret < 0)
 		return (0);
-	if (accept_token(&curr, TK_CMD_SEP) && curr != NULL)
-		return (parse_commands(curr));
 	if (curr != NULL)
 	{
 		ft_dprintf(2, "%s: syntax error near unexpected token `newline'\n"

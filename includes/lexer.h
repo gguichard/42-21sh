@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 15:09:50 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 10:52:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 12:53:39 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 void	next_token(t_list **curr);
 int		accept_token(t_list **curr, t_token_type type);
 int		expect_token(t_list **curr, t_token_type type);
+int		is_redirection(t_list *token);
+int		is_token(t_list **curr, t_token_type type);
 
-int		accept_str_opt(t_list **curr);
-int		parse_operator(t_list **curr);
 int		parse_commands(t_list *tokens);
 
 #endif
