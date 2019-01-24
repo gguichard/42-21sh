@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/24 14:05:48 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/24 15:19:02 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ char			*expand_vars(const char *str, t_shell *shell)
 	size_t			old_pos;
 	size_t			var_in_bracket_len;
 	int				old_is_in_var_bracket;
+	size_t			var_name_len;
 
 	if ((new_str = ft_strdup(str)) == NULL)
 		return (NULL);
@@ -111,11 +112,15 @@ char			*expand_vars(const char *str, t_shell *shell)
 			if (scmd.str[scmd.pos] == '$' && scmd.str[scmd.pos + 1] != '{'
 					&& !scmd_cur_char_is_escaped(&scmd))
 			{
-				if (!replace_var_by_value(&scmd, &new_str,
-							get_var_name_len(scmd.str + scmd.pos + 1), shell))
+				if ((var_name_len = get_var_name_len(scmd.str
+								+ scmd.pos + 1)) > 0)
 				{
-					scmd_delete(scmd.sub_var_bracket);
-					return (NULL);
+					if (!replace_var_by_value(&scmd, &new_str, var_name_len,
+								shell))
+					{
+						scmd_delete(scmd.sub_var_bracket);
+						return (NULL);
+					}
 				}
 			}
 		}
