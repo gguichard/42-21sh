@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 13:06:09 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 13:14:50 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "shell.h"
 #include "input.h"
 #include "history.h"
+#include "expand_vars.h"
 #include "lexer.h"
 #include "execute.h"
 #include "split_cmd_token.h"
@@ -45,14 +46,18 @@ char	*get_command_line(t_term *term)
 
 int		handle_command(t_shell *shell)
 {
+	char			*noexp_line;
 	char			*line;
 	t_str_cmd_inf	str_cmd_inf;
 	t_list			*all_sub_cmd;
 
 	ft_strdel(&(shell->term.def_line));
-	line = get_command_line(&(shell->term));
-	if (line == NULL)
+	noexp_line = get_command_line(&(shell->term));
+	if (noexp_line == NULL || (line = expand_vars(noexp_line, shell)) == NULL)
+	{
+		free(noexp_line);
 		return (0);
+	}
 	scmd_init(&str_cmd_inf, line);
 	all_sub_cmd = split_cmd_token(&str_cmd_inf);
 	if (all_sub_cmd != NULL)
@@ -67,10 +72,11 @@ int		handle_command(t_shell *shell)
 		ft_lstdel(&all_sub_cmd, del_token);
 	}
 	if (shell->term.size > 0)
-		add_history_entry(shell, line);
+		add_history_entry(shell, noexp_line);
 	if (line != shell->term.multiline)
 		ft_strdel(&line);
 	scmd_delete(str_cmd_inf.sub_var_bracket);
+	free(noexp_line);
 	return (1);
 }
 
