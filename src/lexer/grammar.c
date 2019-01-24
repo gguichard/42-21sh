@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 13:08:24 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/24 13:57:53 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,18 @@
 
 static int	expect_ope_right(int is_redir, t_list **curr)
 {
-	if (!is_redir)
-		return (*curr == NULL || expect_token(curr, TK_WORD));
-	else
+	if (is_redir)
 	{
 		if (accept_token(curr, TK_STR_OPT))
+			return (1);
+		return (expect_token(curr, TK_WORD));
+	}
+	else
+	{
+		if (*curr == NULL)
+			return (1);
+		if (!is_token(curr, TK_CMD_SEP)
+				&& !ft_strequ("|", ((t_token_inf *)(*curr)->content)->token))
 			return (1);
 		return (expect_token(curr, TK_WORD));
 	}
