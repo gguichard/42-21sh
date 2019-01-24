@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/24 15:19:02 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/24 16:14:21 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str,
 	return (err_ret);
 }
 
-char			*expand_vars(const char *str, t_shell *shell)
+char			*expand_vars(const char *str, t_shell *shell, char **var_error)
 {
 	t_str_cmd_inf	scmd;
 	char			*new_str;
@@ -84,6 +84,7 @@ char			*expand_vars(const char *str, t_shell *shell)
 	int				old_is_in_var_bracket;
 	size_t			var_name_len;
 
+	*var_error = NULL;
 	if ((new_str = ft_strdup(str)) == NULL)
 		return (NULL);
 	scmd_init(&scmd, new_str);
@@ -99,10 +100,20 @@ char			*expand_vars(const char *str, t_shell *shell)
 			{
 				var_in_bracket_len = scmd.pos - 1 - old_pos;
 				scmd.pos = old_pos - 2;
+				if (get_var_name_len(scmd.str + old_pos) != var_in_bracket_len
+						|| var_in_bracket_len == 0)
+				{
+					*var_error = ft_strsub(scmd.str, scmd.pos,
+							var_in_bracket_len + 3);
+					scmd_delete(scmd.sub_var_bracket);
+					free(new_str);
+					return (NULL);
+				}
 				if (!replace_var_by_value(&scmd, &new_str, var_in_bracket_len,
 							shell))
 				{
 					scmd_delete(scmd.sub_var_bracket);
+					free(new_str);
 					return (NULL);
 				}
 			}
@@ -119,6 +130,7 @@ char			*expand_vars(const char *str, t_shell *shell)
 								shell))
 					{
 						scmd_delete(scmd.sub_var_bracket);
+						free(new_str);
 						return (NULL);
 					}
 				}

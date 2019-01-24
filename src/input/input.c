@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 13:14:50 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/24 16:10:11 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,34 +48,45 @@ int		handle_command(t_shell *shell)
 {
 	char			*noexp_line;
 	char			*line;
+	char			*var_error;
 	t_str_cmd_inf	str_cmd_inf;
 	t_list			*all_sub_cmd;
 
 	ft_strdel(&(shell->term.def_line));
+	var_error = NULL;
 	noexp_line = get_command_line(&(shell->term));
-	if (noexp_line == NULL || (line = expand_vars(noexp_line, shell)) == NULL)
+	if (noexp_line == NULL || ((line = expand_vars(noexp_line, shell,
+						&var_error)) == NULL && var_error == NULL))
 	{
 		free(noexp_line);
 		return (0);
 	}
-	scmd_init(&str_cmd_inf, line);
-	all_sub_cmd = split_cmd_token(&str_cmd_inf);
-	if (all_sub_cmd != NULL)
+	if (var_error != NULL)
 	{
-		if (parse_commands(all_sub_cmd))
+		ft_dprintf(2, "%s: %s: Bad substitution\n", ERR_PREFIX, var_error);
+		free(var_error);
+	}
+	else
+	{
+		scmd_init(&str_cmd_inf, line);
+		all_sub_cmd = split_cmd_token(&str_cmd_inf);
+		if (all_sub_cmd != NULL)
 		{
-			if (is_multiline(&(shell->term), &str_cmd_inf, all_sub_cmd))
-				shell->term.multiline = line;
-			else
-				execute_all(shell, all_sub_cmd);
+			if (parse_commands(all_sub_cmd))
+			{
+				if (is_multiline(&(shell->term), &str_cmd_inf, all_sub_cmd))
+					shell->term.multiline = line;
+				else
+					execute_all(shell, all_sub_cmd);
+			}
+			ft_lstdel(&all_sub_cmd, del_token);
 		}
-		ft_lstdel(&all_sub_cmd, del_token);
+		scmd_delete(str_cmd_inf.sub_var_bracket);
 	}
 	if (shell->term.size > 0)
 		add_history_entry(shell, noexp_line);
-	if (line != shell->term.multiline)
+	if (line != NULL && line != shell->term.multiline)
 		ft_strdel(&line);
-	scmd_delete(str_cmd_inf.sub_var_bracket);
 	free(noexp_line);
 	return (1);
 }

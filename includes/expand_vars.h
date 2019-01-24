@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 12:26:08 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/24 12:36:26 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/24 15:50:58 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 
 /*
 ** Alloue et retourne une nouvelle string avec les variables d'environnement
-** etendues.
+** etendues si une variable a un nom invalide une copie de son nom sera set
+** dans var_error (penser a free).
 */
-char	*expand_vars(const char *str, t_shell *shell);
+char	*expand_vars(const char *str, t_shell *shell, char **var_error);
 
 #endif
