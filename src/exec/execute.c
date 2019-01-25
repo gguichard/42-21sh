@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 09:54:34 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 15:01:35 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,17 @@ static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 	}
 }
 
-void		execute_all(t_shell *shell, t_list *all_sub_cmd)
+void		execute_all(t_shell *shell, t_list *token_lst)
 {
 	t_list		*cmd_lst;
 	t_list		*cur_cmd;
 	t_var		*path;
 
-	cmd_lst = join_token_cmd(all_sub_cmd);
+	cmd_lst = join_token_cmd(token_lst);
 	cur_cmd = cmd_lst;
 	while (cur_cmd != NULL)
 	{
-		process_redir((t_cmd_inf *)cur_cmd->content);
+		process_redir(shell, (t_cmd_inf *)cur_cmd->content);
 		cur_cmd = cur_cmd->next;
 	}
 	cur_cmd = cmd_lst;

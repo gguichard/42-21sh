@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 15:14:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 17:33:00 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 15:02:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,21 @@ static void	redirect_file(t_redirect_inf *redirect_inf)
 	}
 }
 
-void		process_redir(t_cmd_inf *cmd_inf)
+void		process_redir(t_shell *shell, t_cmd_inf *cmd_inf)
 {
-	t_list	*cur_redir;
+	t_list			*cur_redir;
+	t_redirect_inf	*redirect_inf;
 
 	cur_redir = cmd_inf->redirect_lst;
 	while (cur_redir != NULL)
 	{
-		redirect_file((t_redirect_inf *)cur_redir->content);
+		redirect_inf = (t_redirect_inf *)cur_redir->content;
+		if (redirect_inf->red_type != RD_LL)
+			redirect_file(redirect_inf);
+		else
+			prompt_heredoc(shell, redirect_inf);
 		cur_redir = cur_redir->next;
 	}
 	if (cmd_inf->pipe_cmd != NULL)
-		process_redir(cmd_inf->pipe_cmd);
+		process_redir(shell, cmd_inf->pipe_cmd);
 }

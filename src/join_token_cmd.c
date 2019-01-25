@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/24 09:56:03 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 15:46:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ static int			add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf,
 	new_red.red_type = redirection_str_to_type(tk_ope->token);
 	if (!process_ropt_redirect(&new_red, tkl_ropt))
 		return (0);
+	new_red.heredoc = NULL;
 	if ((new_elem = ft_lstnew(&new_red, sizeof(t_redirect_inf))) == NULL)
 	{
 		free(new_red.to_word);

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:26:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 13:57:53 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 14:17:27 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	accept_operator(t_list **curr)
 	return (0);
 }
 
-static int	parse_command_part(t_list **curr, int is_beginning)
+static int	lex_command_part(t_list **curr, int is_beginning)
 {
 	int	word_before;
 
@@ -70,27 +70,27 @@ static int	parse_command_part(t_list **curr, int is_beginning)
 	return (accept_operator(curr));
 }
 
-static int	parse_command(t_list **curr)
+static int	lex_command(t_list **curr)
 {
 	int	ret;
 	int	is_beginning;
 
 	is_beginning = 1;
-	while ((ret = parse_command_part(curr, is_beginning)) > 0)
+	while ((ret = lex_command_part(curr, is_beginning)) > 0)
 		is_beginning = 0;
 	if (ret < 0)
 		return (-1);
 	return (*curr != NULL);
 }
 
-int			parse_commands(t_list *tokens)
+int			lex_commands(t_list *tokens)
 {
 	t_list	*curr;
 	int		ret;
 
 	curr = tokens;
 	ret = 0;
-	while ((ret = parse_command(&curr)) > 0)
+	while ((ret = lex_command(&curr)) > 0)
 	{
 		if (!accept_token(&curr, TK_CMD_SEP))
 			return (0);

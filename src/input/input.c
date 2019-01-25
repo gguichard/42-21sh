@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 15:18:39 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 16:48:56 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int		handle_command(t_shell *shell)
 		token_lst = split_cmd_token(&str_cmd_inf);
 		if (token_lst != NULL)
 		{
-			if (parse_commands(token_lst))
+			if (lex_commands(token_lst))
 			{
 				if (is_multiline(&(shell->term), &str_cmd_inf, token_lst))
 					shell->term.multiline = line;

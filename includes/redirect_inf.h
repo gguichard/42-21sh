@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 10:20:19 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/21 13:49:57 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 15:45:15 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct			s_redirect_inf
 	int					to_fd;
 	int					close_to_fd;
 	char				*to_word;
+	char				*heredoc;
 }						t_redirect_inf;
 
 void					del_redirect(void *content, size_t content_size);
