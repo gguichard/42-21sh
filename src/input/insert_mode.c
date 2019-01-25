@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 15:17:01 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 17:39:34 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,11 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 
 int		handle_ac(t_shell *shell, t_term *term)
 {
-	t_var			*path;
 	t_ac_suff_inf	*result;
 	t_str_cmd_inf	scmd;
 	char			*line;
 	char			*real_line;
 
-	if ((path = get_var(shell->env, "PATH")) == NULL)
-		return (0);
 	if ((line = get_command_line(term)) == NULL)
 		return (0);
 	line[ft_strlen(line) - (term->size - term->cursor)] = '\0';
@@ -65,7 +62,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 	}
 	free(line);
 	scmd_init(&scmd, real_line);
-	result = autocomplete_cmdline(&scmd, path->value
+	result = autocomplete_cmdline(&scmd, shell
 			, &(shell->builtins));
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{

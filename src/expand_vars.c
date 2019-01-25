@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 16:38:07 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 17:30:15 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,11 +198,12 @@ char			*expand_vars(const char *str, t_shell *shell, char **var_error)
 	return (new_str);
 }
 
-char			*expand_home(const char *str, t_shell *shell)
+char			*expand_home(const char *str, t_shell *shell,
+		int remove_home_ending_slash)
 {
-	char	*new_str;
 	char	*real_home;
 	char	*home;
+	size_t	rhome_len;
 
 	if (str[0] == '~' && (str[1] == '/' || str[1] == '\0'))
 	{
@@ -214,10 +215,13 @@ char			*expand_home(const char *str, t_shell *shell)
 			return (NULL);
 		}
 		free(home);
-		new_str = ft_strjoin(real_home, str + 1);
-		free(real_home);
+		if (remove_home_ending_slash)
+		{
+			rhome_len = ft_strlen(real_home);
+			if (rhome_len > 0 && real_home[rhome_len - 1] == '/')
+				real_home[rhome_len - 1] = '\0';
+		}
+		return (ft_strjoin_free(real_home, str + 1));
 	}
-	else
-		new_str = ft_strdup(str);
-	return (new_str);
+	return (ft_strdup(str));
 }

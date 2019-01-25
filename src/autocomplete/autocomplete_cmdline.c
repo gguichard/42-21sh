@@ -6,12 +6,14 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:17:37 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 10:15:59 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 17:50:15 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "split_cmd_token.h"
+#include "expand_vars.h"
 #include "apply_escape.h"
+#include "vars.h"
 #include "str_cmd_inf.h"
 #include "token_inf.h"
 #include "shell.h"
@@ -35,21 +37,35 @@ static void				process_token(t_token_inf *tk_inf,
 }
 
 static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd,
-		const char *path, t_builtin **builtins)
+		t_shell *shell, t_builtin **builtins)
 {
+	char			*path;
+	char			*home_expanded_word;
 	char			*real_word;
 	t_ac_suff_inf	*result;
 
-	if ((real_word = apply_escape(last_word)) == NULL)
+	if ((home_expanded_word = expand_home(last_word, shell, 1)) == NULL)
 		return (NULL);
+	if ((real_word = apply_escape(home_expanded_word)) == NULL)
+	{
+		free(home_expanded_word);
+		return (NULL);
+	}
+	free(home_expanded_word);
+	if ((path = get_shell_var(shell, "PATH")) == NULL)
+	{
+		free(real_word);
+		return (NULL);
+	}
 	result = autocomplete_word(real_word, (word_is_cmd == 0 ? 0 : 1), path,
 			builtins);
+	free(path);
 	free(real_word);
 	return (result);
 }
 
 t_ac_suff_inf			*autocomplete_cmdline(t_str_cmd_inf *scmd,
-		const char *path, t_builtin **builtins)
+		t_shell *shell, t_builtin **builtins)
 {
 	t_list			*all_tokens;
 	t_list			*cur_token;
@@ -73,7 +89,7 @@ t_ac_suff_inf			*autocomplete_cmdline(t_str_cmd_inf *scmd,
 		last_word = "";
 		word_is_cmd = (word_is_cmd == -1 ? 1 : 0);
 	}
-	res = call_ac_word(last_word, (word_is_cmd == 0 ? 0 : 1), path, builtins);
+	res = call_ac_word(last_word, (word_is_cmd == 0 ? 0 : 1), shell, builtins);
 	ft_lstdel(&all_tokens, del_token);
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 16:50:53 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 17:31:12 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int			add_arg(t_cmd_inf *cmd_inf, const char *arg, t_shell *shell)
 	char	*home_expanded_arg;
 	char	*escaped_arg;
 
-	if ((home_expanded_arg = expand_home(arg, shell)) == NULL)
+	if ((home_expanded_arg = expand_home(arg, shell, 0)) == NULL)
 		return (0);
 	if ((escaped_arg = apply_escape(home_expanded_arg)) == NULL)
 	{
