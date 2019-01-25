@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 08:57:59 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 15:28:08 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 15:41:09 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char			*apply_only_newline_escape(const char *str,
 				&& !scmd_cur_char_is_escaped(&str_cmd_inf))
 			remove_cur_char_from_scmd(&str_cmd_inf, new_str, &str_len, 1);
 		else
-			++(str_cmd_inf.pos);
+			scmd_move_to_next_char(&str_cmd_inf);
 	}
 	scmd_delete(str_cmd_inf.sub_var_bracket);
 	return (new_str);
