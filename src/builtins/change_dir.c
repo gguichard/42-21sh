@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:13:49 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 00:43:34 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 11:13:39 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ static int		change_dir(t_shell *shell, t_opts *opts, char *cur_path)
 	size_t	cur_len;
 	char	*new_path;
 
+	pwd = get_var(shell->env, "PWD");
 	if (!has_opt(opts, 'P') && cur_path[0] != '/')
 	{
-		pwd = get_var(shell->env, "PWD");
 		pwd_len = (pwd == NULL) ? 0 : ft_strlen(pwd->value);
 		if (pwd_len > 0 && (pwd->value)[pwd_len - 1] == '/')
 			pwd_len -= 1;
@@ -67,14 +67,15 @@ static int		change_dir(t_shell *shell, t_opts *opts, char *cur_path)
 			ft_memcpy(new_path, pwd->value, pwd_len);
 		new_path[pwd_len] = '/';
 		ft_memcpy(new_path + pwd_len + 1, cur_path, cur_len + 1);
-		ft_printf("BEFORE: %s\n", new_path);
-		set_dir_to_canonical_form(new_path);
-		ft_printf("AFTER: %s\n", new_path);
 		free(cur_path);
 		cur_path = new_path;
 	}
+	set_dir_to_canonical_form(cur_path);
 	if (chdir(cur_path) == 0)
+	{
 		update_var(&(shell->env), "PWD", cur_path);
+		update_var(&(shell->env), "OLDPWD", pwd == NULL ? "" : pwd->value);
+	}
 	free(cur_path);
 	return (0);
 }

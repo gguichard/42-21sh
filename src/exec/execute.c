@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 18:30:43 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 09:54:34 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,13 @@ static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 	if (cmd_inf->pipe_cmd != NULL)
 		execute_pipeline(shell, cmd_inf, path);
 	else if (cmd_inf->arg_lst != NULL)
-		execute_single_cmd(shell, cmd_inf, path);
+	{
+		if (ft_strequ("cd", cmd_inf->arg_lst->content))
+			builtin_cd(shell, ft_lstsize(cmd_inf->arg_lst)
+					, arg_lst_to_tab(cmd_inf->arg_lst));
+		else
+			execute_single_cmd(shell, cmd_inf, path);
+	}
 }
 
 void		execute_all(t_shell *shell, t_list *all_sub_cmd)
