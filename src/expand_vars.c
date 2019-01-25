@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/24 16:14:21 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 09:08:19 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,45 @@ static size_t	get_var_name_len(const char *str)
 	return (var_len);
 }
 
+static int		char_need_to_be_escaped(t_str_cmd_inf *scmd, char this_char)
+{
+	if (scmd->is_in_quote || scmd->is_in_var_bracket)
+		return (0);
+	else if (scmd->is_in_doublequote)
+		return (ft_strchr("$\"\\", this_char) != NULL);
+	else
+		return (ft_strchr("$\"\\\'~|<>;", this_char) != NULL);
+}
+
+static char		*escape_chars_in_var(t_str_cmd_inf *scmd, const char *str)
+{
+	size_t		num_of_chars_to_esc;
+	const char	*cur_char;
+	char		*new_str;
+	size_t		idx;
+
+	num_of_chars_to_esc = 0;
+	cur_char = str;
+	while (*cur_char != '\0')
+	{
+		num_of_chars_to_esc += char_need_to_be_escaped(scmd, *cur_char);
+		++cur_char;
+	}
+	if ((new_str = (char*)malloc(sizeof(char)
+					* (ft_strlen(str) + num_of_chars_to_esc))) == NULL)
+		return (NULL);
+	idx = 0;
+	while (*str != '\0')
+	{
+		if (char_need_to_be_escaped(scmd, *str) && ++idx > 0)
+			new_str[idx - 1] = '\\';
+		new_str[idx] = *str;
+		++idx;
+		++str;
+	}
+	return (new_str);
+}
+
 static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str,
 		size_t var_len, t_shell *shell)
 {
@@ -60,16 +99,24 @@ static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str,
 	int		err_ret;
 	char	*var_name;
 	char	*var_value;
+	char	*escaped_var_value;
 
 	is_in_brackets = (scmd->str[scmd->pos + 1] == '{');
 	if ((var_name = ft_strsub(scmd->str, scmd->pos + (is_in_brackets ? 2 : 1),
 					var_len)) == NULL)
 		return (0);
 	var_value = get_shell_var(shell, var_name);
+	if ((escaped_var_value = escape_chars_in_var(scmd, var_value)) == NULL)
+	{
+		free(var_value);
+		free(var_name);
+		return (0);
+	}
 	err_ret = str_good_replace(new_str, scmd->pos,
-			var_len + (is_in_brackets ? 3 : 1), var_value);
+			var_len + (is_in_brackets ? 3 : 1), escaped_var_value);
 	scmd->str = *new_str;
-	scmd->pos += ft_strlen(var_value);
+	scmd->pos += ft_strlen(escaped_var_value);
+	free(escaped_var_value);
 	free(var_value);
 	free(var_name);
 	return (err_ret);
