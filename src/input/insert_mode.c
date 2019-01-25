@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 10:24:02 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 13:30:58 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int		handle_ac(t_shell *shell, t_term *term)
 		tputs(tparm(tgetstr("do", NULL), term->rows - term->row), 1, t_putchar);
 		tputs(tgetstr("cr", NULL), 1, t_putchar);
 		ac_print_list(result->choices, term);
-		go_to_prompt(term);
 		print_input(shell, term);
 	}
 	scmd_delete(scmd.sub_var_bracket);
