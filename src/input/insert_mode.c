@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 14:48:04 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 15:17:01 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 	if ((line = get_command_line(term)) == NULL)
 		return (0);
 	line[ft_strlen(line) - (term->size - term->cursor)] = '\0';
-	if ((real_line = apply_escape(line)) == NULL)
+	if ((real_line = apply_only_newline_escape(line, 1)) == NULL)
 	{
 		free(line);
 		return (0);

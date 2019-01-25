@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 13:51:17 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 15:18:39 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "input.h"
 #include "history.h"
 #include "expand_vars.h"
+#include "apply_escape.h"
 #include "lexer.h"
 #include "execute.h"
 #include "split_cmd_token.h"
@@ -45,16 +46,20 @@ char	*get_command_line(t_term *term)
 
 int		handle_command(t_shell *shell)
 {
+	char			*tmp_line;
 	char			*noexp_line;
 	char			*line;
 	char			*var_error;
 	t_str_cmd_inf	str_cmd_inf;
-	t_list			*all_sub_cmd;
+	t_list			*token_lst;
 
 	ft_strdel(&(shell->term.def_line));
 	var_error = NULL;
-	noexp_line = get_command_line(&(shell->term));
+	if ((tmp_line = get_command_line(&(shell->term))) == NULL)
+		return (0);
 	ft_strdel(&(shell->term.multiline));
+	noexp_line = apply_only_newline_escape(tmp_line, 0);
+	free(tmp_line);
 	if (noexp_line == NULL || ((line = expand_vars(noexp_line, shell,
 						&var_error)) == NULL && var_error == NULL))
 	{
@@ -69,17 +74,17 @@ int		handle_command(t_shell *shell)
 	else
 	{
 		scmd_init(&str_cmd_inf, line);
-		all_sub_cmd = split_cmd_token(&str_cmd_inf);
-		if (all_sub_cmd != NULL)
+		token_lst = split_cmd_token(&str_cmd_inf);
+		if (token_lst != NULL)
 		{
-			if (parse_commands(all_sub_cmd))
+			if (parse_commands(token_lst))
 			{
-				if (is_multiline(&(shell->term), &str_cmd_inf, all_sub_cmd))
+				if (is_multiline(&(shell->term), &str_cmd_inf, token_lst))
 					shell->term.multiline = line;
 				else
-					execute_all(shell, all_sub_cmd);
+					execute_all(shell, token_lst);
 			}
-			ft_lstdel(&all_sub_cmd, del_token);
+			ft_lstdel(&token_lst, del_token);
 		}
 		scmd_delete(str_cmd_inf.sub_var_bracket);
 	}
