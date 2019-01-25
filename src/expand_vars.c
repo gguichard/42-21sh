@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 09:25:36 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 16:38:07 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ static size_t	get_var_name_len(const char *str)
 
 static int		char_need_to_be_escaped(t_str_cmd_inf *scmd, char this_char)
 {
+	if (scmd == NULL)
+		return (ft_strchr(" $\"\\\'~|<>;", this_char) != NULL);
 	if (scmd->is_in_quote || scmd->is_in_var_bracket)
 		return (0);
 	else if (scmd->is_in_doublequote)
@@ -193,5 +195,29 @@ char			*expand_vars(const char *str, t_shell *shell, char **var_error)
 		scmd_move_to_next_char(&scmd);
 	}
 	scmd_delete(scmd.sub_var_bracket);
+	return (new_str);
+}
+
+char			*expand_home(const char *str, t_shell *shell)
+{
+	char	*new_str;
+	char	*real_home;
+	char	*home;
+
+	if (str[0] == '~' && (str[1] == '/' || str[1] == '\0'))
+	{
+		home = get_shell_var(shell, "HOME");
+		if (home == NULL
+				|| (real_home = escape_chars_in_var(NULL, home)) == NULL)
+		{
+			free(home);
+			return (NULL);
+		}
+		free(home);
+		new_str = ft_strjoin(real_home, str + 1);
+		free(real_home);
+	}
+	else
+		new_str = ft_strdup(str);
 	return (new_str);
 }

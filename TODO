@@ -1,0 +1,2 @@
+? Mieux gerer les echappements (appeler fonction plutot que dupliquer tout tout le temps).
+Gerer ~ (expand apres split).

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 15:01:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 16:59:14 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void		execute_all(t_shell *shell, t_list *token_lst)
 	t_list		*cur_cmd;
 	t_var		*path;
 
-	cmd_lst = join_token_cmd(token_lst);
+	cmd_lst = join_token_cmd(token_lst, shell);
 	cur_cmd = cmd_lst;
 	while (cur_cmd != NULL)
 	{

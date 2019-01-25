@@ -6,26 +6,35 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 15:46:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 16:50:53 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 #include <stdlib.h>
 #include "libft.h"
+#include "expand_vars.h"
 #include "apply_escape.h"
+#include "shell.h"
 #include "cmd_inf.h"
 #include "token_inf.h"
 #include "redirect_inf.h"
 #include "join_token_cmd.h"
 
-static int			add_arg(t_cmd_inf *cmd_inf, const char *arg)
+static int			add_arg(t_cmd_inf *cmd_inf, const char *arg, t_shell *shell)
 {
 	t_list	*new_elem;
+	char	*home_expanded_arg;
 	char	*escaped_arg;
 
-	if ((escaped_arg = apply_escape(arg)) == NULL)
+	if ((home_expanded_arg = expand_home(arg, shell)) == NULL)
 		return (0);
+	if ((escaped_arg = apply_escape(home_expanded_arg)) == NULL)
+	{
+		free(home_expanded_arg);
+		return (0);
+	}
+	free(home_expanded_arg);
 	if ((new_elem = ft_lstnew(escaped_arg,
 					sizeof(char) * (ft_strlen(escaped_arg) + 1))) == NULL)
 	{
@@ -123,7 +132,8 @@ static int			del_cur_cmd(t_cmd_inf *cmd_inf)
 	return (0);
 }
 
-static int			process_tk_ope(t_cmd_inf *cmd_inf, t_list **token_lst)
+static int			process_tk_ope(t_cmd_inf *cmd_inf, t_list **token_lst,
+		t_shell *shell)
 {
 	if (get_tk(*token_lst)->token[0] == '<'
 			|| get_tk(*token_lst)->token[0] == '>')
@@ -141,7 +151,7 @@ static int			process_tk_ope(t_cmd_inf *cmd_inf, t_list **token_lst)
 				== NULL)
 			return (del_cur_cmd(cmd_inf));
 		*token_lst = (*token_lst)->next;
-		if (set_cur_cmd(cmd_inf->pipe_cmd, token_lst))
+		if (set_cur_cmd(cmd_inf->pipe_cmd, token_lst, shell))
 			return (1);
 		else
 			return (del_cur_cmd(cmd_inf));
@@ -149,16 +159,17 @@ static int			process_tk_ope(t_cmd_inf *cmd_inf, t_list **token_lst)
 	return (-1);
 }
 
-static int			process_tk(t_cmd_inf *cmd_inf, t_list **token_lst)
+static int			process_tk(t_cmd_inf *cmd_inf, t_list **token_lst,
+		t_shell *shell)
 {
 	if (get_tk(*token_lst)->type == TK_WORD)
 	{
-		if (!add_arg(cmd_inf, get_tk(*token_lst)->token))
+		if (!add_arg(cmd_inf, get_tk(*token_lst)->token, shell))
 			return (del_cur_cmd(cmd_inf));
 	}
 	else if (get_tk(*token_lst)->type == TK_OPE)
 	{
-		return (process_tk_ope(cmd_inf, token_lst));
+		return (process_tk_ope(cmd_inf, token_lst, shell));
 	}
 	else if (get_tk(*token_lst)->type == TK_NUM_OPT)
 	{
@@ -174,7 +185,8 @@ static int			process_tk(t_cmd_inf *cmd_inf, t_list **token_lst)
 	return (-1);
 }
 
-int					set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
+int					set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst,
+		t_shell *shell)
 {
 	int		tmp_ret;
 
@@ -183,7 +195,7 @@ int					set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 	cmd_inf->redirect_lst = NULL;
 	while (*token_lst != NULL)
 	{
-		if ((tmp_ret = process_tk(cmd_inf, token_lst)) != -1)
+		if ((tmp_ret = process_tk(cmd_inf, token_lst, shell)) != -1)
 			return (tmp_ret);
 		if (*token_lst != NULL)
 			*token_lst = (*token_lst)->next;
@@ -191,7 +203,7 @@ int					set_cur_cmd(t_cmd_inf *cmd_inf, t_list **token_lst)
 	return (1);
 }
 
-t_list				*join_token_cmd(t_list *token_lst)
+t_list				*join_token_cmd(t_list *token_lst, t_shell *shell)
 {
 	t_list		*cmd_lst;
 	t_list		*new_elem;
@@ -200,7 +212,7 @@ t_list				*join_token_cmd(t_list *token_lst)
 	cmd_lst = NULL;
 	while (token_lst != NULL)
 	{
-		if (!set_cur_cmd(&cur_cmd, &token_lst))
+		if (!set_cur_cmd(&cur_cmd, &token_lst, shell))
 		{
 			ft_lstdel(&cmd_lst, del_cmd);
 			return (NULL);
