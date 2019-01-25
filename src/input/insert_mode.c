@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 09:19:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 10:24:02 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 	curr = result->suff;
 	while (*curr != '\0')
 	{
-		if (*curr == ' ' && scmd_cur_char_is_in_nothing(scmd))
+		if ((curr != result->suff || !scmd_cur_char_is_escaped(scmd))
+				&& *curr == ' ' && scmd_cur_char_is_in_nothing(scmd))
 			insert_cmdline(shell, term, '\\');
 		insert_cmdline(shell, term, *curr);
 		curr++;

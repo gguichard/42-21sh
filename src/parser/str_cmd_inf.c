@@ -6,32 +6,12 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 12:15:36 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/23 16:16:09 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 10:18:33 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "str_cmd_inf.h"
-
-/*
-** Retourne 1 si le curseur a la position passee en parametre est echappe,
-** 0 sinon.
-*/
-
-static int		char_at_is_escaped(size_t at_pos, t_str_cmd_inf *str_cmd_inf)
-{
-	if (at_pos == 0 || str_cmd_inf->is_in_quote
-			|| str_cmd_inf->is_in_var_bracket)
-		return (0);
-	if (str_cmd_inf->is_in_doublequote
-			&& str_cmd_inf->str[at_pos] != '$'
-			&& str_cmd_inf->str[at_pos] != '\"'
-			&& str_cmd_inf->str[at_pos] != '\\'
-			&& str_cmd_inf->str[at_pos] != '\n')
-		return (0);
-	return (str_cmd_inf->str[at_pos - 1] == '\\'
-			&& !char_at_is_escaped(at_pos - 1, str_cmd_inf));
-}
 
 /*
 ** Deplace le curseur vers la droite sans gerer les cas ou il se trouve entre
@@ -50,7 +30,7 @@ static void		move_to_next_char_not_quote_or_var(t_str_cmd_inf *str_cmd_inf)
 	else if (str_cmd_inf->str[str_cmd_inf->pos] == '{'
 			&& str_cmd_inf->pos > 0
 			&& str_cmd_inf->str[str_cmd_inf->pos - 1] == '$'
-			&& !char_at_is_escaped(str_cmd_inf->pos - 1, str_cmd_inf))
+			&& !scmd_char_at_is_escaped(str_cmd_inf, str_cmd_inf->pos - 1))
 	{
 		str_cmd_inf->is_in_var_bracket = 1;
 		if ((new_scmd = (t_str_cmd_inf*)malloc(sizeof(t_str_cmd_inf))) != NULL)
@@ -88,9 +68,25 @@ int				scmd_cur_char_is_in_nothing(t_str_cmd_inf *str_cmd_inf)
 			&& !str_cmd_inf->is_in_var_bracket);
 }
 
+int				scmd_char_at_is_escaped(t_str_cmd_inf *str_cmd_inf,
+		size_t at_pos)
+{
+	if (at_pos == 0 || str_cmd_inf->is_in_quote
+			|| str_cmd_inf->is_in_var_bracket)
+		return (0);
+	if (str_cmd_inf->is_in_doublequote
+			&& str_cmd_inf->str[at_pos] != '$'
+			&& str_cmd_inf->str[at_pos] != '\"'
+			&& str_cmd_inf->str[at_pos] != '\\'
+			&& str_cmd_inf->str[at_pos] != '\n')
+		return (0);
+	return (str_cmd_inf->str[at_pos - 1] == '\\'
+			&& !scmd_char_at_is_escaped(str_cmd_inf, at_pos - 1));
+}
+
 int				scmd_cur_char_is_escaped(t_str_cmd_inf *str_cmd_inf)
 {
-	return (char_at_is_escaped(str_cmd_inf->pos, str_cmd_inf));
+	return (scmd_char_at_is_escaped(str_cmd_inf, str_cmd_inf->pos));
 }
 
 static int		move_in_var_bracket(t_str_cmd_inf *str_cmd_inf)
