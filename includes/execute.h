@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 15:43:39 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 17:05:35 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,15 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf
 		, const char *path);
 
 /*
- ** UTILS.
- */
+** UTILS.
+*/
 char			*search_binary(const char *path, const char *binary
 		, t_error *error);
 char			**arg_lst_to_tab(t_list *arg_lst);
 
 /*
- ** REDIRECTIONS.
- */
+** REDIRECTIONS.
+*/
 void			process_redir(t_shell *shell, t_cmd_inf *cmd_inf);
 void			prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf);
 int				fork_redirect(t_cmd_inf *cmd_inf);
@@ -56,8 +56,8 @@ int				redirect_input(t_redirect_inf *redirect_inf);
 int				redirect_heredoc(t_redirect_inf *redirect_inf);
 
 /*
- ** COMMANDS.
- */
+** COMMANDS.
+*/
 char			*get_cmd_inf_path(t_cmd_inf *cmd_inf, const char *path
 		, t_error *error);
 

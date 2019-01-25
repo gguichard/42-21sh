@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 13:40:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 17:07:50 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 #include "history.h"
 #include "vars.h"
 
-t_shell	*g_shell = NULL;
+t_shell			*g_shell = NULL;
 
-static void	kill_forked_pids(t_shell *shell)
+static void		kill_forked_pids(t_shell *shell)
 {
 	t_list	*curr;
 
@@ -33,7 +33,7 @@ static void	kill_forked_pids(t_shell *shell)
 	}
 }
 
-void	handle_signal(int sig)
+void			handle_signal(int sig)
 {
 	if (sig == SIGWINCH)
 		update_winsize(&(g_shell->term));
@@ -52,7 +52,8 @@ void	handle_signal(int sig)
 	}
 }
 
-int		init_shell(t_shell *shell, int argc, char **argv, char **environ)
+int				init_shell(t_shell *shell, int argc, char **argv
+		, char **environ)
 {
 	ft_memset(shell, 0, sizeof(t_shell));
 	shell->argc = argc;
@@ -61,7 +62,7 @@ int		init_shell(t_shell *shell, int argc, char **argv, char **environ)
 	return (1);
 }
 
-int		main(int argc, char **argv, char **environ)
+int				main(int argc, char **argv, char **environ)
 {
 	t_shell	shell;
 
