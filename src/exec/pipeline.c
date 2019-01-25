@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 20:45:53 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 09:28:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static void		setup_pipes(t_shell *shell, t_list *pipeline, const char *path)
 	while (curr != NULL)
 	{
 		curr_pipe = (t_pipe *)curr->content;
-		if (curr->next != NULL && curr_pipe->cmd_inf->arg_lst != NULL)
+		if (curr->next != NULL)
 		{
 			next_pipe = (t_pipe *)curr->next->content;
 			if (pipe(next_pipe->fildes) == 0)
