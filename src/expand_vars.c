@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 09:08:19 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 09:25:36 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,17 +78,21 @@ static char		*escape_chars_in_var(t_str_cmd_inf *scmd, const char *str)
 		++cur_char;
 	}
 	if ((new_str = (char*)malloc(sizeof(char)
-					* (ft_strlen(str) + num_of_chars_to_esc))) == NULL)
+					* (ft_strlen(str) + num_of_chars_to_esc + 1))) == NULL)
 		return (NULL);
 	idx = 0;
 	while (*str != '\0')
 	{
-		if (char_need_to_be_escaped(scmd, *str) && ++idx > 0)
-			new_str[idx - 1] = '\\';
+		if (char_need_to_be_escaped(scmd, *str))
+		{
+			new_str[idx] = '\\';
+			++idx;
+		}
 		new_str[idx] = *str;
 		++idx;
 		++str;
 	}
+	new_str[idx] = '\0';
 	return (new_str);
 }
 
