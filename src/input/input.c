@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 16:10:11 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/25 13:51:17 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*get_command_line(t_term *term)
 		if (add_nl)
 			line[ml_len] = '\n';
 	}
-	ft_strdel(&(term->multiline));
 	return (line);
 }
 
@@ -55,6 +54,7 @@ int		handle_command(t_shell *shell)
 	ft_strdel(&(shell->term.def_line));
 	var_error = NULL;
 	noexp_line = get_command_line(&(shell->term));
+	ft_strdel(&(shell->term.multiline));
 	if (noexp_line == NULL || ((line = expand_vars(noexp_line, shell,
 						&var_error)) == NULL && var_error == NULL))
 	{

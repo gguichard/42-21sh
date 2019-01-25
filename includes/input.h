@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 10:17:32 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 13:42:51 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int				update_winsize(t_term *term);
 /*
 ** COMMAND LINE.
 */
+char			*get_command_line(t_term *term);
 int				handle_command(t_shell *shell);
 int				handle_multiline_eot(t_term *term);
 int				is_multiline(t_term *term, t_str_cmd_inf *str_cmd_inf
