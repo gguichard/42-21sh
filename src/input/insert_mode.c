@@ -6,13 +6,14 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 13:30:58 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/25 14:48:04 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "str_cmd_inf.h"
 #include "shell.h"
 #include "input.h"
+#include "apply_escape.h"
 #include "vars.h"
 #include "utils.h"
 
@@ -49,19 +50,27 @@ int		handle_ac(t_shell *shell, t_term *term)
 	t_var			*path;
 	t_ac_suff_inf	*result;
 	t_str_cmd_inf	scmd;
-	char			old_char;
+	char			*line;
+	char			*real_line;
 
 	if ((path = get_var(shell->env, "PATH")) == NULL)
 		return (0);
-	old_char = (term->line)[term->cursor];
-	term->line[term->cursor] = '\0';
-	scmd_init(&scmd, term->line);
+	if ((line = get_command_line(term)) == NULL)
+		return (0);
+	line[ft_strlen(line) - (term->size - term->cursor)] = '\0';
+	if ((real_line = apply_escape(line)) == NULL)
+	{
+		free(line);
+		return (0);
+	}
+	free(line);
+	scmd_init(&scmd, real_line);
 	result = autocomplete_cmdline(&scmd, path->value
 			, &(shell->builtins));
-	term->line[term->cursor] = old_char;
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{
 		scmd_delete(scmd.sub_var_bracket);
+		free(real_line);
 		return (!!delete_ac_suff_inf(result));
 	}
 	ac_append(shell, term, result, &scmd);
@@ -74,6 +83,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 	}
 	scmd_delete(scmd.sub_var_bracket);
 	delete_ac_suff_inf(result);
+	free(real_line);
 	return (1);
 }
 
