@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 16:48:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/27 00:47:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,13 @@ int		handle_command(t_shell *shell)
 		{
 			if (lex_commands(token_lst))
 			{
-				if (is_multiline(&(shell->term), &str_cmd_inf, token_lst))
-					shell->term.multiline = line;
-				else
+				if (!is_multiline(&str_cmd_inf, token_lst))
 					execute_all(shell, token_lst);
+				else
+				{
+					shell->term.prompt = get_prompt_type(&str_cmd_inf);
+					shell->term.multiline = line;
+				}
 			}
 			ft_lstdel(&token_lst, del_token);
 		}
@@ -96,39 +99,6 @@ int		handle_command(t_shell *shell)
 	return (1);
 }
 
-int		handle_key_mode(t_shell *shell, t_term *term, char key)
-{
-	if (key == FORM_FEED_KEY)
-		return (handle_screen_clear(shell, term));
-	if (key == BELL_KEY)
-		return (handle_bell(shell, term));
-	if (term->visual_mode)
-		return (handle_vm_key(shell, term, key));
-	else
-		return (handle_key(shell, term, key));
-}
-
-int		read_input(t_shell *shell)
-{
-	int		ret;
-	char	buf;
-	int		handle;
-
-	while ((ret = read(STDIN_FILENO, &buf, 1)) > 0)
-	{
-		if (handle_esc_key(shell, &(shell->term), buf))
-		{
-			if (!(shell->term.visual_mode))
-				shell->term.ac_flag = 0;
-			continue ;
-		}
-		handle = handle_key_mode(shell, &(shell->term), buf);
-		if (handle <= 0)
-			return (handle < 0 ? 0 : ret);
-	}
-	return (ret);
-}
-
 int		wait_for_command(t_shell *shell)
 {
 	int	ret;
@@ -139,14 +109,7 @@ int		wait_for_command(t_shell *shell)
 	while (ret > 0)
 	{
 		reset_cmdline(shell);
-		if (!(shell->term.legacy_mode))
-			ret = read_input(shell);
-		else
-		{
-			ret = get_next_line(STDIN_FILENO, &(shell->term.line));
-			if (ret > 0)
-				shell->term.size = ft_strlen(shell->term.line);
-		}
+		ret = read_input(shell);
 		if (ret > 0)
 			handle_command(shell);
 		else if (shell->term.multiline != NULL)
