@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 15:44:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/27 13:27:53 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ typedef struct			s_term
 	int					esc_seq;
 	char				seq[MAX_ESC_SEQ_BYTES];
 	int					seq_off;
+	t_prompt			prompt;
+	char				*prev_lines;
 	char				*line;
 	char				*def_line;
-	t_prompt			prompt;
-	char				*multiline;
 	size_t				capacity;
 	size_t				size;
 	size_t				cursor;

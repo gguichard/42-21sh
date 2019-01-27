@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 17:07:50 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/27 14:21:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ void			handle_signal(int sig)
 		ft_putchar('\n');
 		if (g_shell->fork_pids == NULL)
 		{
-			ft_strdel(&(g_shell->term.multiline));
+			ft_strdel(&(g_shell->term.prev_lines));
 			if (g_shell->term.visual_mode)
 				vm_toggle(g_shell, &(g_shell->term));
-			reset_cmdline(g_shell);
+			reset_cmdline(g_shell, PROMPT_DEF);
 		}
 	}
 }
@@ -77,8 +77,8 @@ int				main(int argc, char **argv, char **environ)
 	reset_term(&shell);
 	ft_lstdel(&(shell.env), free_var);
 	ft_lstdel(&(shell.local), free_var);
+	ft_strdel(&(shell.term.prev_lines));
 	ft_strdel(&(shell.term.line));
-	ft_strdel(&(shell.term.multiline));
 	ft_strdel(&(shell.term.def_line));
 	clear_history(&shell);
 	return (0);

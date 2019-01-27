@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 00:47:59 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/27 17:24:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,11 @@ int				update_winsize(t_term *term);
 */
 char			*get_command_line(t_term *term);
 int				handle_command(t_shell *shell);
-int				handle_multiline_eot(t_term *term);
-int				is_multiline(t_str_cmd_inf *scmd_inf, t_list *token_lst);
+int				is_command_complete(t_str_cmd_inf *scmd_inf, t_list *token_lst);
 t_prompt		get_prompt_type(t_str_cmd_inf *scmd_inf);
 int				read_input(t_shell *shell);
 int				wait_for_command(t_shell *shell);
-void			reset_cmdline(t_shell *shell);
+void			reset_cmdline(t_shell *shell, t_prompt prompt);
 int				realloc_cmdline(t_term *term);
 void			go_to_prompt(t_term *term);
 void			print_input(t_shell *shell, t_term *term);

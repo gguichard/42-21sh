@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 13:49:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/27 14:20:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 #include "input.h"
 #include "utils.h"
 
-void	reset_cmdline(t_shell *shell)
+void	reset_cmdline(t_shell *shell, t_prompt prompt)
 {
+	if (shell->term.legacy_mode)
+		ft_strdel(&(shell->term.line));
 	if (shell->term.line != NULL)
-		ft_memset(shell->term.line, 0, shell->term.size + 1);
-	if (shell->term.multiline == NULL)
-		shell->term.prompt = PROMPT_DEF;
+		ft_memset(shell->term.line, 0, shell->term.size);
+	shell->term.prompt = prompt;
 	show_prompt(shell);
 	shell->term.cursor = 0;
 	shell->term.size = 0;
