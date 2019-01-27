@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/27 00:39:35 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/27 20:54:30 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRC		=	main.c \
 			lexer/tokens.c lexer/grammar.c \
 			exec/binaries.c exec/execute.c exec/single.c \
 			exec/redirections.c exec/redir_output.c exec/redir_input.c \
-			exec/redir_file.c exec/heredoc.c exec/pipeline.c exec/utils.c \
+			exec/heredoc.c exec/pipeline.c exec/utils.c \
 			parser/split_cmd_token.c parser/str_cmd_inf.c \
 			parser/token_inf.c parser/apply_escape.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
