@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 08:57:59 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 15:41:09 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/27 17:52:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,12 @@ char			*apply_escape(const char *str)
 	return (new_str);
 }
 
-char			*apply_only_newline_escape(const char *str,
-		int apply_on_last_char)
+char			*apply_only_newline_escape(const char *str)
 {
 	t_str_cmd_inf	str_cmd_inf;
 	char			*new_str;
 	size_t			str_len;
 
-	(void)apply_on_last_char;
 	str_len = ft_strlen(str);
 	if ((new_str = ft_strndup(str, str_len)) == NULL)
 		return (NULL);
@@ -103,8 +101,6 @@ char			*apply_only_newline_escape(const char *str,
 	{
 		if (str_cmd_inf.str[str_cmd_inf.pos] == '\\'
 				&& str_cmd_inf.str[str_cmd_inf.pos + 1] == '\n'
-				&& (apply_on_last_char
-					|| str_cmd_inf.str[str_cmd_inf.pos + 2] != '\0')
 				&& !str_cmd_inf.is_in_quote && !str_cmd_inf.is_in_doublequote
 				&& !scmd_cur_char_is_escaped(&str_cmd_inf))
 			remove_cur_char_from_scmd(&str_cmd_inf, new_str, &str_len, 1);

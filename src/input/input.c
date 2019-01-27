@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 17:32:32 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/27 17:48:45 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int			handle_command(t_shell *shell)
 	error = ERRC_NOERROR;
 	if ((input = handle_input(shell, &error)) == NULL)
 		return (-1);
-	line = apply_only_newline_escape(input, 0);
+	line = apply_only_newline_escape(input);
 	free(input);
 	if (line == NULL)
 		return (-1);
