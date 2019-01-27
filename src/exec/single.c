@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 18:18:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 18:35:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 00:09:31 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "libft.h"
 #include "shell.h"
 #include "cmd_inf.h"
-#include "input.h"
 #include "execute.h"
 
 static void	single_fork(t_shell *shell, t_cmd_inf *cmd_inf
@@ -52,11 +51,7 @@ void		execute_single_cmd(t_shell *shell, t_cmd_inf *cmd_inf
 	}
 	args = arg_lst_to_tab(cmd_inf->arg_lst);
 	if (args != NULL)
-	{
-		reset_term(shell);
 		single_fork(shell, cmd_inf, bin_path, args);
-		setup_term(shell);
-	}
 	free(bin_path);
 	free(args);
 }

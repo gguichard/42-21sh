@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 14:21:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 00:28:07 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,8 @@ int				main(int argc, char **argv, char **environ)
 	if (!init_shell(&shell, argc, argv, environ))
 		return (1);
 	signal(SIGINT, handle_signal);
-	shell.term.legacy_mode = !setup_term(&shell);
-	if (!(shell.term.legacy_mode))
-		signal(SIGWINCH, handle_signal);
+	signal(SIGWINCH, handle_signal);
 	wait_for_command(&shell);
-	reset_term(&shell);
 	ft_lstdel(&(shell.env), free_var);
 	ft_lstdel(&(shell.local), free_var);
 	ft_strdel(&(shell.term.prev_lines));

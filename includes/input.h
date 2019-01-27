@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 17:24:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 00:13:31 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int				update_winsize(t_term *term);
 ** COMMAND LINE.
 */
 char			*get_command_line(t_term *term);
-int				handle_command(t_shell *shell);
 int				is_command_complete(t_str_cmd_inf *scmd_inf, t_list *token_lst);
 t_prompt		get_prompt_type(t_str_cmd_inf *scmd_inf);
 int				read_input(t_shell *shell);

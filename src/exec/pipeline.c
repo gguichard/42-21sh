@@ -6,14 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 09:28:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 00:09:51 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include "libft.h"
-#include "input.h"
 #include "execute.h"
 
 static t_list	*create_pipeline(t_cmd_inf *cmd_inf)
@@ -139,7 +138,6 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf
 	}
 	setup_pipes(shell, pipeline, path);
 	ft_lstfree(&pipeline);
-	reset_term(shell);
 	curr = shell->fork_pids;
 	while (curr != NULL)
 	{
@@ -150,5 +148,4 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf
 		curr = next;
 	}
 	shell->fork_pids = NULL;
-	setup_term(shell);
 }

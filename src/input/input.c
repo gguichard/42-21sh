@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 17:48:45 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 00:27:29 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char		*get_command_line(t_term *term)
 	return (line);
 }
 
-static char	*handle_input(t_shell *shell, t_error *error)
+static char	*get_full_input(t_shell *shell, t_error *error)
 {
 	int				ret;
 	char			*input;
@@ -90,19 +90,14 @@ static char	*handle_input(t_shell *shell, t_error *error)
 	return (input);
 }
 
-int			handle_command(t_shell *shell)
+static int	handle_input(t_shell *shell, char *input, t_error error)
 {
-	t_error			error;
-	char			*input;
 	char			*line;
 	char			*expand_line;
 	char			*var_error;
 	t_str_cmd_inf	scmd_inf;
 	t_list			*token_lst;
 
-	error = ERRC_NOERROR;
-	if ((input = handle_input(shell, &error)) == NULL)
-		return (-1);
 	line = apply_only_newline_escape(input);
 	free(input);
 	if (line == NULL)
@@ -143,7 +138,9 @@ int			handle_command(t_shell *shell)
 
 int			wait_for_command(t_shell *shell)
 {
-	int	ret;
+	int		ret;
+	t_error	error;
+	char	*input;
 
 	if (!realloc_cmdline(&(shell->term)))
 		return (0);
@@ -151,7 +148,14 @@ int			wait_for_command(t_shell *shell)
 	while (ret > 0)
 	{
 		reset_cmdline(shell, PROMPT_DEF);
-		ret = handle_command(shell);
+		shell->term.legacy_mode = !setup_term(shell);
+		error = ERRC_NOERROR;
+		input = get_full_input(shell, &error);
+		reset_term(shell);
+		if (input == NULL)
+			ret = 0;
+		else
+			ret = handle_input(shell, input, error);
 	}
 	ft_putendl("exit");
 	return (ret);
