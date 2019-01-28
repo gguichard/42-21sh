@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 00:09:51 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:38:20 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void		exec_pipe(t_shell *shell, t_list *curr, const char *path)
 
 	error = ERRC_UNEXPECTED;
 	pipe = (t_pipe *)curr->content;
-	bin_path = get_cmd_inf_path(pipe->cmd_inf, path, &error);
+	bin_path = get_cmd_inf_path(shell, pipe->cmd_inf, path, &error);
 	args = NULL;
 	if (error == ERRC_NOERROR
 			&& (args = arg_lst_to_tab(pipe->cmd_inf->arg_lst)) == NULL)

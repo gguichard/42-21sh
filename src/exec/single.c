@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 18:18:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 00:09:31 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:42:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void		execute_single_cmd(t_shell *shell, t_cmd_inf *cmd_inf
 	char	*bin_path;
 	char	**args;
 
-	error = ERRC_UNEXPECTED;
-	bin_path = get_cmd_inf_path(cmd_inf, path, &error);
+	error = ERRC_NOERROR;
+	bin_path = get_cmd_inf_path(shell, cmd_inf, path, &error);
 	if (error != ERRC_NOERROR)
 	{
 		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX

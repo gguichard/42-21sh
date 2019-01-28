@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 16:59:14 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 09:43:00 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,20 @@
 #include "vars.h"
 #include "execute.h"
 
-char		*get_cmd_inf_path(t_cmd_inf *cmd_inf, const char *path
-		, t_error *error)
+char		*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
+		, const char *path, t_error *error)
 {
-	char	*name;
-	char	*bin_path;
+	char		*name;
+	t_hashentry	*hashentry;
+	char		*bin_path;
 
 	name = (char *)(cmd_inf->arg_lst->content);
+	if (shell->exec_hashtable != NULL)
+	{
+		hashentry = get_hashentry(shell->exec_hashtable, name);
+		if (hashentry != NULL)
+			return (ft_strdup((char *)hashentry->value));
+	}
 	if (!ft_strchr(name, '/'))
 		bin_path = search_binary(path, name, error);
 	else
@@ -37,6 +44,9 @@ char		*get_cmd_inf_path(t_cmd_inf *cmd_inf, const char *path
 		}
 		*error = check_file_rights(bin_path, FT_FILE, X_OK);
 	}
+	if (bin_path != NULL && shell->exec_hashtable != NULL)
+		add_hashentry(shell->exec_hashtable, name, bin_path
+				, ft_strlen(bin_path) + 1);
 	return (bin_path);
 }
 

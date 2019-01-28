@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/25 17:05:35 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 09:37:58 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int				redirect_heredoc(t_redirect_inf *redirect_inf);
 /*
 ** COMMANDS.
 */
-char			*get_cmd_inf_path(t_cmd_inf *cmd_inf, const char *path
-		, t_error *error);
+char			*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
+		, const char *path, t_error *error);
 
 #endif

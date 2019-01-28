@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 13:27:53 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:27:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include <term.h>
+# include "hash_table.h"
 
 # define ERR_PREFIX "21sh"
 # define MAX_ESC_SEQ_BYTES 8
@@ -83,6 +84,7 @@ typedef struct			s_shell
 	t_list				*env;
 	t_list				*local;
 	t_builtin			*builtins;
+	t_hashtable			*exec_hashtable;
 	int					last_status;
 	t_term				term;
 	t_history			*history;

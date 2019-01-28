@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 00:28:07 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:28:27 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int				init_shell(t_shell *shell, int argc, char **argv
 	shell->argc = argc;
 	shell->argv = argv;
 	shell->env = parse_env(environ);
+	shell->exec_hashtable = make_def_hashtable();
 	return (1);
 }
 
