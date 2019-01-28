@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 09:28:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:52:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,11 @@ int				main(int argc, char **argv, char **environ)
 	ft_strdel(&(shell.term.prev_lines));
 	ft_strdel(&(shell.term.line));
 	ft_strdel(&(shell.term.def_line));
+	if (shell.exec_hashtable != NULL)
+	{
+		delete_hashtable(shell.exec_hashtable);
+		shell.exec_hashtable = NULL;
+	}
 	clear_history(&shell);
 	return (0);
 }
