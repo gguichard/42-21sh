@@ -6,12 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 15:20:59 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 15:40:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 16:54:36 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "shell.h"
+#include "builtins.h"
 
 int	builtin_echo(t_shell *shell, int argc, char **argv)
 {

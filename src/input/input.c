@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 09:45:44 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 16:44:41 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,63 +22,45 @@
 #include "execute.h"
 #include "split_cmd_token.h"
 
-char		*get_command_line(t_term *term)
+static char	*read_input_chunk(t_shell *shell, t_error *error)
 {
-	size_t	len;
-	char	*line;
-	int		add_nl;
+	char			*input;
+	t_list			*token_lst;
+	t_str_cmd_inf	scmd_inf;
 
-	if (term->prev_lines == NULL)
-		return (ft_strdup(term->line));
-	add_nl = term->prompt != PROMPT_OPE;
-	len = ft_strlen(term->prev_lines);
-	line = (char *)malloc((len + term->size + add_nl + 1) * sizeof(char));
-	if (line != NULL)
+	input = get_command_line(&(shell->term));
+	ft_strdel(&(shell->term.prev_lines));
+	if (input == NULL && (*error = ERRC_UNEXPECTED) == ERRC_UNEXPECTED)
+		return (NULL);
+	scmd_init(&scmd_inf, input);
+	*error = ERRC_NOERROR;
+	if ((token_lst = split_cmd_token(&scmd_inf)) != NULL)
 	{
-		ft_memcpy(line, term->prev_lines, len);
-		ft_memcpy(line + len + add_nl, term->line, term->size);
-		line[len + add_nl + term->size] = '\0';
-		if (add_nl)
-			line[len] = '\n';
+		if (!lex_commands(token_lst))
+			*error = ERRC_LEXERROR;
+		else if (!is_command_complete(&scmd_inf, token_lst))
+		{
+			*error = ERRC_INCOMPLETECMD;
+			shell->term.prev_lines = input;
+			reset_cmdline(shell, get_prompt_type(&scmd_inf));
+		}
+		ft_lstdel(&token_lst, del_token);
 	}
-	return (line);
+	scmd_delete(scmd_inf.sub_var_bracket);
+	return (input);
 }
 
 static char	*get_full_input(t_shell *shell, t_error *error)
 {
-	int				ret;
-	char			*input;
-	t_str_cmd_inf	scmd_inf;
-	t_list			*token_lst;
+	int		ret;
+	char	*input;
 
 	input = NULL;
 	while ((ret = read_input(shell)) == 1)
 	{
-		input = get_command_line(&(shell->term));
-		ft_strdel(&(shell->term.prev_lines));
-		if (input == NULL)
-		{
-			*error = ERRC_UNEXPECTED;
-			break ;
-		}
-		scmd_init(&scmd_inf, input);
-		if ((token_lst = split_cmd_token(&scmd_inf)) != NULL)
-		{
-			if (!lex_commands(token_lst))
-				*error = ERRC_LEXERROR;
-			else if (is_command_complete(&scmd_inf, token_lst))
-				*error = ERRC_NOERROR;
-			else
-			{
-				*error = ERRC_INCOMPLETECMD;
-				shell->term.prev_lines = input;
-			}
-			ft_lstdel(&token_lst, del_token);
-		}
-		scmd_delete(scmd_inf.sub_var_bracket);
+		input = read_input_chunk(shell, error);
 		if (*error != ERRC_INCOMPLETECMD)
 			break ;
-		reset_cmdline(shell, get_prompt_type(&scmd_inf));
 	}
 	shell->term.prev_lines = NULL;
 	if (ret < 0)
@@ -89,13 +71,38 @@ static char	*get_full_input(t_shell *shell, t_error *error)
 	return (input);
 }
 
+static int	expand_line_with_execute(t_shell *shell, const char *line)
+{
+	char			*var_error;
+	char			*expand_line;
+	t_str_cmd_inf	scmd_inf;
+	t_list			*token_lst;
+
+	var_error = NULL;
+	expand_line = expand_vars(line, shell, &var_error);
+	if (expand_line == NULL && var_error == NULL)
+		return (0);
+	else if (var_error != NULL)
+	{
+		ft_dprintf(2, "%s: %s: Bad substitution\n", ERR_PREFIX, var_error);
+		free(var_error);
+	}
+	else
+	{
+		scmd_init(&scmd_inf, expand_line);
+		token_lst = split_cmd_token(&scmd_inf);
+		if (token_lst != NULL)
+			execute_all(shell, token_lst);
+		ft_lstdel(&token_lst, del_token);
+		scmd_delete(scmd_inf.sub_var_bracket);
+		free(expand_line);
+	}
+	return (1);
+}
+
 static int	handle_input(t_shell *shell, char *input, t_error error)
 {
 	char			*line;
-	char			*expand_line;
-	char			*var_error;
-	t_str_cmd_inf	scmd_inf;
-	t_list			*token_lst;
 
 	line = apply_only_newline_escape(input);
 	free(input);
@@ -105,29 +112,10 @@ static int	handle_input(t_shell *shell, char *input, t_error error)
 		ft_dprintf(2, "%s: unexpected end of file\n", ERR_PREFIX);
 	else if (error == ERRC_NOERROR)
 	{
-		var_error = NULL;
-		expand_line = expand_vars(line, shell, &var_error);
-		if (expand_line == NULL && var_error == NULL)
+		if (!expand_line_with_execute(shell, line))
 		{
 			free(line);
 			return (0);
-		}
-		if (var_error != NULL)
-		{
-			ft_dprintf(2, "%s: %s: Bad substitution\n", ERR_PREFIX, var_error);
-			free(var_error);
-		}
-		else
-		{
-			scmd_init(&scmd_inf, expand_line);
-			token_lst = split_cmd_token(&scmd_inf);
-			if (token_lst != NULL)
-			{
-				execute_all(shell, token_lst);
-				ft_lstdel(&token_lst, del_token);
-			}
-			scmd_delete(scmd_inf.sub_var_bracket);
-			free(expand_line);
 		}
 	}
 	if (ft_strlen(line) > 0)

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 15:45:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 16:56:17 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "join_token_cmd.h"
 #include "check_path.h"
 #include "vars.h"
+#include "builtins.h"
 #include "execute.h"
 
 char		*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
@@ -29,8 +30,7 @@ char		*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
 	name = (char *)(cmd_inf->arg_lst->content);
 	if (shell->exec_hashtable != NULL)
 	{
-		hashentry = get_hashentry(shell->exec_hashtable, name);
-		if (hashentry != NULL)
+		if ((hashentry = get_hashentry(shell->exec_hashtable, name)) != NULL)
 			return (ft_strdup((char *)hashentry->value));
 	}
 	if (!ft_strchr(name, '/'))
