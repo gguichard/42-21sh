@@ -6,10 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 13:41:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 14:35:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "libft.h"
@@ -67,6 +68,8 @@ static pid_t	pipe_fork(t_shell *shell, t_list *curr, const char *bin_path
 			close(pipe->out_fd);
 			close((((t_pipe *)curr->next->content)->fildes)[0]);
 		}
+		if (bin_path == NULL || args == NULL)
+			exit(127);
 		child_exec_cmd_inf(shell, pipe->cmd_inf, bin_path, args);
 	}
 	return (pid);
@@ -89,11 +92,7 @@ static int		exec_pipe(t_shell *shell, t_list *curr)
 	if (error != ERRC_NOERROR)
 		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
 				, pipe->cmd_inf->arg_lst->content, error_to_str(error));
-	else
-	{
-		if (pipe_fork(shell, curr, bin_path, args) < 0)
-			return (0);
-	}
+	pipe_fork(shell, curr, bin_path, args);
 	free(bin_path);
 	free(args);
 	return (1);
@@ -137,6 +136,7 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf)
 	t_list	*pipeline;
 	t_list	*curr;
 	t_list	*next;
+	int		status;
 
 	pipeline = create_pipeline(cmd_inf);
 	if (pipeline == NULL)
@@ -147,13 +147,19 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf)
 	setup_pipes(shell, pipeline);
 	ft_lstfree(&pipeline);
 	curr = shell->fork_pids;
-	while (curr != NULL)
+	if (curr == NULL)
+		shell->last_status = 127;
+	else
 	{
-		waitpid(*((pid_t *)curr->content), &(shell->last_status), 0);
-		next = curr->next;
-		free(curr->content);
-		free(curr);
-		curr = next;
+		while (curr != NULL)
+		{
+			waitpid(*((pid_t *)curr->content), &status, 0);
+			next = curr->next;
+			free(curr->content);
+			free(curr);
+			curr = next;
+		}
+		shell->last_status = WEXITSTATUS(status);
 	}
 	shell->fork_pids = NULL;
 }
