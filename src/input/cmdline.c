@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 14:20:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 23:48:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,29 +51,20 @@ int		realloc_cmdline(t_term *term)
 
 void	insert_cmdline(t_shell *shell, t_term *term, char key)
 {
-	size_t	row;
-
 	(void)shell;
-	if (term->size < term->capacity || realloc_cmdline(term))
+	if (term->size >= term->capacity && !realloc_cmdline(term))
+		return ;
+	if (term->size > term->cursor)
 	{
-		if (term->size > term->cursor)
-		{
-			ft_memmove(&(term->line[term->cursor + 1])
-					, &(term->line[term->cursor])
-					, term->size - term->cursor);
-		}
-		(term->size)++;
-		(term->line)[term->size] = '\0';
-		(term->line)[term->cursor] = key;
-		ft_putstr(term->line + term->cursor);
-		ft_putchar(' ');
-		(term->cursor)++;
-		update_pos_data(term);
-		row = term->rows - (term->row + 1);
-		if (row > 0)
-			tputs(tparm(tgetstr("UP", NULL), row), 1, t_putchar);
-		move_cursor_to_col(term);
+		ft_memmove(term->line + term->cursor + 1
+				, term->line + term->cursor, term->size - term->cursor);
 	}
+	(term->size)++;
+	(term->line)[term->size] = '\0';
+	(term->line)[term->cursor] = key;
+	(term->cursor)++;
+	go_to_prompt(term);
+	print_input(shell, term);
 }
 
 void	go_to_prompt(t_term *term)
