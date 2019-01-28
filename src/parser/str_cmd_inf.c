@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 12:15:36 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 10:18:33 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 16:46:37 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,6 @@ static void		move_to_next_char_not_quote_or_var(t_str_cmd_inf *str_cmd_inf)
 	}
 }
 
-void			scmd_init(t_str_cmd_inf *str_cmd_inf, const char *str)
-{
-	str_cmd_inf->is_in_quote = 0;
-	str_cmd_inf->is_in_doublequote = 0;
-	str_cmd_inf->is_in_var_bracket = 0;
-	str_cmd_inf->pos = 0;
-	str_cmd_inf->str = str;
-	str_cmd_inf->sub_var_bracket = NULL;
-}
-
-void			scmd_delete(t_str_cmd_inf *str_cmd_inf)
-{
-	if (str_cmd_inf != NULL)
-	{
-		scmd_delete(str_cmd_inf->sub_var_bracket);
-		free(str_cmd_inf);
-	}
-}
-
 int				scmd_cur_char_is_in_nothing(t_str_cmd_inf *str_cmd_inf)
 {
 	return (!str_cmd_inf->is_in_quote
@@ -68,8 +49,8 @@ int				scmd_cur_char_is_in_nothing(t_str_cmd_inf *str_cmd_inf)
 			&& !str_cmd_inf->is_in_var_bracket);
 }
 
-int				scmd_char_at_is_escaped(t_str_cmd_inf *str_cmd_inf,
-		size_t at_pos)
+int				scmd_char_at_is_escaped(t_str_cmd_inf *str_cmd_inf
+		, size_t at_pos)
 {
 	if (at_pos == 0 || str_cmd_inf->is_in_quote
 			|| str_cmd_inf->is_in_var_bracket)
@@ -82,11 +63,6 @@ int				scmd_char_at_is_escaped(t_str_cmd_inf *str_cmd_inf,
 		return (0);
 	return (str_cmd_inf->str[at_pos - 1] == '\\'
 			&& !scmd_char_at_is_escaped(str_cmd_inf, at_pos - 1));
-}
-
-int				scmd_cur_char_is_escaped(t_str_cmd_inf *str_cmd_inf)
-{
-	return (scmd_char_at_is_escaped(str_cmd_inf, str_cmd_inf->pos));
 }
 
 static int		move_in_var_bracket(t_str_cmd_inf *str_cmd_inf)

@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/28 16:15:20 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/28 16:48:43 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC		=	main.c signals.c \
 			exec/redirections.c exec/redir_output.c exec/redir_input.c \
 			exec/heredoc.c exec/pipeline.c exec/utils.c \
 			parser/split_cmd_token.c parser/str_cmd_inf.c \
+			parser/str_cmd_inf_utils.c \
 			parser/token_inf.c parser/apply_escape.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
 			autocomplete/ac_cmdline.c autocomplete/ac_rdir_utils.c \
