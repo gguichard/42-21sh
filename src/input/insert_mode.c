@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 09:15:45 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 10:45:04 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 static void		add_char_and_escape_if_needed(char char_to_add
 		, int already_escaped, t_shell *shell, t_str_cmd_inf *scmd)
 {
-	if (!already_escaped)
+	if (char_to_add == '\0')
+		return ;
+	else if (!already_escaped)
 	{
 		if ((scmd_cur_char_is_in_nothing(scmd)
 					&& ft_strchr(" \t|<>;$\'\"\\", char_to_add) != NULL)
