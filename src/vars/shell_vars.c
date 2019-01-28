@@ -6,11 +6,10 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 17:51:53 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 00:34:18 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 14:19:29 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/wait.h>
 #include "vars.h"
 
 char	*get_shell_var(t_shell *shell, const char *key)
@@ -28,7 +27,7 @@ char	*get_shell_var(t_shell *shell, const char *key)
 	else
 	{
 		if (ft_strequ(key, "?"))
-			return (ft_itoa(WEXITSTATUS(shell->last_status)));
+			return (ft_itoa(shell->last_status));
 		if (ft_isdigit(key[0]))
 		{
 			tmp = ft_atoi(key);

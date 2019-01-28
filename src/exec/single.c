@@ -6,10 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 18:18:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 13:40:42 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 14:21:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/wait.h>
 #include <stdlib.h>
 #include "libft.h"
 #include "shell.h"
@@ -20,6 +21,7 @@ static void	single_fork(t_shell *shell, t_cmd_inf *cmd_inf
 		, const char *bin_path, char **args)
 {
 	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	if (pid < 0)
@@ -29,7 +31,8 @@ static void	single_fork(t_shell *shell, t_cmd_inf *cmd_inf
 	else
 	{
 		shell->fork_pids = ft_lstnew(&pid, sizeof(pid_t));
-		waitpid(pid, &(shell->last_status), 0);
+		waitpid(pid, &status, 0);
+		shell->last_status = WEXITSTATUS(status);
 		ft_lstfree(&(shell->fork_pids));
 	}
 }

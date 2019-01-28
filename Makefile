@@ -33,7 +33,7 @@ SRC		=	main.c signals.c \
 			autocomplete/autocomplete_suff_utils.c \
 			misc/error.c misc/check_path.c misc/hash_table.c \
 			misc/convert_path_to_tab.c misc/utils.c \
-			builtins/change_dir.c builtins/utils.c \
+			builtins/change_dir.c builtins/exit.c builtins/utils.c \
 			join_token_cmd.c cmd_inf.c redirect_inf.c \
 			expand_vars.c
 
