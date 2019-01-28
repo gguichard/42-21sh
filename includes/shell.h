@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 14:52:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 15:44:41 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,6 @@ void					show_prompt(t_shell *shell);
 void					set_dir_to_canonical_form(char *dir);
 int						builtin_cd(t_shell *shell, int argc, char **argv);
 int						builtin_exit(t_shell *shell, int argc, char **argv);
+int						builtin_echo(t_shell *shell, int argc, char **argv);
 
 #endif
