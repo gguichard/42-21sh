@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 09:27:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 12:37:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,9 @@ typedef struct			s_shell
 	t_list				*fork_pids;
 }						t_shell;
 
-void					handle_signal(int sig);
-int						init_shell(t_shell *shell, int argc, char **argv
-		, char **environ);
-
 t_list					*parse_env(char **environ);
+void					setup_signals(void);
+void					kill_forked_pids(t_shell *shell);
 
 void					show_prompt(t_shell *shell);
 

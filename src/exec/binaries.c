@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 12:40:55 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/22 12:33:15 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 13:52:22 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,15 @@ static t_error	check_is_valid_path(const char *file_path)
 	return (error);
 }
 
-char			*search_binary(const char *path, const char *binary
+char			*search_binary(t_shell *shell, const char *binary
 		, t_error *error)
 {
-	char	*path_cpy;
-	char	**path_tab;
 	char	*file_path;
+	char	**path_tab;
 	size_t	index;
 
-	if ((path_cpy = ft_strdup(path)) == NULL)
-		return (NULL);
 	file_path = NULL;
-	if ((path_tab = convert_path_to_tab(path_cpy)) != NULL)
+	if ((path_tab = convert_path_to_tab(shell)) != NULL)
 	{
 		index = -1;
 		while (path_tab[++index] != NULL)
@@ -74,7 +71,6 @@ char			*search_binary(const char *path, const char *binary
 			ft_strdel(&file_path);
 		}
 	}
-	free(path_tab);
-	free(path_cpy);
+	ft_strtab_free(path_tab);
 	return (file_path);
 }
