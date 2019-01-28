@@ -103,5 +103,6 @@ void					show_prompt(t_shell *shell);
 void					set_dir_to_canonical_form(char *dir);
 int						builtin_cd(t_shell *shell, int argc, char **argv);
 int						builtin_exit(t_shell *shell, int argc, char **argv);
+int						builtin_echo(t_shell *shell, int argc, char **argv);
 
 #endif
