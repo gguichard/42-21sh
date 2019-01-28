@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/28 16:48:43 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/28 17:33:38 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,9 @@ SRC		=	main.c signals.c \
 			misc/hashtable_utils.c misc/convert_path_to_tab.c misc/utils.c \
 			builtins/change_dir.c builtins/exit.c builtins/echo.c \
 			builtins/utils.c \
-			join_token_cmd.c cmd_inf.c redirect_inf.c \
+			parser/join_token_cmd.c parser/join_token_cmd_redirect.c \
+			parser/join_token_cmd_utils.c \
+			cmd_inf.c redirect_inf.c \
 			expand_vars.c
 
 OBJ_DIR	=	.obj
