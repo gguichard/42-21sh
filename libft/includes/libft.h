@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/29 15:05:10 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/11 00:38:50 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 17:42:54 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char			*ft_strtolower(char *s);
 
 void			*ft_memalloc(size_t size);
 
-void			ft_memdel(void **ap);
+void			*ft_memdel(void **ap);
 
 char			*ft_strnew(size_t size);
 
