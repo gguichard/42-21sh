@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 17:30:15 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 10:35:28 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ static size_t	get_var_name_len(const char *str)
 
 static int		char_need_to_be_escaped(t_str_cmd_inf *scmd, char this_char)
 {
-	if (scmd == NULL)
+	if (this_char == '\0')
+		return (0);
+	else if (scmd == NULL)
 		return (ft_strchr(" $\"\\\'~|<>;", this_char) != NULL);
-	if (scmd->is_in_quote || scmd->is_in_var_bracket)
+	else if (scmd->is_in_quote || scmd->is_in_var_bracket)
 		return (0);
 	else if (scmd->is_in_doublequote)
 		return (ft_strchr("$\"\\", this_char) != NULL);

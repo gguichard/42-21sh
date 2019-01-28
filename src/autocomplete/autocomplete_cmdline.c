@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:17:37 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 17:50:15 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 10:32:56 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,9 @@ t_ac_suff_inf			*autocomplete_cmdline(t_str_cmd_inf *scmd,
 		cur_token = cur_token->next;
 	}
 	if (last_word[0] != '\0' && scmd_cur_char_is_in_nothing(scmd)
+			&& scmd->pos > 0
 			&& ft_strchr(" \t\n", scmd->str[scmd->pos - 1]) != NULL
-			&& scmd->pos > 0 && !scmd_char_at_is_escaped(scmd, scmd->pos - 1))
+			&& !scmd_char_at_is_escaped(scmd, scmd->pos - 1))
 	{
 		last_word = "";
 		word_is_cmd = (word_is_cmd == -1 ? 1 : 0);

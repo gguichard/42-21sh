@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 09:29:29 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 11:00:22 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ static int				add_token_to_lst(t_list **token_lst, char *token_str,
 
 static int				is_a_sep_char(char c)
 {
-	return (ft_strchr(" \t\n|<>;", c) != NULL);
+	if (c == '\0')
+		return (0);
+	else
+		return (ft_strchr(" \t\n|<>;", c) != NULL);
 }
 
 static int				cur_token_is_number(t_str_cmd_inf *str_cmd_inf,
@@ -179,7 +182,8 @@ static int				split_sep_char(t_list **token_lst,
 			return (0);
 	token_type = TK_OPE;
 	token_start = str_cmd_inf->str + str_cmd_inf->pos;
-	if (ft_strchr(" \t\n", str_cmd_inf->str[str_cmd_inf->pos]) == NULL)
+	if (str_cmd_inf->str[str_cmd_inf->pos] != '\0'
+			&& ft_strchr(" \t\n", str_cmd_inf->str[str_cmd_inf->pos]) == NULL)
 	{
 		if (str_cmd_inf->str[str_cmd_inf->pos] == ';')
 			token_type = TK_CMD_SEP;
