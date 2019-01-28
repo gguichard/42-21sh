@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 00:27:29 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:45:44 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static char	*get_full_input(t_shell *shell, t_error *error)
 	t_list			*token_lst;
 
 	input = NULL;
-	*error = ERRC_NOERROR;
 	while ((ret = read_input(shell)) == 1)
 	{
 		input = get_command_line(&(shell->term));
@@ -131,7 +130,8 @@ static int	handle_input(t_shell *shell, char *input, t_error error)
 			free(expand_line);
 		}
 	}
-	add_history_entry(shell, line);
+	if (ft_strlen(line) > 0)
+		add_history_entry(shell, line);
 	free(line);
 	return (1);
 }
@@ -152,10 +152,7 @@ int			wait_for_command(t_shell *shell)
 		error = ERRC_NOERROR;
 		input = get_full_input(shell, &error);
 		reset_term(shell);
-		if (input == NULL)
-			ret = 0;
-		else
-			ret = handle_input(shell, input, error);
+		ret = (input == NULL) ? 0 : handle_input(shell, input, error);
 	}
 	ft_putendl("exit");
 	return (ret);
