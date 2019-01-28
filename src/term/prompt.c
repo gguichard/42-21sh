@@ -6,19 +6,33 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 09:55:02 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 00:08:17 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include "shell.h"
+#include "vars.h"
 
-void	show_prompt(t_shell *shell)
+static char	*get_default_prompt(t_shell *shell)
 {
 	char	*prompt;
 	char	*tmp;
 
+	prompt = ft_strjoin_free(get_shell_var(shell, "USER"), ":");
+	tmp = get_shell_var(shell, "PWD");
+	prompt = ft_strjoin_free(prompt, tmp);
+	free(tmp);
+	prompt = ft_strjoin_free(prompt, "% ");
+	return (prompt);
+}
+
+static char	*get_prompt_with_type(t_shell *shell)
+{
+	char	*prompt;
+
+	prompt = NULL;
 	if (shell->term.prompt == PROMPT_ESCAPED)
 		prompt = ft_strdup("> ");
 	else if (shell->term.prompt == PROMPT_QUOTE)
@@ -31,8 +45,16 @@ void	show_prompt(t_shell *shell)
 		prompt = ft_strdup("bracket> ");
 	else if (shell->term.prompt == PROMPT_OPE)
 		prompt = ft_strdup("pipe> ");
-	else
-		prompt = ft_strdup("$> ");
+	return (prompt);
+}
+
+void		show_prompt(t_shell *shell)
+{
+	char	*prompt;
+	char	*tmp;
+
+	prompt = (shell->term.prompt == PROMPT_DEF) ? get_default_prompt(shell)
+		: get_prompt_with_type(shell);
 	if (shell->term.visual_mode)
 	{
 		tmp = prompt;
