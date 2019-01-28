@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:51:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 20:53:53 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 18:01:11 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,13 @@
 
 static void	redirect_file(t_redirect_inf *redirect_inf)
 {
-	int		fd;
 	int		is_write;
+	int		fd;
 	t_error	error;
 
-	fd = redirect_inf->to_fd;
-	if (fd == FD_ERROR)
-	{
+	if (redirect_inf->to_fd == FD_ERROR)
 		ft_dprintf(2, "%s: -1: Bad file descriptor\n", ERR_PREFIX);
-		return ;
-	}
-	if (fd == FD_NOTSET)
+	else if (redirect_inf->to_fd == FD_NOTSET)
 	{
 		is_write = (redirect_inf->red_type == RD_R
 				|| redirect_inf->red_type == RD_RR);
