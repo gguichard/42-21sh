@@ -6,15 +6,35 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 11:54:09 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 13:25:52 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 15:25:53 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
 #include "libft.h"
 #include "autocomplete.h"
+
+int		valid_file_for_ac(t_ac_rdir_inf *acrd)
+{
+	if (acrd->cur_file_name[0] != '.' || acrd->file_word[0] == '.')
+	{
+		if (!acrd->need_to_be_cmd
+				|| (acrd->can_be_dir && S_ISDIR(acrd->stat_buf.st_mode))
+				|| (S_ISREG(acrd->stat_buf.st_mode)
+					&& access(acrd->cur_file_path, X_OK) == 0))
+		{
+			if (ft_strnequ(acrd->cur_file_name, acrd->file_word
+						, acrd->file_word_len))
+			{
+				return (1);
+			}
+		}
+	}
+	return (0);
+}
 
 t_list	*make_new_choice(t_ac_rdir_inf *acrd)
 {

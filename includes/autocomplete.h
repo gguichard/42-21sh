@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 13:25:52 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 15:23:35 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,45 @@ typedef struct		s_ac_suff_inf
 	long long		suff_len;
 }					t_ac_suff_inf;
 
+/*
+** Renvoie le nombre de premiers caracteres identiques entre les deux strings.
+*/
+size_t	count_same_char(const char *str1, const char *str2);
+
 void				strlist_insert_sort(t_list **lst, t_list *elem);
+
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
+** les informations de fichier contenues dans le  t_ac_rdir_inf.
+** Si force_file_type est vrai et que l'autocompletion a un type, ce type sera
+** force en tant que fichier.
+** Retourne 0 si l'autocompletion est vide (aucun suffix et aucun type).
+** Retourne 1 sinon.
+*/
+int					build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs
+		, int force_file_type);
+
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
+** les informations de fichier contenues dans le  t_ac_rdir_inf.
+** Retourne 0 si l'autocompletion est vide (aucun suffix et aucun type).
+** Retourne 1 sinon.
+*/
+int					try_ac_for_this_file(t_ac_rdir_inf *acrd
+		, t_ac_suff_inf *acs);
+
+/*
+** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
+** les informations de dossier contenues dans le  t_ac_rdir_inf.
+*/
+void				autocomplete_with_infs(t_ac_rdir_inf *acrd
+		, t_ac_suff_inf *acs);
+
+/*
+** Initialise le t_ac_suff_inf passe en parametre avec les valeurs par defaut.
+** Retourne 1 si l'initialisation reussi, 0 si elle rate.
+*/
+int					init_ac_suff_inf(t_ac_suff_inf *acs);
 
 /*
 ** Free le contenu de l'ac_suff_inf passe en parametre puis free la structure
@@ -70,6 +108,12 @@ t_ac_suff_inf		*autocomplete_word(t_shell *shell, const char *word
 
 t_ac_suff_inf		*autocomplete_cmdline(t_str_cmd_inf *scmd, t_shell *shell
 		, t_builtin **builtins);
+
+/*
+** Retourne 1 si le fichier present dans le t_ac_rdir_inf peut etre une
+** autocompletion valide, 0 sinon.
+*/
+int					valid_file_for_ac(t_ac_rdir_inf *acrd);
 
 /*
 ** Alloue et retourne un nouvel element representant un choix valide pour

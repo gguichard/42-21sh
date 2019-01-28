@@ -6,11 +6,21 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 16:28:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/10 16:41:37 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 15:12:31 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+size_t	count_same_char(const char *str1, const char *str2)
+{
+	int	count;
+
+	count = 0;
+	while (str1[count] != '\0' && str1[count] == str2[count])
+		++count;
+	return (count);
+}
 
 void	strlist_insert_sort(t_list **lst, t_list *elem)
 {
