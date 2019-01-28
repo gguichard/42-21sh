@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:46:53 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 17:31:12 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 10:16:28 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,29 @@
 #include "redirect_inf.h"
 #include "join_token_cmd.h"
 
-static int			add_arg(t_cmd_inf *cmd_inf, const char *arg, t_shell *shell)
+static char			*process_escape_arg(const char *arg, t_shell *shell)
 {
-	t_list	*new_elem;
 	char	*home_expanded_arg;
 	char	*escaped_arg;
 
 	if ((home_expanded_arg = expand_home(arg, shell, 0)) == NULL)
-		return (0);
+		return (NULL);
 	if ((escaped_arg = apply_escape(home_expanded_arg)) == NULL)
 	{
 		free(home_expanded_arg);
-		return (0);
+		return (NULL);
 	}
 	free(home_expanded_arg);
+	return (escaped_arg);
+}
+
+static int			add_arg(t_cmd_inf *cmd_inf, const char *arg, t_shell *shell)
+{
+	t_list	*new_elem;
+	char	*escaped_arg;
+
+	if ((escaped_arg = process_escape_arg(arg, shell)) == NULL)
+		return (0);
 	if ((new_elem = ft_lstnew(escaped_arg,
 					sizeof(char) * (ft_strlen(escaped_arg) + 1))) == NULL)
 	{
@@ -64,12 +73,14 @@ static void			process_lopt_redirect(t_redirect_inf *new_red,
 	}
 }
 
-static int			process_ropt_redirect(t_redirect_inf *new_red,
-		t_list *tkl_ropt)
+static int			process_ropt_redirect(t_redirect_inf *new_red
+		, t_list *tkl_ropt, t_shell *shell)
 {
 	long int		tmp_fd;
 	char			*tmp_fd_end;
 
+	if (tkl_ropt == NULL)
+		return (0);
 	new_red->to_fd = FD_NOTSET;
 	if (get_tk(tkl_ropt)->type == TK_STR_OPT
 			&& ft_strequ(get_tk(tkl_ropt)->token, "&"))
@@ -91,20 +102,22 @@ static int			process_ropt_redirect(t_redirect_inf *new_red,
 		return ((new_red->close_to_fd = (*tmp_fd_end == '-')) ? 1 : 1);
 	}
 	new_red->close_to_fd = 0;
-	return ((new_red->to_word = ft_strdup(get_tk(tkl_ropt)->token)) != NULL);
+	return ((new_red->to_word = process_escape_arg(get_tk(tkl_ropt)->token
+					, shell)) != NULL);
 }
 
-static int			add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf,
-		t_token_inf *tk_lopt, t_token_inf *tk_ope, t_list *tkl_ropt)
+static int			add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf, int have_lopt
+		, t_list *opt_lst_start, t_shell *shell)
 {
 	t_redirect_inf	new_red;
 	t_list			*new_elem;
 
-	if (tkl_ropt == NULL)
+	if (opt_lst_start == NULL)
 		return (0);
-	process_lopt_redirect(&new_red, tk_lopt);
-	new_red.red_type = redirection_str_to_type(tk_ope->token);
-	if (!process_ropt_redirect(&new_red, tkl_ropt))
+	process_lopt_redirect(&new_red, (have_lopt ? get_tk(opt_lst_start) : NULL));
+	opt_lst_start = (have_lopt ? opt_lst_start->next : opt_lst_start);
+	new_red.red_type = redirection_str_to_type(get_tk(opt_lst_start)->token);
+	if (!process_ropt_redirect(&new_red, opt_lst_start->next, shell))
 		return (0);
 	new_red.heredoc = NULL;
 	if ((new_elem = ft_lstnew(&new_red, sizeof(t_redirect_inf))) == NULL)
@@ -139,9 +152,7 @@ static int			process_tk_ope(t_cmd_inf *cmd_inf, t_list **token_lst,
 			|| get_tk(*token_lst)->token[0] == '>')
 	{
 		if ((*token_lst)->next == NULL
-				|| !add_redirect_inf_to_cmd(cmd_inf, NULL,
-					get_tk(*token_lst),
-					(*token_lst)->next))
+				|| !add_redirect_inf_to_cmd(cmd_inf, 0, *token_lst, shell))
 			return (del_cur_cmd(cmd_inf));
 		*token_lst = get_ropt_elem((*token_lst)->next);
 	}
@@ -174,9 +185,7 @@ static int			process_tk(t_cmd_inf *cmd_inf, t_list **token_lst,
 	else if (get_tk(*token_lst)->type == TK_NUM_OPT)
 	{
 		if ((*token_lst)->next == NULL || (*token_lst)->next->next == NULL
-				|| !add_redirect_inf_to_cmd(cmd_inf, get_tk(*token_lst),
-					get_tk((*token_lst)->next),
-					(*token_lst)->next->next))
+				|| !add_redirect_inf_to_cmd(cmd_inf, 1, *token_lst, shell))
 			return (del_cur_cmd(cmd_inf));
 		*token_lst = get_ropt_elem((*token_lst)->next->next);
 	}
