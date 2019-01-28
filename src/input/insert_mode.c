@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 17:51:45 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:15:45 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,44 @@
 #include "apply_escape.h"
 #include "vars.h"
 #include "utils.h"
+
+static void		add_char_and_escape_if_needed(char char_to_add
+		, int already_escaped, t_shell *shell, t_str_cmd_inf *scmd)
+{
+	if (!already_escaped)
+	{
+		if ((scmd_cur_char_is_in_nothing(scmd)
+					&& ft_strchr(" \t|<>;$\'\"\\", char_to_add) != NULL)
+				|| (scmd->is_in_doublequote
+					&& ft_strchr("$\"\\", char_to_add) != NULL))
+		{
+			insert_cmdline(shell, &(shell->term), '\\');
+			insert_cmdline(shell, &(shell->term), char_to_add);
+		}
+		else if (scmd_cur_char_is_in_nothing(scmd) && char_to_add == '\n')
+		{
+			insert_cmdline(shell, &(shell->term), '\'');
+			insert_cmdline(shell, &(shell->term), char_to_add);
+			insert_cmdline(shell, &(shell->term), '\'');
+		}
+		else if (scmd->is_in_quote && char_to_add == '\'')
+		{
+			insert_cmdline(shell, &(shell->term), '\'');
+			insert_cmdline(shell, &(shell->term), '\\');
+			insert_cmdline(shell, &(shell->term), char_to_add);
+			insert_cmdline(shell, &(shell->term), '\'');
+		}
+		else
+			insert_cmdline(shell, &(shell->term), char_to_add);
+	}
+	else if (char_to_add == '\n')
+	{
+		handle_bs_key(shell, &(shell->term));
+		add_char_and_escape_if_needed(char_to_add, 0, shell, scmd);
+	}
+	else
+		insert_cmdline(shell, &(shell->term), char_to_add);
+}
 
 void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 		, t_str_cmd_inf *scmd)
@@ -27,11 +65,10 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 	curr = result->suff;
 	while (*curr != '\0')
 	{
-		if ((curr != result->suff || !scmd_cur_char_is_escaped(scmd))
-				&& *curr == ' ' && scmd_cur_char_is_in_nothing(scmd))
-			insert_cmdline(shell, term, '\\');
-		insert_cmdline(shell, term, *curr);
-		curr++;
+		add_char_and_escape_if_needed(*curr
+				, (curr == result->suff && scmd_cur_char_is_escaped(scmd))
+				, shell, scmd);
+		++curr;
 	}
 	if (result->suff_type == ACS_TYPE_FILE && is_at_end_of_cmd)
 	{
