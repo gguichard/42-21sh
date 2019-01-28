@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 14:46:36 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 16:33:07 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 17:44:10 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,29 @@ static int		process_cur_path(char **path_cpy, char **cur_path
 
 char			**convert_path_to_tab(t_shell *shell)
 {
+	char	*path_base;
 	char	*path_cpy;
 	size_t	path_count;
 	char	**path_tab;
 	size_t	path_idx;
 
-	if ((path_cpy = get_shell_var(shell, "PATH")) == NULL)
+	if ((path_base = get_shell_var(shell, "PATH")) == NULL)
 		return (NULL);
+	path_cpy = path_base;
 	path_count = count_subpath(path_cpy);
 	if ((path_tab = (char**)malloc(sizeof(char*) * (path_count + 1))) == NULL)
-		return (NULL);
+		return (ft_memdel((void**)&path_base));
 	path_tab[path_count] = NULL;
 	path_idx = 0;
 	while (path_idx < path_count)
 	{
 		if (!process_cur_path(&path_cpy, path_tab + path_idx, shell))
+		{
+			free(path_base);
 			return (ft_strtab_free(path_tab));
+		}
 		++path_idx;
 	}
+	free(path_base);
 	return (path_tab);
 }
