@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 00:24:00 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 16:54:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 00:03:53 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void			set_dir_to_canonical_form(char *dir)
 		{
 			dir_delete_comp(comps, index);
 			if (index > 0)
-				dir_delete_comp(comps, index--);
+				dir_delete_comp(comps, --index);
 		}
 		if (!ret)
 			index++;
