@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hash_table.h                                       :+:      :+:    :+:   */
+/*   hashtable.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:58:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/07 15:53:42 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 16:04:26 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HASH_TABLE_H
-# define HASH_TABLE_H
+#ifndef HASHTABLE_H
+# define HASHTABLE_H
 
 # include "libft.h"
 
@@ -60,8 +60,8 @@ t_hashentry		*get_hashentry(t_hashtable *hashtable, const char *key);
 ** clef sont ajoutes via une shallow copie. Retourne 0 en cas d'erreur et 1
 ** en cas de succes.
 */
-int				add_hashentry(t_hashtable *hashtable, const char *key,
-		const void *value, size_t value_size);
+int				add_hashentry(t_hashtable *hashtable, const char *key
+		, const void *value, size_t value_size);
 
 /*
 ** Set l'entree de la hashtable ayant pour clef key a la valeur value. Si
@@ -69,13 +69,19 @@ int				add_hashentry(t_hashtable *hashtable, const char *key,
 ** et la clef sont ajoutes via une shallow copie. Retourne 0 en cas d'erreur
 ** et 1 en cas de succes.
 */
-int				replace_hashentry(t_hashtable *hashtable, const char *key,
-		const void *value, size_t value_size);
+int				replace_hashentry(t_hashtable *hashtable, const char *key
+		, const void *value, size_t value_size);
 
 /*
 ** Free l'integralite des elements de la hashtable ainsi que la hashtable
 ** elle-meme.
 */
 void			delete_hashtable(t_hashtable *hashtable);
+
+/*
+** Free le contenu de la hashentry ainsi que la hashentry elle-meme (le tout si
+** elle est != NULL). Retourne toujours 0.
+*/
+int				delete_hashentry(t_hashtable *hashtable, t_hashentry *entry);
 
 #endif

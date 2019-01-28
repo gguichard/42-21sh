@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 14:52:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 15:58:24 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "libft.h"
 # include <term.h>
-# include "hash_table.h"
+# include "hashtable.h"
 
 # define ERR_PREFIX "21sh"
 # define MAX_ESC_SEQ_BYTES 8

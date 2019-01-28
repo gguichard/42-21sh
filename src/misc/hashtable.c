@@ -1,62 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hash_table.c                                       :+:      :+:    :+:   */
+/*   hashtable.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 11:14:45 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/09 09:23:51 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 16:08:04 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
-#include "hash_table.h"
-
-void				def_del_hashentry_val_fun(void *value, size_t value_size)
-{
-	(void)value_size;
-	free(value);
-}
-
-size_t				def_hash_fun(const char *str)
-{
-	size_t			hash;
-	unsigned int	c;
-
-	hash = 5381;
-	while ((c = *str++))
-		hash = ((hash << 5) + hash) + c;
-	return (hash);
-}
-
-t_hashtable			*make_def_hashtable(void)
-{
-	t_hashtable		*new_hashtable;
-
-	if ((new_hashtable = (t_hashtable*)(malloc(sizeof(t_hashtable)))) == NULL)
-		return (NULL);
-	new_hashtable->bucket_count = DEF_BUCKET_COUNT;
-	new_hashtable->buckets = (t_list**)ft_memalloc(sizeof(t_list*)
-			* new_hashtable->bucket_count);
-	if (new_hashtable->buckets == NULL)
-	{
-		free(new_hashtable);
-		return (NULL);
-	}
-	new_hashtable->hash_fun = def_hash_fun;
-	new_hashtable->del_hashentry_val_fun = def_del_hashentry_val_fun;
-	return (new_hashtable);
-}
+#include "hashtable.h"
 
 /*
 ** Retourne le hashentry ayant pour clef key et pour hash hash, ou NULL
 ** s'il n'existe pas. Cette fonction a pour but d'eviter de recalculer le hash.
 */
 
-static t_hashentry	*get_hashentry_with_hash(t_hashtable *hashtable,
-		const char *key, size_t hash)
+static t_hashentry	*get_hashentry_with_hash(t_hashtable *hashtable
+		, const char *key, size_t hash)
 {
 	t_list	*bucket;
 
@@ -80,8 +44,8 @@ t_hashentry			*get_hashentry(t_hashtable *hashtable, const char *key)
 ** Retourne NULL en cas d'erreur.
 */
 
-static t_hashentry	*make_hashentry(const char *key, const void *value,
-		size_t value_size)
+static t_hashentry	*make_hashentry(const char *key, const void *value
+		, size_t value_size)
 {
 	t_hashentry		*new_entry;
 
@@ -107,24 +71,8 @@ static t_hashentry	*make_hashentry(const char *key, const void *value,
 	return (new_entry);
 }
 
-/*
-** Free le contenu de la hashentry ainsi que la hashentry elle-meme (le tout si
-** elle est != NULL). Retourne toujours 0.
-*/
-
-static int			delete_hashentry(t_hashtable *hashtable, t_hashentry *entry)
-{
-	if (entry != NULL)
-	{
-		free(entry->key);
-		hashtable->del_hashentry_val_fun(entry->value, entry->value_size);
-		free(entry);
-	}
-	return (0);
-}
-
-int					add_hashentry(t_hashtable *hashtable, const char *key,
-		const void *value, size_t value_size)
+int					add_hashentry(t_hashtable *hashtable, const char *key
+		, const void *value, size_t value_size)
 {
 	size_t			hash;
 	t_hashentry		*entry;
@@ -134,8 +82,9 @@ int					add_hashentry(t_hashtable *hashtable, const char *key,
 	entry = get_hashentry_with_hash(hashtable, key, hash);
 	if (entry == NULL)
 	{
-		if ((entry = make_hashentry(key, value, value_size)) == NULL ||
-				(new_bucket_el = ft_lstnew(entry, sizeof(t_hashentry))) == NULL)
+		if ((entry = make_hashentry(key, value, value_size)) == NULL
+				|| (new_bucket_el = ft_lstnew(entry
+						, sizeof(t_hashentry))) == NULL)
 			return (delete_hashentry(hashtable, entry));
 		ft_lstadd(hashtable->buckets + (hash % hashtable->bucket_count),
 				new_bucket_el);
@@ -144,8 +93,8 @@ int					add_hashentry(t_hashtable *hashtable, const char *key,
 	return (1);
 }
 
-int					replace_hashentry(t_hashtable *hashtable, const char *key,
-		const void *value, size_t value_size)
+int					replace_hashentry(t_hashtable *hashtable, const char *key
+		, const void *value, size_t value_size)
 {
 	size_t			hash;
 	t_hashentry		*entry;
@@ -165,34 +114,11 @@ int					replace_hashentry(t_hashtable *hashtable, const char *key,
 	}
 	else if (entry == NULL)
 	{
-		if ((entry = make_hashentry(key, value, value_size)) == NULL ||
-				(nw_el = ft_lstnew(entry, sizeof(t_hashentry))) == NULL)
+		if ((entry = make_hashentry(key, value, value_size)) == NULL
+				|| (nw_el = ft_lstnew(entry, sizeof(t_hashentry))) == NULL)
 			return (delete_hashentry(hashtable, entry));
 		ft_lstadd(hashtable->buckets + (hash % hashtable->bucket_count), nw_el);
 		free(entry);
 	}
 	return (1);
-}
-
-void				delete_hashtable(t_hashtable *hashtable)
-{
-	size_t	bucket_idx;
-	t_list	*cur_bucket;
-	t_list	*old_bucket;
-
-	bucket_idx = 0;
-	while (bucket_idx < hashtable->bucket_count)
-	{
-		cur_bucket = hashtable->buckets[bucket_idx];
-		while (cur_bucket != NULL)
-		{
-			delete_hashentry(hashtable, (t_hashentry*)cur_bucket->content);
-			old_bucket = cur_bucket;
-			cur_bucket = cur_bucket->next;
-			free(old_bucket);
-		}
-		++bucket_idx;
-	}
-	free(hashtable->buckets);
-	free(hashtable);
 }
