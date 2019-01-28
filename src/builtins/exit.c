@@ -1,0 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/01/28 14:13:52 by gguichar          #+#    #+#             */
+/*   Updated: 2019/01/28 15:11:23 by gguichar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "libft.h"
+#include "shell.h"
+
+int	builtin_exit(t_shell *shell, int argc, char **argv)
+{
+	int		status;
+	char	*endptr;
+
+	status = 0;
+	if (argc > 2)
+		ft_dprintf(2, "%s: %s: Too many arguments.\n");
+	else
+	{
+		if (argc > 1)
+		{
+			status = ft_strtol(argv[1], &endptr, 10);
+			if (*endptr != '\0')
+			{
+				status = 255;
+				ft_dprintf(2, "%s: %s: %s: Numeric argument required\n"
+						, ERR_PREFIX, argv[0], argv[1]);
+			}
+		}
+		destroy_shell(shell);
+		exit(status);
+	}
+	return (1);
+}

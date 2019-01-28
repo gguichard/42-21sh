@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 15:26:54 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/27 17:10:44 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 15:09:59 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ typedef enum	e_error
 	ERRC_UNEXPECTED = 1,
 	ERRC_FILENOTFOUND,
 	ERRC_CMDNOTFOUND,
-	ERRC_WRONGNUMOFARGS,
-	ERRC_TOOMANYARGS,
 	ERRC_NOTADIR,
 	ERRC_ISADIR,
 	ERRC_NONEEDEDRIGHTS,
