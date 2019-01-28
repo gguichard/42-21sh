@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/22 14:21:42 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 13:45:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,11 +360,10 @@ void			*delete_ac_suff_inf(t_ac_suff_inf *acs)
 	return (NULL);
 }
 
-t_ac_suff_inf	*autocomplete_word(const char *word, int is_a_cmd,
-		const char *path, t_builtin **builtin_tab)
+t_ac_suff_inf	*autocomplete_word(t_shell *shell, const char *word
+		, int is_a_cmd, t_builtin **builtin_tab)
 {
 	t_ac_suff_inf	*acs;
-	char			*path_cpy;
 	char			**path_tab;
 
 	if ((acs = (t_ac_suff_inf*)malloc(sizeof(t_ac_suff_inf))) == NULL)
@@ -375,13 +374,10 @@ t_ac_suff_inf	*autocomplete_word(const char *word, int is_a_cmd,
 			autocomplete_from_wordpath(word, is_a_cmd, acs);
 		else
 		{
-			if ((path_cpy = ft_strdup(path)) == NULL)
-				return (delete_ac_suff_inf(acs));
-			path_tab = convert_path_to_tab(path_cpy);
+			path_tab = convert_path_to_tab(shell);
 			if (path_tab != NULL)
 				autocomplete_cmd(word, path_tab, builtin_tab, acs);
-			free(path_tab);
-			free(path_cpy);
+			ft_strtab_free(path_tab);
 		}
 		if (acs->suff != NULL)
 			return (acs);

@@ -6,18 +6,15 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 14:18:42 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/05 09:24:10 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/28 13:43:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONVERT_PATH_TO_TAB_H
 # define CONVERT_PATH_TO_TAB_H
 
-/*
-** Modifie path et malloc un tableau contenant les differentes parties du path.
-** Ce tableau contiendra des pointeurs sur path, donc ce dernier doit rester
-** valide. Retourne le tableau ou NULL en cas d'erreur.
-*/
-char	**convert_path_to_tab(char *path_cpy);
+# include "shell.h"
+
+char	**convert_path_to_tab(t_shell *shell);
 
 #endif

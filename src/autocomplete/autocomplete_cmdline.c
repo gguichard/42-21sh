@@ -39,7 +39,6 @@ static void				process_token(t_token_inf *tk_inf,
 static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd,
 		t_shell *shell, t_builtin **builtins)
 {
-	char			*path;
 	char			*home_expanded_word;
 	char			*real_word;
 	t_ac_suff_inf	*result;
@@ -52,14 +51,8 @@ static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd,
 		return (NULL);
 	}
 	free(home_expanded_word);
-	if ((path = get_shell_var(shell, "PATH")) == NULL)
-	{
-		free(real_word);
-		return (NULL);
-	}
-	result = autocomplete_word(real_word, (word_is_cmd == 0 ? 0 : 1), path,
-			builtins);
-	free(path);
+	result = autocomplete_word(shell, real_word, (word_is_cmd == 0 ? 0 : 1)
+			, builtins);
 	free(real_word);
 	return (result);
 }

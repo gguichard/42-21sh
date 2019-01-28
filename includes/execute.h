@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 09:37:58 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 13:40:23 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,13 @@ typedef struct	s_pipe
 void			child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 		, const char *bin_path, char **args);
 void			execute_all(t_shell *shell, t_list *all_sub_cmd);
-void			execute_single_cmd(t_shell *shell, t_cmd_inf *cmd_inf
-		, const char *path);
-void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf
-		, const char *path);
+void			execute_single_cmd(t_shell *shell, t_cmd_inf *cmd_inf);
+void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf);
 
 /*
 ** UTILS.
 */
-char			*search_binary(const char *path, const char *binary
+char			*search_binary(t_shell *shell, const char *binary
 		, t_error *error);
 char			**arg_lst_to_tab(t_list *arg_lst);
 
@@ -59,6 +57,6 @@ int				redirect_heredoc(t_redirect_inf *redirect_inf);
 ** COMMANDS.
 */
 char			*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
-		, const char *path, t_error *error);
+		, t_error *error);
 
 #endif
