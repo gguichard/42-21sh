@@ -6,15 +6,13 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 13:45:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 13:40:36 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <dirent.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #include "libft.h"
 #include "convert_path_to_tab.h"
 #include "shell.h"
@@ -32,80 +30,6 @@ static size_t	count_same_char(const char *str1, const char *str2)
 	while (str1[count] != '\0' && str1[count] == str2[count])
 		++count;
 	return (count);
-}
-
-/*
-** Initialise le contenu du t_ac_rdir_inf avec les informations passes en
-** parametre. Retourne 0 si l'initialisation rate, 1 si elle reussi.
-*/
-
-static int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
-		int need_to_be_cmd, int can_be_dir)
-{
-	char	*last_slash;
-
-	acrd->need_to_be_cmd = need_to_be_cmd;
-	acrd->can_be_dir = can_be_dir;
-	if ((last_slash = ft_strrchr(word, '/')) == NULL)
-		acrd->dir_to_use = ft_strdup("./");
-	else
-		acrd->dir_to_use = ft_strndup(word, last_slash - word + 1);
-	if (acrd->dir_to_use == NULL || (acrd->file_word = ft_strdup(
-					last_slash == NULL ? word : last_slash + 1)) == NULL)
-	{
-		ft_memdel((void**)&(acrd->dir_to_use));
-		return (0);
-	}
-	acrd->file_word_len = ft_strlen(acrd->file_word);
-	acrd->dir = NULL;
-	acrd->cur_file_path = NULL;
-	acrd->cur_file_name = NULL;
-	return (1);
-}
-
-/*
-** Supprime le contenu du t_ac_rdir_inf.
-*/
-
-static void		delete_ac_rdir(t_ac_rdir_inf *acrd)
-{
-	if (acrd->dir != NULL)
-	{
-		closedir(acrd->dir);
-		acrd->dir = NULL;
-	}
-	ft_memdel((void**)&(acrd->dir_to_use));
-	ft_memdel((void**)&(acrd->file_word));
-	ft_memdel((void**)&(acrd->cur_file_path));
-}
-
-/*
-** Remplie les inforamtions du prochain fichier a lire present dans le dossier
-** contenu dans le t_ac_rdir_inf. Retourne 1 si un fichier a ete trouve et 0
-** sinon. Met le suffix du t_ac_suff_inf a NULL s'il y a eu une erreur.
-*/
-
-static int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
-{
-	struct dirent	*tmp_dirent;
-
-	while ((tmp_dirent = readdir(acrd->dir)) != NULL)
-	{
-		acrd->cur_file_name = tmp_dirent->d_name;
-		if ((acrd->cur_file_path = ft_strjoin(acrd->dir_to_use,
-						acrd->cur_file_name)) == NULL)
-		{
-			acs->suff = NULL;
-			return (0);
-		}
-		if (stat(acrd->cur_file_path, &(acrd->stat_buf)) == -1)
-		{
-			ft_memdel((void**)&(acrd->cur_file_path));
-			continue ;
-		}
-		return (1);
-	}
-	return (0);
 }
 
 /*
@@ -168,32 +92,6 @@ static int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs,
 		acs->suff[acs->suff_len] = '\0';
 	}
 	return (1);
-}
-
-/*
-** Alloue et retourne un nouvel element representant un choix valide pour
-** l'autocompletion.
-*/
-
-static t_list	*make_new_choice(t_ac_rdir_inf *acrd)
-{
-	char	*tmp_file_name;
-	size_t	tmp_file_name_len;
-	t_list	*new_elem;
-
-	tmp_file_name_len = ft_strlen(acrd->cur_file_name);
-	if ((tmp_file_name = (char*)malloc(sizeof(char) * (1 + tmp_file_name_len
-					+ (S_ISDIR(acrd->stat_buf.st_mode) ? 1 : 0)))) == NULL)
-		return (NULL);
-	ft_memcpy(tmp_file_name, acrd->cur_file_name, tmp_file_name_len + 1);
-	if (S_ISDIR(acrd->stat_buf.st_mode))
-	{
-		ft_memcpy(tmp_file_name + tmp_file_name_len, "/", 2);
-		++tmp_file_name_len;
-	}
-	new_elem = ft_lstnew(tmp_file_name, tmp_file_name_len + 1);
-	free(tmp_file_name);
-	return (new_elem);
 }
 
 /*
