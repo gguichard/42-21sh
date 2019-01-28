@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/28 15:43:03 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/28 15:47:32 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,9 +28,8 @@ SRC		=	main.c signals.c \
 			parser/split_cmd_token.c parser/str_cmd_inf.c \
 			parser/token_inf.c parser/apply_escape.c \
 			autocomplete/autocomplete.c autocomplete/utils.c \
-			autocomplete/autocomplete_cmdline.c \
-			autocomplete/autocomplete_rdir_utils.c \
-			autocomplete/autocomplete_suff_utils.c \
+			autocomplete/ac_cmdline.c autocomplete/ac_rdir_utils.c \
+			autocomplete/ac_suff_utils.c \
 			misc/error.c misc/check_path.c misc/hash_table.c \
 			misc/convert_path_to_tab.c misc/utils.c \
 			builtins/change_dir.c builtins/exit.c builtins/echo.c \
