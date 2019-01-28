@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 19:52:57 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 19:38:04 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/28 09:15:11 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,10 @@ int	update_winsize(t_term *term)
 
 	ret = ioctl(STDOUT_FILENO, TIOCGWINSZ, &(term->winsize));
 	if (ret != -1)
+	{
+		if (term->winsize.ws_col <= 0)
+			term->winsize.ws_col = 1;
 		update_pos_data(term);
+	}
 	return (ret);
 }
