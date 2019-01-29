@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 16:44:25 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:03:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,11 @@ static size_t	print_prompt_with_type(t_shell *shell)
 
 void			show_prompt(t_shell *shell)
 {
+	size_t	write_len;
+
 	if (shell->term.visual_mode)
 		write(STDOUT_FILENO, "(visual) ", 9);
-	shell->term.offset = (shell->term.prompt == PROMPT_DEF)
-		? print_def_prompt(shell) : print_prompt_with_type(shell);
+	write_len = (shell->term.prompt == PROMPT_DEF) ? print_def_prompt(shell)
+		: print_prompt_with_type(shell);
+	shell->term.offset = write_len;
 }

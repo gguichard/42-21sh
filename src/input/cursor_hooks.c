@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:18:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/18 15:33:06 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:05:10 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	move_cursor_left(t_shell *shell, t_term *term)
 	if (term->cursor == 0)
 		return (0);
 	(term->cursor)--;
-	if (term->col > term->offset
+	if (term->col > (term->offset % term->winsize.ws_col)
 			|| (term->col > 0 && term->row > 0))
 	{
 		(term->col)--;
@@ -77,7 +77,7 @@ int	move_cursor_home(t_shell *shell, t_term *term)
 		tputs(tparm(tgetstr("UP", NULL), term->row), 1, t_putchar);
 		term->row = 0;
 	}
-	term->col = term->offset;
+	term->col = term->offset % term->winsize.ws_col;
 	move_cursor_to_col(term);
 	return (1);
 }

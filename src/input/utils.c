@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/15 10:52:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 16:54:57 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:06:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static size_t	get_col_offset(t_term *term, size_t *index_ptr)
 	size_t	index;
 
 	row = 0;
-	col = term->offset;
+	col = term->offset % term->winsize.ws_col;
 	index = 0;
 	while (index < term->size && row < term->row)
 	{
@@ -63,7 +63,7 @@ size_t			get_total_rows(t_term *term)
 	size_t	index;
 
 	rows = 1;
-	col = term->offset;
+	col = term->offset % term->winsize.ws_col;
 	index = 0;
 	while (index < term->size)
 	{
@@ -96,7 +96,7 @@ void			update_pos_data(t_term *term)
 	size_t	index;
 
 	row = 0;
-	col = term->offset;
+	col = term->offset % term->winsize.ws_col;
 	index = 0;
 	while (index < term->cursor)
 	{

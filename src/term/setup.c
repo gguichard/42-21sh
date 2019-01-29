@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 19:52:57 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 09:15:11 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 16:58:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ int	setup_term(t_shell *shell)
 	t_var	*var;
 
 	var = get_var(shell->env, "TERM");
-	if (var == NULL
-		|| tgetent(NULL, var->value) <= 0
-		|| update_winsize(&(shell->term)) < 0)
+	if (var == NULL || tgetent(NULL, var->value) <= 0)
 		return (0);
 	tcgetattr(STDIN_FILENO, &(shell->term.default_term));
 	ft_memcpy(&(shell->term.curr_term), &(shell->term.default_term)

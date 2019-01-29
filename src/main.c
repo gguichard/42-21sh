@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 16:10:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 16:59:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static int			init_shell(t_shell *shell, int argc, char **argv
 		return (0);
 	setup_signals();
 	setup_def_vars(shell);
+	update_winsize(&(shell->term));
 	return (1);
 }
 
