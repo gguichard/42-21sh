@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 14:20:19 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 17:38:40 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 09:56:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void		prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf)
 	int	ret;
 
 	ret = 1;
+	shell->term.legacy_mode = !setup_term(shell);
 	while (ret > 0)
 	{
 		reset_cmdline(shell, PROMPT_HEREDOC);
@@ -29,18 +30,18 @@ void		prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf)
 		else
 		{
 			redirect_inf->heredoc = get_command_line(&(shell->term));
-			free(shell->term.prev_lines);
+			ft_strdel(&(shell->term.prev_lines));
 			if (ft_strequ(shell->term.line, redirect_inf->to_word))
 				break ;
 			shell->term.prev_lines = redirect_inf->heredoc;
 		}
 	}
+	reset_term(shell);
 	if (redirect_inf->heredoc == NULL)
 		ft_dprintf(2, "%s: Wrong heredoc end\n", ERR_PREFIX);
 	else
 		(redirect_inf->heredoc)[ft_strlen(redirect_inf->heredoc)
 			- ft_strlen(redirect_inf->to_word)] = '\0';
-	shell->term.prev_lines = NULL;
 	shell->term.prompt = PROMPT_DEF;
 }
 
