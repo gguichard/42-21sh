@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 18:27:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:32:17 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,56 +15,58 @@
 #include "shell.h"
 #include "vars.h"
 
-static size_t	write_pwd_with_home_replaced(t_shell *shell)
+static char	*get_custom_prompt_pwd(t_shell *shell)
 {
-	t_var	*pwd;
+	char	*pwd;
 	char	*home;
-	char	*tmp;
-	size_t	len;
+	size_t	home_len;
 
-	pwd = get_var(shell->env, "PWD");
+	pwd = get_shell_var(shell, "PWD");
 	if (pwd == NULL)
-		return (write(STDOUT_FILENO, "unknown", 7));
+		return (NULL);
 	home = get_shell_var(shell, "HOME");
-	tmp = NULL;
-	if (home != NULL)
+	if (home == NULL)
+		return (pwd);
+	if (ft_strstr(pwd, home) == pwd)
 	{
-		tmp = ft_strstr(pwd->value, home);
-		if (tmp == NULL || tmp != pwd->value)
-		{
-			free(home);
-			return (write(STDOUT_FILENO, pwd->value, ft_strlen(pwd->value)));
-		}
-		tmp += ft_strlen(home);
-		free(home);
+		home_len = ft_strlen(home);
+		ft_memmove(pwd + 1, pwd + home_len, ft_strlen(pwd) - home_len + 1);
+		pwd[0] = '~';
 	}
-	len = 0;
-	len += write(STDOUT_FILENO, "~", 1);
-	if (*tmp != '\0')
-		len += write(STDOUT_FILENO, tmp, ft_strlen(tmp));
-	return (len);
+	free(home);
+	return (pwd);
 }
 
-static size_t	print_def_prompt(t_shell *shell)
+static int	print_def_prompt(t_shell *shell)
 {
-	size_t	len;
-	t_var	*user;
+	int		ret;
+	char	*pwd;
+	char	*user;
+	char	*prompt;
 
-	len = 0;
-	user = get_var(shell->env, "USER");
-	write(STDOUT_FILENO, "\033[33;1m", 7);
-	len += write(STDOUT_FILENO, user == NULL ? "guest" : user->value
-			, user == NULL ? 5 : ft_strlen(user->value));
-	write(STDOUT_FILENO, "\033[0m", 4);
-	len += write(STDOUT_FILENO, " ", 1);
-	write(STDOUT_FILENO, "\033[34;1m", 7);
-	len += write_pwd_with_home_replaced(shell);
-	write(STDOUT_FILENO, "\033[0m", 4);
-	len += write(STDOUT_FILENO, " > ", 3);
-	return (len);
+	ret = 0;
+	pwd = get_custom_prompt_pwd(shell);
+	user = get_shell_var(shell, "USER");
+	prompt = (char *)malloc((user == NULL ? 5 : ft_strlen(user))
+			+ (pwd == NULL ? 7 : ft_strlen(pwd)) + 27);
+	if (prompt != NULL)
+	{
+		prompt[0] = '\0';
+		ft_strcat(prompt, "\033[33;1m");
+		ft_strcat(prompt, (user == NULL) ? "guest" : user);
+		ft_strcat(prompt, "\033[0m \033[34;1m");
+		ft_strcat(prompt, (pwd == NULL) ? "unknown" : pwd);
+		ft_strcat(prompt, "\033[0m > ");
+		if ((ret = write(STDOUT_FILENO, prompt, ft_strlen(prompt))) > 0)
+			ret -= 22;
+	}
+	free(pwd);
+	free(user);
+	free(prompt);
+	return (ret);
 }
 
-static size_t	print_prompt_with_type(t_shell *shell)
+static int	print_prompt_with_type(t_shell *shell)
 {
 	char	*str;
 
@@ -84,13 +86,16 @@ static size_t	print_prompt_with_type(t_shell *shell)
 	return (write(STDOUT_FILENO, str, ft_strlen(str)));
 }
 
-void			show_prompt(t_shell *shell)
+void		show_prompt(t_shell *shell)
 {
-	size_t	write_len;
+	int	write_len;
 
+	write_len = 0;
 	if (shell->term.visual_mode)
-		write(STDOUT_FILENO, "(visual) ", 9);
-	write_len = (shell->term.prompt == PROMPT_DEF) ? print_def_prompt(shell)
-		: print_prompt_with_type(shell);
+		write_len += ft_max(0, write(STDOUT_FILENO, "(visual) ", 9));
+	if (shell->term.prompt == PROMPT_DEF)
+		write_len += ft_max(0, print_def_prompt(shell));
+	else
+		write_len += ft_max(0, print_prompt_with_type(shell));
 	shell->term.offset = write_len;
 }
