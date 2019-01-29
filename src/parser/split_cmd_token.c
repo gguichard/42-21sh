@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 14:15:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 11:00:22 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 11:04:41 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,112 +16,8 @@
 #include "token_inf.h"
 #include "split_cmd_token.h"
 
-/*
-** Ajout du token represente par les informations passes en parametre
-** a la liste des commandes. Retourne 1 en cas de succes et 0 en cas d'erreur.
-*/
-
-static int				add_cur_token_to_lst(t_list **token_lst,
-		t_str_cmd_inf *str_cmd_inf, const char *token_start,
-		t_token_type token_type)
-{
-	t_token_inf		new_token;
-	t_list			*new_elem;
-	size_t			cur_token_size;
-
-	if (token_type == TK_NOTHING)
-		return (1);
-	cur_token_size = (str_cmd_inf->str + str_cmd_inf->pos) - token_start
-		+ (token_type == TK_OPE || token_type == TK_CMD_SEP ? 1 : 0);
-	new_token.token = ft_strndup(token_start, cur_token_size);
-	new_token.type = token_type;
-	if (new_token.token == NULL
-			|| (new_elem = ft_lstnew(&new_token, sizeof(t_token_inf))) == NULL)
-	{
-		free(new_token.token);
-		return (0);
-	}
-	ft_lstpush(token_lst, new_elem);
-	return (1);
-}
-
-static int				add_token_to_lst(t_list **token_lst, char *token_str,
-		t_token_type token_type)
-{
-	t_token_inf		new_token;
-	t_list			*new_elem;
-
-	if (token_type == TK_NOTHING)
-		return (1);
-	new_token.token = ft_strdup(token_str);
-	new_token.type = token_type;
-	if (new_token.token == NULL
-			|| (new_elem = ft_lstnew(&new_token, sizeof(t_token_inf))) == NULL)
-	{
-		free(new_token.token);
-		return (0);
-	}
-	ft_lstpush(token_lst, new_elem);
-	return (1);
-}
-
-static int				is_a_sep_char(char c)
-{
-	if (c == '\0')
-		return (0);
-	else
-		return (ft_strchr(" \t\n|<>;", c) != NULL);
-}
-
-static int				cur_token_is_number(t_str_cmd_inf *str_cmd_inf,
-		const char *token_start)
-{
-	while (token_start != str_cmd_inf->str + str_cmd_inf->pos)
-	{
-		if (!ft_isdigit(*token_start))
-			return (0);
-		++token_start;
-	}
-	return (1);
-}
-
-static int				get_cur_token_len(const char *token_start)
-{
-	size_t	len;
-
-	len = 0;
-	if (is_a_sep_char(*token_start))
-	{
-		++len;
-		if ((*token_start == '>' || *token_start == '<')
-				&& *token_start == token_start[1])
-			++len;
-	}
-	return (len);
-}
-
-static t_token_type		get_token_for_opt_add(t_str_cmd_inf *str_cmd_inf,
-		const char *token_start, int *end_by_and)
-{
-	if (str_cmd_inf->str[str_cmd_inf->pos] == '>'
-			|| str_cmd_inf->str[str_cmd_inf->pos] == '<')
-	{
-		if (cur_token_is_number(str_cmd_inf, token_start))
-			return (TK_NUM_OPT);
-		else if (str_cmd_inf->pos > 0
-				&& get_cur_token_len(str_cmd_inf->str + str_cmd_inf->pos) == 1
-				&& str_cmd_inf->str[str_cmd_inf->pos] == '>'
-				&& str_cmd_inf->str[str_cmd_inf->pos - 1] == '&')
-		{
-			*end_by_and = 1;
-			return (TK_WORD);
-		}
-	}
-	return (TK_WORD);
-}
-
-static int				process_opt_add(t_list **token_lst,
-		t_str_cmd_inf *str_cmd_inf, const char *token_start)
+static int				process_opt_add(t_list **token_lst
+		, t_str_cmd_inf *str_cmd_inf, const char *token_start)
 {
 	t_str_cmd_inf	str_cmd_cpy;
 	int				end_by_and;
@@ -134,8 +30,8 @@ static int				process_opt_add(t_list **token_lst,
 	if (end_by_and)
 		--(str_cmd_cpy.pos);
 	if ((str_cmd_cpy.str + str_cmd_cpy.pos) != token_start
-			&& !add_cur_token_to_lst(token_lst, &str_cmd_cpy,
-				token_start, token_type))
+			&& !add_cur_token_to_lst(token_lst, &str_cmd_cpy
+				, token_start, token_type))
 		return (0);
 	if (end_by_and)
 		if (!add_token_to_lst(token_lst, "&", TK_NUM_OPT))
@@ -143,8 +39,8 @@ static int				process_opt_add(t_list **token_lst,
 	return (1);
 }
 
-static int				process_after_ope(t_list **token_lst,
-		t_str_cmd_inf *str_cmd_inf)
+static int				process_after_ope(t_list **token_lst
+		, t_str_cmd_inf *str_cmd_inf)
 {
 	const char		*token_start;
 	t_str_cmd_inf	str_cmd_cpy;
@@ -163,17 +59,17 @@ static int				process_after_ope(t_list **token_lst,
 				&& str_cmd_cpy.str[str_cmd_cpy.pos] != '\0'
 				&& token_start[1] != '-')
 			str_cmd_cpy.pos = token_start - str_cmd_cpy.str + 1;
-		if (!add_cur_token_to_lst(token_lst, &str_cmd_cpy,
-					token_start, TK_STR_OPT))
+		if (!add_cur_token_to_lst(token_lst, &str_cmd_cpy
+					, token_start, TK_STR_OPT))
 			return (0);
 		str_cmd_inf->pos = str_cmd_cpy.pos - 1;
 	}
 	return (1);
 }
 
-static int				split_sep_char(t_list **token_lst,
-		t_str_cmd_inf *str_cmd_inf, const char *token_start,
-		int last_char_was_sep)
+static int				split_sep_char(t_list **token_lst
+		, t_str_cmd_inf *str_cmd_inf, const char *token_start
+		, int last_char_was_sep)
 {
 	t_token_type	token_type;
 
@@ -188,8 +84,8 @@ static int				split_sep_char(t_list **token_lst,
 		if (str_cmd_inf->str[str_cmd_inf->pos] == ';')
 			token_type = TK_CMD_SEP;
 		str_cmd_inf->pos += get_cur_token_len(token_start) - 1;
-		if (!add_cur_token_to_lst(token_lst, str_cmd_inf,
-					token_start, token_type))
+		if (!add_cur_token_to_lst(token_lst, str_cmd_inf
+					, token_start, token_type))
 			return (0);
 	}
 	if (token_start == (str_cmd_inf->str + str_cmd_inf->pos)
@@ -202,9 +98,9 @@ static int				split_sep_char(t_list **token_lst,
 	return (1);
 }
 
-static t_token_type		split_at_pos(t_list **token_lst,
-		t_str_cmd_inf *str_cmd_inf, const char **token_start,
-		int *last_char_was_sep)
+static t_token_type		split_at_pos(t_list **token_lst
+		, t_str_cmd_inf *str_cmd_inf, const char **token_start
+		, int *last_char_was_sep)
 {
 	t_token_type	token_type;
 
@@ -212,8 +108,8 @@ static t_token_type		split_at_pos(t_list **token_lst,
 			&& is_a_sep_char(str_cmd_inf->str[str_cmd_inf->pos])
 			&& !scmd_cur_char_is_escaped(str_cmd_inf))
 	{
-		if (!split_sep_char(token_lst, str_cmd_inf, *token_start,
-					*last_char_was_sep))
+		if (!split_sep_char(token_lst, str_cmd_inf, *token_start
+					, *last_char_was_sep))
 			return (TK_NOTHING);
 		token_type = TK_OPE;
 		*last_char_was_sep = 1;
@@ -241,13 +137,13 @@ t_list					*split_cmd_token(t_str_cmd_inf *str_cmd_inf)
 	token_start = str_cmd_inf->str;
 	while (str_cmd_inf->str[str_cmd_inf->pos] != '\0')
 	{
-		if ((token_type = split_at_pos(&token_lst, str_cmd_inf, &token_start,
-						&last_char_was_sep)) == TK_NOTHING)
+		if ((token_type = split_at_pos(&token_lst, str_cmd_inf, &token_start
+						, &last_char_was_sep)) == TK_NOTHING)
 			return (ft_lstdel(&token_lst, del_token));
 		scmd_move_to_next_char(str_cmd_inf);
 	}
-	if (token_type == TK_WORD && !add_cur_token_to_lst(&token_lst,
-				str_cmd_inf, token_start, token_type))
+	if (token_type == TK_WORD && !add_cur_token_to_lst(&token_lst
+				, str_cmd_inf, token_start, token_type))
 		return (ft_lstdel(&token_lst, del_token));
 	return (token_lst);
 }
