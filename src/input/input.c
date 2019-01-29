@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 00:48:50 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:58:42 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,6 @@ int			wait_for_command(t_shell *shell)
 		ret = (input == NULL) ? 0 : handle_input(shell, input, error);
 	}
 	if (shell->is_atty)
-		ft_putendl("exit");
+		ft_putendl_fd("exit", 2);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 14:13:52 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 18:12:37 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:58:48 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	builtin_exit(t_shell *shell, int argc, char **argv)
 			}
 		}
 		destroy_shell(shell);
-		ft_putendl("exit");
+		ft_putendl_fd("exit", 2);
 		exit(status);
 	}
 	return (1);
