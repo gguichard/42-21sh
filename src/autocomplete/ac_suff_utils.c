@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 14:19:14 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 08:47:05 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 10:17:55 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,27 @@ int		build_ac_suff(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs
 int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 {
 	t_list	*new_elem;
+	int		insert_ret;
 
 	if (valid_file_for_ac(acrd))
 	{
+		insert_ret = 1;
 		if ((new_elem = make_new_choice(acrd)) != NULL)
-			strlist_insert_sort(&(acs->choices), new_elem);
-		if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name
-					+ acrd->file_word_len, acs->suff, acs->suff_len))
+			insert_ret = strlist_insert_sort(&(acs->choices), new_elem);
+		if (insert_ret)
 		{
-			if (!build_ac_suff(acrd, acs, acrd->force_exec_type))
+			if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name
+						+ acrd->file_word_len, acs->suff, acs->suff_len))
 			{
-				ft_memdel((void**)&(acrd->cur_file_path));
-				return (0);
+				if (!build_ac_suff(acrd, acs, acrd->force_exec_type))
+				{
+					ft_memdel((void**)&(acrd->cur_file_path));
+					return (0);
+				}
 			}
+			else
+				acs->suff_type = ACS_TYPE_NOTHING;
 		}
-		else
-			acs->suff_type = ACS_TYPE_NOTHING;
 	}
 	ft_memdel((void**)&(acrd->cur_file_path));
 	return (1);
