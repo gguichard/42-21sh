@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 16:22:42 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 10:23:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 11:08:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void				del_redirect(void *content, size_t content_size)
 	(void)content_size;
 	free(((t_redirect_inf*)content)->to_word);
 	free(((t_redirect_inf*)content)->heredoc);
-	ft_lstfree(&(((t_redirect_inf*)content)->red_fd));
+	ft_lstfree(&(((t_redirect_inf*)content)->red_save));
 	free(content);
 }
 

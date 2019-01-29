@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 11:58:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 10:46:15 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 10:58:38 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 static void	redirect_close_fd(t_redirect_inf *redirect_inf)
 {
 	if (redirect_inf->from_fd >= 0)
-		close(redirect_inf->from_fd);
+		close_with_rc(redirect_inf, redirect_inf->from_fd);
 	if (redirect_inf->from_fd == FD_AMPERSAND
 			|| redirect_inf->from_fd == FD_DEFAULT)
-		close(STDOUT_FILENO);
+		close_with_rc(redirect_inf, STDOUT_FILENO);
 	if (redirect_inf->from_fd == FD_AMPERSAND)
-		close(STDERR_FILENO);
+		close_with_rc(redirect_inf, STDERR_FILENO);
 }
 
 static int	open_redirect_file(t_redirect_inf *redirect_inf, int append_to_file)

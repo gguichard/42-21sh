@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:51:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 10:39:05 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 11:07:21 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void		process_redir(t_shell *shell, t_cmd_inf *cmd_inf)
 		process_redir(shell, cmd_inf->pipe_cmd);
 }
 
-int			fork_redirect(t_cmd_inf *cmd_inf)
+int			setup_redirections(t_cmd_inf *cmd_inf)
 {
 	t_list			*curr;
 	t_redirect_inf	*redirect_inf;
@@ -97,21 +97,21 @@ int			fork_redirect(t_cmd_inf *cmd_inf)
 int			reset_redirections(t_cmd_inf *cmd_inf)
 {
 	t_list			*curr;
-	t_list			*curr_red;
-	t_redirect_inf	*redirect_inf;
+	t_list			*curr_save;
+	t_redirect_save	*redirect_save;
 
 	curr = cmd_inf->redirect_lst;
 	while (curr != NULL)
 	{
-		redirect_inf = (t_redirect_inf *)curr->content;
-		curr_red = redirect_inf->red_fd;
-		while (curr_red != NULL)
+		curr_save = ((t_redirect_inf *)curr->content)->red_save;
+		while (curr_save != NULL)
 		{
-			dup2(((t_redirect_fd *)curr_red->content)->original_fd
-					, ((t_redirect_fd *)curr_red->content)->to_fd);
-			close(((t_redirect_fd *)curr_red->content)->from_fd);
-			close(((t_redirect_fd *)curr_red->content)->original_fd);
-			curr_red = curr_red->next;
+			redirect_save = (t_redirect_save *)curr_save->content;
+			dup2(redirect_save->original_fd, redirect_save->to_fd);
+			if (redirect_save->from_fd != -1)
+				close(redirect_save->from_fd);
+			close(redirect_save->original_fd);
+			curr_save = curr_save->next;
 		}
 		curr = curr->next;
 	}
