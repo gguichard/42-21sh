@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 11:58:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 16:13:18 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 10:46:15 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	redirect_to_fd(t_redirect_inf *redirect_inf)
 	dup_ret = 0;
 	if (redirect_inf->from_fd >= 0)
 	{
-		if ((dup_ret = dup2(fd, redirect_inf->from_fd)) < 0)
+		if (!(dup_ret = dup2_with_rc(redirect_inf, fd, redirect_inf->from_fd)))
 			ft_dprintf(2, "%s: %d: Bad file descriptor\n", ERR_PREFIX
 					, redirect_inf->from_fd);
 	}
@@ -79,15 +79,15 @@ static int	redirect_to_fd(t_redirect_inf *redirect_inf)
 	{
 		if (redirect_inf->from_fd == FD_AMPERSAND
 				|| redirect_inf->from_fd == FD_DEFAULT)
-			dup_ret = dup2(fd, STDOUT_FILENO);
-		if (dup_ret > 0 && redirect_inf->from_fd == FD_AMPERSAND)
-			dup_ret = dup2(fd, STDERR_FILENO);
-		if (dup_ret < 0)
+			dup_ret = dup2_with_rc(redirect_inf, fd, STDOUT_FILENO);
+		if (dup_ret && redirect_inf->from_fd == FD_AMPERSAND)
+			dup_ret = dup2_with_rc(redirect_inf, fd, STDERR_FILENO);
+		if (!dup_ret)
 			ft_dprintf(2, "%s: %d: Bad file descriptor\n", ERR_PREFIX, fd);
 	}
 	if (redirect_inf->close_to_fd || redirect_inf->to_fd == FD_NOTSET)
 		close(fd);
-	return (dup_ret >= 0);
+	return (dup_ret);
 }
 
 int			redirect_output(t_redirect_inf *redirect_inf)

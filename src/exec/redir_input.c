@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 12:06:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/24 18:08:24 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 10:49:13 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ int	redirect_input(t_redirect_inf *redirect_inf)
 	}
 	if (fd < 0)
 		return (0);
-	dup2(fd, redirect_inf->from_fd >= 0 ? redirect_inf->from_fd : STDIN_FILENO);
+	dup2_with_rc(redirect_inf, fd
+			, redirect_inf->from_fd >= 0
+			? redirect_inf->from_fd : STDIN_FILENO);
 	if (should_close)
 		close(fd);
 	return (1);

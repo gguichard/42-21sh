@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 17:17:36 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 17:24:00 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 10:24:10 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int				add_redirect_inf_to_cmd(t_cmd_inf *cmd_inf, int have_lopt
 	if (!process_ropt_redirect(&new_red, opt_lst_start->next, shell))
 		return (0);
 	new_red.heredoc = NULL;
+	new_red.red_fd = NULL;
 	if ((new_elem = ft_lstnew(&new_red, sizeof(t_redirect_inf))) == NULL)
 	{
 		free(new_red.to_word);

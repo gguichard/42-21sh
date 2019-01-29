@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 13:40:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 10:47:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,12 @@ char			**arg_lst_to_tab(t_list *arg_lst);
 /*
 ** REDIRECTIONS.
 */
+int				dup2_with_rc(t_redirect_inf *redirect_inf, int from_fd
+		, int to_fd);
 void			process_redir(t_shell *shell, t_cmd_inf *cmd_inf);
 void			prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf);
 int				fork_redirect(t_cmd_inf *cmd_inf);
+int				reset_redirections(t_cmd_inf *cmd_inf);
 int				redirect_output(t_redirect_inf *redirect_inf);
 int				redirect_input(t_redirect_inf *redirect_inf);
 int				redirect_heredoc(t_redirect_inf *redirect_inf);
