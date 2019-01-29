@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/29 12:10:54 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/29 13:09:48 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ SRC		=	main.c signals.c \
 			parser/join_token_cmd.c parser/join_token_cmd_redirect.c \
 			parser/join_token_cmd_utils.c \
 			cmd_inf.c redirect_inf.c \
-			expand_vars.c
+			vars/expand_vars.c vars/expand_vars_utils.c
 
 OBJ_DIR	=	.obj
 OBJ		=	$(SRC:.c=.o)
