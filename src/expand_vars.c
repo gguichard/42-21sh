@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 09:14:11 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 10:35:28 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 12:55:59 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 #include "vars.h"
 #include "shell.h"
 #include "str_cmd_inf.h"
+#include "expand_vars.h"
 
-static int		str_good_replace(char **str, size_t pos, size_t len,
-		const char *replacement)
+static int		str_good_replace(char **str, size_t pos, size_t len
+		, const char *replacement)
 {
 	size_t	str_len;
 	size_t	replacement_len;
@@ -88,20 +89,16 @@ static char		*escape_chars_in_var(t_str_cmd_inf *scmd, const char *str)
 	while (*str != '\0')
 	{
 		if (char_need_to_be_escaped(scmd, *str))
-		{
-			new_str[idx] = '\\';
-			++idx;
-		}
-		new_str[idx] = *str;
-		++idx;
+			new_str[idx++] = '\\';
+		new_str[idx++] = *str;
 		++str;
 	}
 	new_str[idx] = '\0';
 	return (new_str);
 }
 
-static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str,
-		size_t var_len, t_shell *shell)
+static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str
+		, size_t var_len, t_shell *shell)
 {
 	int		is_in_brackets;
 	int		err_ret;
@@ -110,8 +107,8 @@ static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str,
 	char	*escaped_var_value;
 
 	is_in_brackets = (scmd->str[scmd->pos + 1] == '{');
-	if ((var_name = ft_strsub(scmd->str, scmd->pos + (is_in_brackets ? 2 : 1),
-					var_len)) == NULL)
+	if ((var_name = ft_strsub(scmd->str, scmd->pos + (is_in_brackets ? 2 : 1)
+					, var_len)) == NULL)
 		return (0);
 	var_value = get_shell_var(shell, var_name);
 	if ((escaped_var_value = escape_chars_in_var(scmd, var_value)) == NULL)
@@ -120,8 +117,8 @@ static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str,
 		free(var_name);
 		return (0);
 	}
-	err_ret = str_good_replace(new_str, scmd->pos,
-			var_len + (is_in_brackets ? 3 : 1), escaped_var_value);
+	err_ret = str_good_replace(new_str, scmd->pos
+			, var_len + (is_in_brackets ? 3 : 1), escaped_var_value);
 	scmd->str = *new_str;
 	scmd->pos += ft_strlen(escaped_var_value);
 	free(escaped_var_value);
@@ -130,78 +127,99 @@ static int		replace_var_by_value(t_str_cmd_inf *scmd, char **new_str,
 	return (err_ret);
 }
 
-char			*expand_vars(const char *str, t_shell *shell, char **var_error)
+static int		process_var_bracket_stat_changed(t_expand_inf *einf
+		, size_t *old_pos, char **var_error, t_shell *shell)
 {
-	t_str_cmd_inf	scmd;
-	char			*new_str;
-	size_t			old_pos;
-	size_t			var_in_bracket_len;
-	int				old_is_in_var_bracket;
+	size_t	var_in_bracket_len;
+
+	if (einf->scmd.is_in_var_bracket)
+		*old_pos = einf->scmd.pos;
+	else
+	{
+		var_in_bracket_len = einf->scmd.pos - 1 - *old_pos;
+		einf->scmd.pos = *old_pos - 2;
+		if (get_var_name_len(einf->scmd.str + *old_pos) != var_in_bracket_len
+				|| var_in_bracket_len == 0)
+		{
+			*var_error = ft_strsub(einf->scmd.str, einf->scmd.pos
+					, var_in_bracket_len + 3);
+			return (0);
+		}
+		if (!replace_var_by_value(&(einf->scmd), &(einf->str)
+					, var_in_bracket_len, shell))
+			return (0);
+	}
+	return (1);
+}
+
+static int		process_var_bracket_stat_unchanged(t_expand_inf *einf
+		, t_shell *shell)
+{
 	size_t			var_name_len;
 
+	if (einf->scmd.str[einf->scmd.pos] == '$'
+			&& einf->scmd.str[einf->scmd.pos + 1] != '{'
+			&& !scmd_cur_char_is_escaped(&(einf->scmd)))
+	{
+		if ((var_name_len = get_var_name_len(einf->scmd.str
+						+ einf->scmd.pos + 1)) > 0)
+		{
+			if (!replace_var_by_value(&(einf->scmd), &(einf->str), var_name_len
+						, shell))
+				return (0);
+		}
+	}
+	return (1);
+}
+
+static int		process_var_bracket(t_expand_inf *einf, int stat_changed
+		, char **var_error, t_shell *shell)
+{
+	if (stat_changed)
+	{
+		if (!process_var_bracket_stat_changed(einf, &(einf->old_pos), var_error
+					, shell))
+			return (0);
+	}
+	else if (!einf->scmd.is_in_quote && !einf->scmd.is_in_var_bracket)
+	{
+		if (!process_var_bracket_stat_unchanged(einf, shell))
+			return (0);
+	}
+	return (1);
+}
+
+char			*expand_vars(const char *str, t_shell *shell, char **var_error)
+{
+	t_expand_inf	einf;
+	int				old_is_in_var_bracket;
+
 	*var_error = NULL;
-	if ((new_str = ft_strdup(str)) == NULL)
+	if ((einf.str = ft_strdup(str)) == NULL)
 		return (NULL);
-	scmd_init(&scmd, new_str);
-	old_pos = 0;
+	scmd_init(&(einf.scmd), einf.str);
+	einf.old_pos = 0;
 	old_is_in_var_bracket = 0;
 	while (1)
 	{
-		if (scmd.is_in_var_bracket != old_is_in_var_bracket)
+		if (!process_var_bracket(&einf
+					, einf.scmd.is_in_var_bracket != old_is_in_var_bracket
+					, var_error, shell))
 		{
-			if (scmd.is_in_var_bracket)
-				old_pos = scmd.pos;
-			else
-			{
-				var_in_bracket_len = scmd.pos - 1 - old_pos;
-				scmd.pos = old_pos - 2;
-				if (get_var_name_len(scmd.str + old_pos) != var_in_bracket_len
-						|| var_in_bracket_len == 0)
-				{
-					*var_error = ft_strsub(scmd.str, scmd.pos,
-							var_in_bracket_len + 3);
-					scmd_delete(scmd.sub_var_bracket);
-					free(new_str);
-					return (NULL);
-				}
-				if (!replace_var_by_value(&scmd, &new_str, var_in_bracket_len,
-							shell))
-				{
-					scmd_delete(scmd.sub_var_bracket);
-					free(new_str);
-					return (NULL);
-				}
-			}
+			scmd_delete(einf.scmd.sub_var_bracket);
+			return (ft_memdel((void**)&(einf.str)));
 		}
-		else if (!scmd.is_in_quote && !scmd.is_in_var_bracket)
-		{
-			if (scmd.str[scmd.pos] == '$' && scmd.str[scmd.pos + 1] != '{'
-					&& !scmd_cur_char_is_escaped(&scmd))
-			{
-				if ((var_name_len = get_var_name_len(scmd.str
-								+ scmd.pos + 1)) > 0)
-				{
-					if (!replace_var_by_value(&scmd, &new_str, var_name_len,
-								shell))
-					{
-						scmd_delete(scmd.sub_var_bracket);
-						free(new_str);
-						return (NULL);
-					}
-				}
-			}
-		}
-		old_is_in_var_bracket = scmd.is_in_var_bracket;
-		if (scmd.str[scmd.pos] == '\0')
+		old_is_in_var_bracket = einf.scmd.is_in_var_bracket;
+		if (einf.scmd.str[einf.scmd.pos] == '\0')
 			break ;
-		scmd_move_to_next_char(&scmd);
+		scmd_move_to_next_char(&(einf.scmd));
 	}
-	scmd_delete(scmd.sub_var_bracket);
-	return (new_str);
+	scmd_delete(einf.scmd.sub_var_bracket);
+	return (einf.str);
 }
 
-char			*expand_home(const char *str, t_shell *shell,
-		int remove_home_ending_slash)
+char			*expand_home(const char *str, t_shell *shell
+		, int remove_home_ending_slash)
 {
 	char	*real_home;
 	char	*home;
