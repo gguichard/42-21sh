@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 16:56:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 09:07:47 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,23 @@ void		child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 
 static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf)
 {
+	char **arg_tab;
+
 	if (cmd_inf->pipe_cmd != NULL)
 		execute_pipeline(shell, cmd_inf);
 	else if (cmd_inf->arg_lst != NULL)
 	{
+		if ((arg_tab = arg_lst_to_tab(cmd_inf->arg_lst)) == NULL)
+			return ;
 		if (ft_strequ("cd", cmd_inf->arg_lst->content))
-			builtin_cd(shell, ft_lstsize(cmd_inf->arg_lst)
-					, arg_lst_to_tab(cmd_inf->arg_lst));
+			builtin_cd(shell, ft_lstsize(cmd_inf->arg_lst), arg_tab);
 		else if (ft_strequ("exit", cmd_inf->arg_lst->content))
-			builtin_exit(shell, ft_lstsize(cmd_inf->arg_lst)
-					, arg_lst_to_tab(cmd_inf->arg_lst));
+			builtin_exit(shell, ft_lstsize(cmd_inf->arg_lst), arg_tab);
 		else if (ft_strequ("echo", cmd_inf->arg_lst->content))
-			builtin_echo(shell, ft_lstsize(cmd_inf->arg_lst)
-					, arg_lst_to_tab(cmd_inf->arg_lst));
+			builtin_echo(shell, ft_lstsize(cmd_inf->arg_lst), arg_tab);
 		else
 			execute_single_cmd(shell, cmd_inf);
+		free(arg_tab);
 	}
 }
 
