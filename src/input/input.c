@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:20:32 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 18:10:33 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static int	handle_input(t_shell *shell, char *input, t_error error)
 	if (line == NULL)
 		return (-1);
 	if (error == ERRC_INCOMPLETECMD)
-		ft_dprintf(2, "%s: unexpected end of file\n", ERR_PREFIX);
+		ft_dprintf(2, "%s: Unexpected end of file\n", ERR_PREFIX);
 	else if (error == ERRC_NOERROR)
 	{
 		if (!expand_line_with_execute(shell, line))
