@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:03:29 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:35:49 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ struct					s_shell
 {
 	int					argc;
 	char				**argv;
+	int					is_atty;
 	t_list				*env;
 	t_list				*local;
 	t_builtin			*builtins;

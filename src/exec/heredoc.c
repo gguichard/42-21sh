@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 14:20:19 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 18:10:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:51:59 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void		prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf)
 	int	ret;
 
 	ret = 1;
-	shell->term.legacy_mode = !setup_term(shell);
+	setup_term(shell);
 	while (ret > 0)
 	{
 		reset_cmdline(shell, PROMPT_HEREDOC);
@@ -37,6 +37,7 @@ void		prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf)
 		}
 	}
 	reset_term(shell);
+	shell->term.prev_lines = NULL;
 	if (redirect_inf->heredoc == NULL)
 		ft_dprintf(2, "%s: Invalid heredoc\n", ERR_PREFIX);
 	else

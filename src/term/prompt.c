@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 00:32:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:43:31 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	print_def_prompt(t_shell *shell)
 		ft_strcat(prompt, "\033[0m \033[34;1m");
 		ft_strcat(prompt, (pwd == NULL) ? "unknown" : pwd);
 		ft_strcat(prompt, "\033[0m > ");
-		if ((ret = write(STDOUT_FILENO, prompt, ft_strlen(prompt))) > 0)
+		if ((ret = write(STDERR_FILENO, prompt, ft_strlen(prompt))) > 0)
 			ret -= 22;
 	}
 	free(pwd);
@@ -83,7 +83,7 @@ static int	print_prompt_with_type(t_shell *shell)
 		str = "bracket> ";
 	else if (shell->term.prompt == PROMPT_OPE)
 		str = "pipe> ";
-	return (write(STDOUT_FILENO, str, ft_strlen(str)));
+	return (write(STDERR_FILENO, str, ft_strlen(str)));
 }
 
 void		show_prompt(t_shell *shell)
@@ -92,7 +92,7 @@ void		show_prompt(t_shell *shell)
 
 	write_len = 0;
 	if (shell->term.visual_mode)
-		write_len += ft_max(0, write(STDOUT_FILENO, "(visual) ", 9));
+		write_len += ft_max(0, write(STDERR_FILENO, "(visual) ", 9));
 	if (shell->term.prompt == PROMPT_DEF)
 		write_len += ft_max(0, print_def_prompt(shell));
 	else

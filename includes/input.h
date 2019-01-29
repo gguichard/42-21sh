@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 18:11:51 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 00:48:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ typedef struct	s_ac_format
 /*
 ** SETUP TERM.
 */
-int				setup_term(t_shell *shell);
-int				reset_term(t_shell *shell);
-int				update_winsize(t_term *term);
+void			setup_term(t_shell *shell);
+void			reset_term(t_shell *shell);
+void			update_winsize(t_term *term);
 
 /*
 ** COMMAND LINE.

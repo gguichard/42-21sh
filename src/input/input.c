@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 21:25:13 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 18:12:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:48:50 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,12 +136,13 @@ int			wait_for_command(t_shell *shell)
 	while (ret > 0)
 	{
 		reset_cmdline(shell, PROMPT_DEF);
-		shell->term.legacy_mode = !setup_term(shell);
+		setup_term(shell);
 		error = ERRC_NOERROR;
 		input = get_full_input(shell, &error);
 		reset_term(shell);
 		ret = (input == NULL) ? 0 : handle_input(shell, input, error);
 	}
-	ft_putendl("exit");
+	if (shell->is_atty)
+		ft_putendl("exit");
 	return (ret);
 }

@@ -6,10 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 16:59:08 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 00:48:14 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include <stdlib.h>
 #include "shell.h"
 #include "input.h"
@@ -48,6 +49,7 @@ static int			init_shell(t_shell *shell, int argc, char **argv
 	ft_memset(shell, 0, sizeof(t_shell));
 	shell->argc = argc;
 	shell->argv = argv;
+	shell->is_atty = isatty(STDIN_FILENO);
 	shell->env = parse_env(environ);
 	shell->exec_hashtable = make_def_hashtable();
 	if ((shell->builtins = build_builtin_tab()) == NULL)
