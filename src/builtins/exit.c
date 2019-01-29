@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 14:13:52 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 17:16:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 10:27:55 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	builtin_exit(t_shell *shell, int argc, char **argv)
 
 	status = 0;
 	if (argc > 2)
-		ft_dprintf(2, "%s: %s: too many arguments.\n");
+		ft_dprintf(2, "%s: %s: Too many arguments\n", ERR_PREFIX, argv[0]);
 	else
 	{
 		if (argc > 1)
@@ -31,7 +31,7 @@ int	builtin_exit(t_shell *shell, int argc, char **argv)
 			if (*endptr != '\0')
 			{
 				status = 255;
-				ft_dprintf(2, "%s: %s: %s: numeric argument required\n"
+				ft_dprintf(2, "%s: %s: %s: Numeric argument required\n"
 						, ERR_PREFIX, argv[0], argv[1]);
 			}
 		}
