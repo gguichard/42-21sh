@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 10:16:58 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 14:18:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 13:47:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ static int	history_copy(t_shell *shell, t_term *term, const char *line)
 	size_t	len;
 	char	*dup;
 
-	if (line == NULL)
-		return (0);
-	dup = ft_strdup(line);
-	if (dup == NULL)
+	if (line == NULL || (dup = ft_strdup(line)) == NULL)
 		return (0);
 	ft_strdel(&(term->line));
 	len = ft_strlen(dup);
@@ -70,4 +67,31 @@ int			history_down(t_shell *shell, t_term *term)
 	if (should_free)
 		free((char *)line);
 	return (ret);
+}
+
+int			history_search(t_shell *shell, t_term *term)
+{
+	t_history	*elem;
+
+	if (term->def_line == NULL)
+		term->def_line = ft_strdup(term->line);
+	if (term->def_line == NULL)
+		return (0);
+	elem = shell->history_off;
+	if (elem != NULL)
+		elem = elem->prev;
+	if (elem == NULL)
+		elem = shell->history;
+	while (elem != NULL)
+	{
+		if (ft_strncmp(elem->content, term->def_line
+					, ft_strlen(term->def_line)) == 0)
+			break ;
+		elem = elem->prev;
+	}
+	shell->history_off = elem;
+	if (elem == NULL)
+		return (0);
+	history_copy(shell, term, elem->content);
+	return (1);
 }

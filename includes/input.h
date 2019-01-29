@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 13:50:06 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 13:55:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define BELL_KEY 7
 # define BACKSPACE_KEY 8
 # define FORM_FEED_KEY 12
+# define CTRL_R_KEY 18
 # define DELETE_KEY 127
 # define ESC_SEQ_LEFT "\033[D"
 # define ESC_SEQ_RIGHT "\033[C"
@@ -36,7 +37,6 @@
 # define ESC_SHIFT_UP "\033[1;2A"
 # define ESC_SHIFT_DOWN "\033[1;2B"
 # define ESC_FN_F1 "\033OP"
-# define ESC_NL "\033\n"
 
 typedef struct	s_seq
 {
@@ -126,7 +126,6 @@ int				move_cursor_down(t_shell *shell, t_term *term);
 /*
 ** MISC HOOKS.
 */
-int				handle_new_line(t_shell *shell, t_term *term);
 int				handle_screen_clear(t_shell *shell, t_term *term);
 int				handle_bell(t_shell *shell, t_term *term);
 

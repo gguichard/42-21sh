@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 13:48:47 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 13:53:53 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "shell.h"
 #include "input.h"
 #include "utils.h"
+#include "history.h"
 
 void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 		, t_str_cmd_inf *scmd)
@@ -93,6 +94,8 @@ int				handle_key(t_shell *shell, t_term *term, char key)
 		return (handle_eot_key(shell, term) ? -1 : 1);
 	else if (key == BACKSPACE_KEY || key == DELETE_KEY)
 		ret = handle_bs_key(shell, term);
+	else if (key == CTRL_R_KEY)
+		ret = history_search(shell, term);
 	else if (key == '\t')
 		ret = handle_ac(shell, term);
 	else if (key == '\n')

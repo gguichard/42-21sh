@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 09:50:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/09 20:45:51 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 13:37:47 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ const char	*peek_history_next(t_shell *shell);
 */
 int			history_up(t_shell *shell, t_term *term);
 int			history_down(t_shell *shell, t_term *term);
+int			history_search(t_shell *shell, t_term *term);
 
 #endif

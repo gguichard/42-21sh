@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 23:48:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 13:57:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 void	reset_cmdline(t_shell *shell, t_prompt prompt)
 {
+	ft_strdel(&(shell->term.def_line));
 	if (shell->term.legacy_mode)
 		ft_strdel(&(shell->term.line));
 	if (shell->term.line != NULL)
