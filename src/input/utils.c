@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/15 10:52:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/16 15:59:39 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 16:54:57 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static size_t	get_col_offset(t_term *term, size_t *index_ptr)
 	row = 0;
 	col = term->offset;
 	index = 0;
-	while (row < term->row)
+	while (index < term->size && row < term->row)
 	{
 		if ((col + 1) % term->winsize.ws_col != 0
 				&& (term->line)[index] != '\n')
