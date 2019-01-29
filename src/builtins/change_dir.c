@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:13:49 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 17:45:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 09:48:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include "shell.h"
 #include "vars.h"
 #include "options.h"
+#include "error.h"
+#include "check_path.h"
 #include "builtins.h"
 
 static t_opts	*cd_get_opts(int argc, char **argv)
@@ -92,9 +94,11 @@ static char		*get_cur_path(t_shell *shell, t_opts *opts, int argc
 	return (cur_path);
 }
 
-static int		change_dir(t_shell *shell, const char *cur_path)
+static int		change_dir(t_shell *shell, const char *cur_path, char **argv)
 {
-	t_var	*pwd;
+	t_var		*pwd;
+	t_error		error;
+	const char	*def_path;
 
 	if (chdir(cur_path) == 0)
 	{
@@ -103,6 +107,11 @@ static int		change_dir(t_shell *shell, const char *cur_path)
 		update_var(&(shell->env), "PWD", cur_path);
 		return (0);
 	}
+	error = check_dir_rights(cur_path, X_OK);
+	def_path = argv[1];
+	if (def_path == NULL)
+		def_path = cur_path;
+	ft_dprintf(2, "%s: %s: %s\n", argv[0], def_path, error_to_str(error));
 	return (1);
 }
 
@@ -123,7 +132,7 @@ int				builtin_cd(t_shell *shell, int argc, char **argv)
 	}
 	else
 	{
-		ret = change_dir(shell, cur_path);
+		ret = change_dir(shell, cur_path, argv);
 		if (ret == 0 && opts->index < argc && ft_strequ(argv[opts->index], "-"))
 			ft_printf("%s\n", cur_path);
 		free(cur_path);
