@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:03:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 18:27:23 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,50 @@
 #include "shell.h"
 #include "vars.h"
 
+static size_t	write_pwd_with_home_replaced(t_shell *shell)
+{
+	t_var	*pwd;
+	char	*home;
+	char	*tmp;
+	size_t	len;
+
+	pwd = get_var(shell->env, "PWD");
+	if (pwd == NULL)
+		return (write(STDOUT_FILENO, "unknown", 7));
+	home = get_shell_var(shell, "HOME");
+	tmp = NULL;
+	if (home != NULL)
+	{
+		tmp = ft_strstr(pwd->value, home);
+		if (tmp == NULL || tmp != pwd->value)
+		{
+			free(home);
+			return (write(STDOUT_FILENO, pwd->value, ft_strlen(pwd->value)));
+		}
+		tmp += ft_strlen(home);
+		free(home);
+	}
+	len = 0;
+	len += write(STDOUT_FILENO, "~", 1);
+	if (*tmp != '\0')
+		len += write(STDOUT_FILENO, tmp, ft_strlen(tmp));
+	return (len);
+}
+
 static size_t	print_def_prompt(t_shell *shell)
 {
 	size_t	len;
 	t_var	*user;
-	t_var	*pwd;
 
 	len = 0;
 	user = get_var(shell->env, "USER");
-	pwd = get_var(shell->env, "PWD");
 	write(STDOUT_FILENO, "\033[33;1m", 7);
 	len += write(STDOUT_FILENO, user == NULL ? "guest" : user->value
 			, user == NULL ? 5 : ft_strlen(user->value));
 	write(STDOUT_FILENO, "\033[0m", 4);
 	len += write(STDOUT_FILENO, " ", 1);
 	write(STDOUT_FILENO, "\033[34;1m", 7);
-	len += write(STDOUT_FILENO, pwd == NULL ? "unknown" : pwd->value
-			, pwd == NULL ? 7 : ft_strlen(pwd->value));
+	len += write_pwd_with_home_replaced(shell);
 	write(STDOUT_FILENO, "\033[0m", 4);
 	len += write(STDOUT_FILENO, " > ", 3);
 	return (len);
