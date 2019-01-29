@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 11:32:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 11:35:54 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static int		exec_pipe(t_shell *shell, t_pipe *pipe)
 {
 	t_error		error;
 	char		**arg_tab;
+	int			ret;
 	size_t		idx;
 	char		*bin_path;
 
@@ -57,23 +58,21 @@ static int		exec_pipe(t_shell *shell, t_pipe *pipe)
 					, pipe->cmd_inf->arg_lst->content))
 		{
 			setup_redirections(pipe->cmd_inf);
-			shell->last_status = shell->builtins[idx].builtin_fun(shell
+			ret = shell->builtins[idx].builtin_fun(shell
 					, ft_lstsize(pipe->cmd_inf->arg_lst), arg_tab);
 			reset_redirections(pipe->cmd_inf);
-			break ;
+			free(arg_tab);
+			exit(ret);
 		}
 		++idx;
 	}
-	if (shell->builtins[idx].name == NULL)
-	{
-		bin_path = get_cmd_inf_path(shell, pipe->cmd_inf, &error);
-		if (error != ERRC_NOERROR)
-			ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
-					, pipe->cmd_inf->arg_lst->content, error_to_str(error));
-		else
-			child_exec_cmd_inf(shell, pipe->cmd_inf, bin_path, arg_tab);
-		free(bin_path);
-	}
+	bin_path = get_cmd_inf_path(shell, pipe->cmd_inf, &error);
+	if (error == ERRC_NOERROR)
+		child_exec_cmd_inf(shell, pipe->cmd_inf, bin_path, arg_tab);
+	else
+		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
+				, pipe->cmd_inf->arg_lst->content, error_to_str(error));
+	free(bin_path);
 	free(arg_tab);
 	return (1);
 }
