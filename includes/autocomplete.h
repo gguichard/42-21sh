@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 08:37:55 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 10:18:33 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct		s_ac_suff_inf
 */
 size_t				count_same_char(const char *str1, const char *str2);
 
-void				strlist_insert_sort(t_list **lst, t_list *elem);
+int					strlist_insert_sort(t_list **lst, t_list *elem);
 
 /*
 ** Remplie le t_ac_suff_inf avec les informations pour autocompleter depuis
