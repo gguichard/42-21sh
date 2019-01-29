@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 16:19:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 16:31:26 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:47:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int		delete_hashentries(t_hashtable *hashtable)
 			delete_hashentry(hashtable, (t_hashentry*)cur_bucket->content);
 			cur_bucket = cur_bucket->next;
 		}
+		hashtable->buckets[bucket_idx] = NULL;
 		++bucket_idx;
 	}
 	return (0);
