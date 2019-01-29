@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 12:18:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 12:59:17 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char		*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
 		bin_path = search_binary(shell, name, error);
 	else
 	{
-		if ((bin_path = ft_strdup(name)) != NULL)
+		if ((bin_path = ft_strdup(name)) == NULL)
 		{
 			*error = ERRC_UNEXPECTED;
 			return (NULL);
