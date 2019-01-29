@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 11:37:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 15:34:13 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 #include "vars.h"
 #include "builtins.h"
 
-t_shell		*g_shell = NULL;
+t_shell				*g_shell = NULL;
 
 static t_builtin	*build_builtin_tab(void)
 {
 	t_builtin	*new_tab;
 
-	if ((new_tab = (t_builtin*)malloc(sizeof(t_builtin) * 4)) == NULL)
+	if ((new_tab = (t_builtin*)malloc(sizeof(t_builtin) * 7)) == NULL)
 		return (NULL);
 	new_tab[0].name = "echo";
 	new_tab[0].builtin_fun = builtin_echo;
@@ -32,8 +32,14 @@ static t_builtin	*build_builtin_tab(void)
 	new_tab[1].builtin_fun = builtin_cd;
 	new_tab[2].name = "exit";
 	new_tab[2].builtin_fun = builtin_exit;
-	new_tab[3].name = NULL;
-	new_tab[3].builtin_fun = NULL;
+	new_tab[3].name = "env";
+	new_tab[3].builtin_fun = builtin_env;
+	new_tab[4].name = "unsetenv";
+	new_tab[4].builtin_fun = builtin_unsetenv;
+	new_tab[5].name = "setenv";
+	new_tab[5].builtin_fun = builtin_setenv;
+	new_tab[6].name = NULL;
+	new_tab[6].builtin_fun = NULL;
 	return (new_tab);
 }
 

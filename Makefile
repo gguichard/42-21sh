@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/29 13:50:33 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/29 15:31:46 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC		=	main.c signals.c \
 			misc/error.c misc/check_path.c misc/hashtable.c \
 			misc/hashtable_utils.c misc/convert_path_to_tab.c misc/utils.c \
 			builtins/change_dir.c builtins/exit.c builtins/echo.c \
+			builtins/env.c builtins/unsetenv.c builtins/setenv.c \
 			builtins/cd_utils.c \
 			parser/join_token_cmd.c parser/join_token_cmd_redirect.c \
 			parser/join_token_cmd_utils.c \
