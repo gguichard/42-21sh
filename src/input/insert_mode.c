@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 14:01:25 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:37:29 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 				, shell, scmd);
 		++curr;
 	}
-	if (result->suff_type == ACS_TYPE_FILE && is_at_end_of_cmd)
+	if (result->suff_type == ACS_TYPE_VAR_IN_BRACKETS)
+		insert_cmdline(shell, term, '}');
+	if (is_at_end_of_cmd && (result->suff_type == ACS_TYPE_FILE
+				|| result->suff_type == ACS_TYPE_VAR_IN_BRACKETS))
 	{
 		if (scmd->is_in_quote)
 			insert_cmdline(shell, term, '\'');
@@ -51,7 +54,7 @@ int				handle_ac(t_shell *shell, t_term *term)
 
 	if ((real_line = init_scmd_with_realline(&scmd, term)) == NULL)
 		return (0);
-	result = autocomplete_cmdline(&scmd, shell, shell->builtins);
+	result = autocomplete_cmdline(&scmd, shell);
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{
 		scmd_delete(scmd.sub_var_bracket);

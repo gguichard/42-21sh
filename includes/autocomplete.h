@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 10:18:33 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 17:32:42 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef enum		e_ac_suff_type
 {
 	ACS_TYPE_NOTHING,
 	ACS_TYPE_DIR,
+	ACS_TYPE_VAR_IN_BRACKETS,
 	ACS_TYPE_FILE
 }					t_ac_suff_type;
 
@@ -107,8 +108,9 @@ void				*delete_ac_suff_inf(t_ac_suff_inf *acs);
 t_ac_suff_inf		*autocomplete_word(t_shell *shell, const char *word
 		, int is_a_cmd, t_builtin *builtin_tab);
 
-t_ac_suff_inf		*autocomplete_cmdline(t_str_cmd_inf *scmd, t_shell *shell
-		, t_builtin *builtins);
+t_ac_suff_inf		*autocomplete_var(t_shell *shell, const char *word);
+
+t_ac_suff_inf		*autocomplete_cmdline(t_str_cmd_inf *scmd, t_shell *shell);
 
 /*
 ** Retourne 1 si le fichier present dans le t_ac_rdir_inf peut etre une

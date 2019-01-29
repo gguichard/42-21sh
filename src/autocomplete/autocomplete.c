@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 08:55:12 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 16:08:47 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "libft.h"
 #include "convert_path_to_tab.h"
 #include "shell.h"
+#include "vars.h"
 #include "autocomplete.h"
 
 /*
@@ -63,15 +64,8 @@ static char		*build_path_to_file(const char *path, const char *file)
 static void		check_for_builtin_ac(const char *word, t_ac_rdir_inf *acrd
 		, t_ac_suff_inf *acs, t_builtin *builtin_tab)
 {
-	char	*word_cpy;
-
-	if ((word_cpy = ft_strdup(word)) == NULL)
+	if (!init_ac_rdir(word, acrd, 1, 0))
 		return ;
-	if (!init_ac_rdir(word_cpy, acrd, 1, 0))
-	{
-		free(word_cpy);
-		return ;
-	}
 	ft_bzero(&(acrd->stat_buf), sizeof(struct stat));
 	acrd->force_exec_type = 1;
 	while (builtin_tab->name != NULL)
@@ -83,7 +77,6 @@ static void		check_for_builtin_ac(const char *word, t_ac_rdir_inf *acrd
 	}
 	acrd->force_exec_type = 0;
 	delete_ac_rdir(acrd);
-	free(word_cpy);
 }
 
 /*
@@ -133,6 +126,41 @@ t_ac_suff_inf	*autocomplete_word(t_shell *shell, const char *word
 				autocomplete_cmd(word, path_tab, builtin_tab, acs);
 			ft_strtab_free(path_tab);
 		}
+		if (acs->suff != NULL)
+			return (acs);
+	}
+	return (delete_ac_suff_inf(acs));
+}
+
+void			check_for_var_ac(const char *word, t_ac_rdir_inf *acrd
+		, t_ac_suff_inf *acs, t_list *var_lst)
+{
+	if (!init_ac_rdir(word, acrd, 1, 0))
+		return ;
+	ft_bzero(&(acrd->stat_buf), sizeof(struct stat));
+	acrd->force_exec_type = 1;
+	while (var_lst != NULL)
+	{
+		acrd->cur_file_name = ((t_var*)var_lst->content)->key;
+		if (!try_ac_for_this_file(acrd, acs))
+			break ;
+		var_lst = var_lst->next;
+	}
+	acrd->force_exec_type = 0;
+	delete_ac_rdir(acrd);
+}
+
+t_ac_suff_inf	*autocomplete_var(t_shell *shell, const char *word)
+{
+	t_ac_suff_inf	*acs;
+	t_ac_rdir_inf	acrd;
+
+	if ((acs = (t_ac_suff_inf*)malloc(sizeof(t_ac_suff_inf))) == NULL)
+		return (NULL);
+	if (init_ac_suff_inf(acs))
+	{
+		check_for_var_ac(word, &acrd, acs, shell->env);
+		check_for_var_ac(word, &acrd, acs, shell->local);
 		if (acs->suff != NULL)
 			return (acs);
 	}
