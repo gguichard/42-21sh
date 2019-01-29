@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 10:03:17 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 13:56:36 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:16:51 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@ static void		handle_signal(int sig)
 		{
 			move_cursor_end(g_shell, &(g_shell->term));
 			ft_putchar('\n');
-			ft_strdel(&(g_shell->term.prev_lines));
 			if (g_shell->term.visual_mode)
 				vm_toggle(g_shell, &(g_shell->term));
-			reset_cmdline(g_shell, PROMPT_DEF);
+			reset_cmdline(g_shell, g_shell->term.prompt);
 		}
 	}
 }
