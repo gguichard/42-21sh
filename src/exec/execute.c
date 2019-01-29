@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:37:35 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 20:00:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int			try_execute_builtin(t_shell *shell, t_cmd_inf *cmd_inf
 	{
 		if (ft_strequ(shell->builtins[idx].name, cmd_inf->arg_lst->content))
 		{
-			setup_redirections(cmd_inf);
+			if (!setup_redirections(cmd_inf))
+				return (1);
 			ret = shell->builtins[idx].builtin_fun(shell
 					, ft_lstsize(cmd_inf->arg_lst), arg_tab);
 			reset_redirections(cmd_inf);
