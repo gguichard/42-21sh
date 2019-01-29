@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 00:08:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 16:36:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,57 +15,48 @@
 #include "shell.h"
 #include "vars.h"
 
-static char	*get_default_prompt(t_shell *shell)
+static size_t	print_def_prompt(t_shell *shell)
 {
-	char	*prompt;
-	char	*tmp;
+	size_t	len;
+	t_var	*user;
+	t_var	*pwd;
 
-	prompt = ft_strjoin_free(get_shell_var(shell, "USER"), ":");
-	tmp = get_shell_var(shell, "PWD");
-	prompt = ft_strjoin_free(prompt, tmp);
-	free(tmp);
-	prompt = ft_strjoin_free(prompt, "% ");
-	return (prompt);
+	len = 0;
+	user = get_var(shell->env, "USER");
+	pwd = get_var(shell->env, "PWD");
+	len += write(STDOUT_FILENO, user == NULL ? "guest" : user->value
+			, user == NULL ? 5 : ft_strlen(user->value));
+	write(STDOUT_FILENO, " ", 1);
+	len += write(STDOUT_FILENO, pwd == NULL ? "unknown" : pwd->value
+			, pwd == NULL ? 7 : ft_strlen(pwd->value));
+	len += write(STDOUT_FILENO, " > ", 3);
+	return (len);
 }
 
-static char	*get_prompt_with_type(t_shell *shell)
+static size_t	print_prompt_with_type(t_shell *shell)
 {
-	char	*prompt;
+	char	*str;
 
-	prompt = NULL;
+	str = "";
 	if (shell->term.prompt == PROMPT_ESCAPED)
-		prompt = ft_strdup("> ");
+		str = "> ";
 	else if (shell->term.prompt == PROMPT_QUOTE)
-		prompt = ft_strdup("quote> ");
+		str = "quote> ";
 	else if (shell->term.prompt == PROMPT_DQUOTE)
-		prompt = ft_strdup("dquote> ");
+		str = "dquote> ";
 	else if (shell->term.prompt == PROMPT_HEREDOC)
-		prompt = ft_strdup("heredoc> ");
+		str = "heredoc> ";
 	else if (shell->term.prompt == PROMPT_BRACKET)
-		prompt = ft_strdup("bracket> ");
+		str = "bracket> ";
 	else if (shell->term.prompt == PROMPT_OPE)
-		prompt = ft_strdup("pipe> ");
-	return (prompt);
+		str = "pipe> ";
+	return (write(STDOUT_FILENO, str, ft_strlen(str)));
 }
 
-void		show_prompt(t_shell *shell)
+void			show_prompt(t_shell *shell)
 {
-	char	*prompt;
-	char	*tmp;
-
-	prompt = (shell->term.prompt == PROMPT_DEF) ? get_default_prompt(shell)
-		: get_prompt_with_type(shell);
 	if (shell->term.visual_mode)
-	{
-		tmp = prompt;
-		prompt = ft_strjoin("(visual) ", prompt);
-		free(tmp);
-	}
-	if (prompt == NULL)
-		shell->term.offset = 0;
-	else
-	{
-		shell->term.offset = write(STDOUT_FILENO, prompt, ft_strlen(prompt));
-		free(prompt);
-	}
+		write(STDOUT_FILENO, "(visual) ", 9);
+	shell->term.offset = (shell->term.prompt == PROMPT_DEF)
+		? print_def_prompt(shell) : print_prompt_with_type(shell);
 }
