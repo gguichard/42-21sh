@@ -6,58 +6,16 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 08:03:18 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 13:48:47 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "str_cmd_inf.h"
 #include "shell.h"
 #include "input.h"
-#include "apply_escape.h"
-#include "vars.h"
 #include "utils.h"
 
-static void		add_char_and_escape_if_needed(char char_to_add
-		, int already_escaped, t_shell *shell, t_str_cmd_inf *scmd)
-{
-	if (char_to_add == '\0')
-		return ;
-	else if (!already_escaped)
-	{
-		if ((scmd_cur_char_is_in_nothing(scmd)
-					&& ft_strchr(" \t|<>;$\'\"\\", char_to_add) != NULL)
-				|| (scmd->is_in_doublequote
-					&& ft_strchr("$\"\\", char_to_add) != NULL))
-		{
-			insert_cmdline(shell, &(shell->term), '\\');
-			insert_cmdline(shell, &(shell->term), char_to_add);
-		}
-		else if (scmd_cur_char_is_in_nothing(scmd) && char_to_add == '\n')
-		{
-			insert_cmdline(shell, &(shell->term), '\'');
-			insert_cmdline(shell, &(shell->term), char_to_add);
-			insert_cmdline(shell, &(shell->term), '\'');
-		}
-		else if (scmd->is_in_quote && char_to_add == '\'')
-		{
-			insert_cmdline(shell, &(shell->term), '\'');
-			insert_cmdline(shell, &(shell->term), '\\');
-			insert_cmdline(shell, &(shell->term), char_to_add);
-			insert_cmdline(shell, &(shell->term), '\'');
-		}
-		else
-			insert_cmdline(shell, &(shell->term), char_to_add);
-	}
-	else if (char_to_add == '\n')
-	{
-		handle_bs_key(shell, &(shell->term));
-		add_char_and_escape_if_needed(char_to_add, 0, shell, scmd);
-	}
-	else
-		insert_cmdline(shell, &(shell->term), char_to_add);
-}
-
-void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
+void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 		, t_str_cmd_inf *scmd)
 {
 	char	*curr;
@@ -84,25 +42,15 @@ void	ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 		insert_cmdline(shell, term, '/');
 }
 
-int		handle_ac(t_shell *shell, t_term *term)
+int				handle_ac(t_shell *shell, t_term *term)
 {
 	t_ac_suff_inf	*result;
 	t_str_cmd_inf	scmd;
-	char			*line;
 	char			*real_line;
 
-	if ((line = get_command_line(term)) == NULL)
+	if ((real_line = init_scmd_with_realline(&scmd, term)) == NULL)
 		return (0);
-	line[ft_strlen(line) - (term->size - term->cursor)] = '\0';
-	if ((real_line = apply_only_newline_escape(line)) == NULL)
-	{
-		free(line);
-		return (0);
-	}
-	free(line);
-	scmd_init(&scmd, real_line);
-	result = autocomplete_cmdline(&scmd, shell
-			, shell->builtins);
+	result = autocomplete_cmdline(&scmd, shell, shell->builtins);
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{
 		scmd_delete(scmd.sub_var_bracket);
@@ -123,7 +71,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 	return (1);
 }
 
-int		handle_eot_key(t_shell *shell, t_term *term)
+int				handle_eot_key(t_shell *shell, t_term *term)
 {
 	(void)shell;
 	if (term->size == 0)
@@ -132,7 +80,7 @@ int		handle_eot_key(t_shell *shell, t_term *term)
 	return (0);
 }
 
-int		handle_key(t_shell *shell, t_term *term, char key)
+int				handle_key(t_shell *shell, t_term *term, char key)
 {
 	int	ret;
 	int	ac;

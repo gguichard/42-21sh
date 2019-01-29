@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/29 13:09:48 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/29 13:50:33 by fwerner          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME	=	21sh
 SRC_DIR	=	src
 SRC		=	main.c signals.c \
 			vars/env.c vars/vars.c vars/shell_vars.c \
-			term/setup.c term/prompt.c \
+			term/setup.c term/prompt.c input/insert_mode_utils.c \
 			input/input.c input/read.c input/multiline.c input/cmdline.c \
 			input/esc_sequence.c input/history.c input/history_hooks.c \
 			input/insert_mode.c input/insert_mode_ac.c input/visual_mode.c \
