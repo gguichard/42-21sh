@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 08:14:54 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 16:06:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ struct					s_shell
 	t_history			*history_off;
 	t_list				*fork_pids;
 };
+
+void					setup_def_vars(t_shell *shell);
 
 t_list					*parse_env(char **environ);
 void					setup_signals(void);

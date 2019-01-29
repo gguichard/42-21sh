@@ -6,12 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 15:34:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 16:10:08 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <limits.h>
 #include "shell.h"
 #include "input.h"
 #include "history.h"
@@ -43,35 +42,6 @@ static t_builtin	*build_builtin_tab(void)
 	return (new_tab);
 }
 
-static int			update_shlvl(t_shell *shell)
-{
-	t_var	*var;
-	long	shlvl;
-	char	*endptr;
-	char	*tmp;
-
-	var = get_var(shell->env, "SHLVL");
-	if (var == NULL)
-		shlvl = 0;
-	else
-	{
-		shlvl = ft_strtol(var->value, &endptr, 10);
-		if (*endptr != '\0' || shlvl < 0 || shlvl >= INT_MAX)
-		{
-			shlvl = 0;
-			ft_dprintf(2, "%s: warning: Wrong shell level, resetting to 1\n"
-					, ERR_PREFIX);
-		}
-	}
-	shlvl++;
-	tmp = ft_itoa((int)shlvl);
-	if (tmp == NULL)
-		return (0);
-	update_var(&(shell->env), "SHLVL", tmp);
-	free(tmp);
-	return (1);
-}
-
 static int			init_shell(t_shell *shell, int argc, char **argv
 		, char **environ)
 {
@@ -79,12 +49,11 @@ static int			init_shell(t_shell *shell, int argc, char **argv
 	shell->argc = argc;
 	shell->argv = argv;
 	shell->env = parse_env(environ);
-	if (!update_shlvl(shell))
-		return (0);
 	shell->exec_hashtable = make_def_hashtable();
 	if ((shell->builtins = build_builtin_tab()) == NULL)
 		return (0);
 	setup_signals();
+	setup_def_vars(shell);
 	return (1);
 }
 

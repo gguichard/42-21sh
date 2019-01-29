@@ -6,14 +6,14 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/29 15:31:46 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/29 16:08:54 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	21sh
 
 SRC_DIR	=	src
-SRC		=	main.c signals.c \
+SRC		=	main.c misc/signals.c vars/def_vars.c \
 			vars/env.c vars/vars.c vars/shell_vars.c \
 			term/setup.c term/prompt.c input/insert_mode_utils.c \
 			input/input.c input/read.c input/multiline.c input/cmdline.c \
