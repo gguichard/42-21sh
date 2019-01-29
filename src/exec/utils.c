@@ -6,15 +6,63 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 12:09:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 12:18:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:49:51 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
+#include "check_path.h"
 #include "execute.h"
 
-char	**arg_lst_to_tab(t_list *arg_lst)
+static char	*get_bin_path(t_shell *shell, char *value, t_error *error)
+{
+	char	*bin_path;
+
+	bin_path = NULL;
+	if (!ft_strchr(value, '/'))
+		bin_path = search_binary(shell, value, error);
+	else
+	{
+		*error = check_file_rights(value, FT_FILE, X_OK);
+		if (*error == ERRC_NOERROR && (bin_path = ft_strdup(value)) == NULL)
+		{
+			*error = ERRC_UNEXPECTED;
+			return (NULL);
+		}
+	}
+	return (bin_path);
+}
+
+char		*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
+		, t_error *error)
+{
+	char		*name;
+	t_hashentry	*hashentry;
+	char		*bin_path;
+
+	*error = ERRC_NOERROR;
+	name = (char *)(cmd_inf->arg_lst->content);
+	hashentry = NULL;
+	if (shell->exec_hashtable == NULL
+			|| (hashentry = get_hashentry(shell->exec_hashtable, name)) == NULL)
+		bin_path = get_bin_path(shell, name, error);
+	else
+	{
+		if ((bin_path = ft_strdup(hashentry->value)) == NULL)
+		{
+			*error = ERRC_UNEXPECTED;
+			return (NULL);
+		}
+		*error = check_file_rights(bin_path, FT_FILE, X_OK);
+	}
+	if (bin_path != NULL && shell->exec_hashtable != NULL && hashentry == NULL)
+		add_hashentry(shell->exec_hashtable, name, bin_path
+				, ft_strlen(bin_path) + 1);
+	return (bin_path);
+}
+
+char		**arg_lst_to_tab(t_list *arg_lst)
 {
 	size_t	size;
 	t_list	*curr;

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 12:59:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:37:35 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,39 +15,9 @@
 #include "libft.h"
 #include "cmd_inf.h"
 #include "join_token_cmd.h"
-#include "check_path.h"
 #include "vars.h"
 #include "builtins.h"
 #include "execute.h"
-
-char		*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
-		, t_error *error)
-{
-	char		*name;
-	t_hashentry	*hashentry;
-	char		*bin_path;
-
-	*error = ERRC_NOERROR;
-	name = (char *)(cmd_inf->arg_lst->content);
-	if (shell->exec_hashtable != NULL
-			&& (hashentry = get_hashentry(shell->exec_hashtable, name)) != NULL)
-		return (ft_strdup((char *)hashentry->value));
-	if (!ft_strchr(name, '/'))
-		bin_path = search_binary(shell, name, error);
-	else
-	{
-		if ((bin_path = ft_strdup(name)) == NULL)
-		{
-			*error = ERRC_UNEXPECTED;
-			return (NULL);
-		}
-		*error = check_file_rights(bin_path, FT_FILE, X_OK);
-	}
-	if (bin_path != NULL && shell->exec_hashtable != NULL)
-		add_hashentry(shell->exec_hashtable, name, bin_path
-				, ft_strlen(bin_path) + 1);
-	return (bin_path);
-}
 
 void		child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 		, const char *bin_path, char **args)

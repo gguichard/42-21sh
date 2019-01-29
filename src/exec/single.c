@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 18:18:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 12:02:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:52:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,18 @@ void		execute_single_cmd(t_shell *shell, t_cmd_inf *cmd_inf)
 {
 	t_error	error;
 	char	*bin_path;
-	char	**args;
+	char	**arg_tab;
 
 	bin_path = get_cmd_inf_path(shell, cmd_inf, &error);
 	if (error != ERRC_NOERROR)
-	{
 		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
 				, cmd_inf->arg_lst->content, error_to_str(error));
-		return ;
+	else
+	{
+		arg_tab = arg_lst_to_tab(cmd_inf->arg_lst);
+		if (arg_tab != NULL)
+			single_fork(shell, cmd_inf, bin_path, arg_tab);
+		free(arg_tab);
 	}
-	args = arg_lst_to_tab(cmd_inf->arg_lst);
-	if (args != NULL)
-		single_fork(shell, cmd_inf, bin_path, args);
 	free(bin_path);
-	free(args);
 }
