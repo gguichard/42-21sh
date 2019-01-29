@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/01/03 13:31:22 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/29 16:24:02 by fwerner          ###   ########.fr        #
+#    Updated: 2019/01/29 16:32:59 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC		=	main.c misc/signals.c vars/def_vars.c \
 			exec/single.c exec/pipeline.c exec/pipe_utils.c \
 			exec/redirections.c exec/redir_output.c exec/redir_input.c \
 			exec/redir_utils.c exec/heredoc.c \
+			parser/cmd_inf.c parser/redirect_inf.c \
 			parser/split_cmd_token.c parser/split_cmd_token_utils.c \
 			parser/split_cmd_token_add.c parser/str_cmd_inf.c \
 			parser/str_cmd_inf_utils.c \
@@ -40,7 +41,6 @@ SRC		=	main.c misc/signals.c vars/def_vars.c \
 			builtins/cd_utils.c \
 			parser/join_token_cmd.c parser/join_token_cmd_redirect.c \
 			parser/join_token_cmd_utils.c \
-			cmd_inf.c redirect_inf.c \
 			vars/expand_vars.c vars/expand_vars_utils.c
 
 OBJ_DIR	=	.obj

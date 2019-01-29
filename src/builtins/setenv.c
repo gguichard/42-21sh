@@ -6,12 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 15:00:41 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 15:39:56 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 16:32:00 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 #include "vars.h"
+#include "hashtable.h"
 #include "builtins.h"
 
 static int	is_valid_identifier(const char *key)
@@ -30,6 +31,16 @@ static int	is_valid_identifier(const char *key)
 	return (1);
 }
 
+static int	update_env_var(t_shell *shell, const char *key, const char *value)
+{
+	if (!is_valid_identifier(key))
+		return (0);
+	if (ft_strequ("PATH", key))
+		delete_hashentries(shell->exec_hashtable);
+	update_var(&(shell->env), key, value);
+	return (1);
+}
+
 int			builtin_setenv(t_shell *shell, int argc, char **argv)
 {
 	int		index;
@@ -44,13 +55,10 @@ int			builtin_setenv(t_shell *shell, int argc, char **argv)
 		if (tmp != NULL)
 		{
 			*tmp = '\0';
-			if (is_valid_identifier(argv[index]))
-				update_var(&(shell->env), argv[index], tmp + 1);
-			else
+			if (!update_env_var(shell, argv[index], tmp + 1))
 			{
 				ret = 1;
-				*tmp = '=';
-				ft_dprintf(2, "%s: %s: %s: Not a valid identifier\n"
+				ft_dprintf(2, "%s: %s: `%s': Not a valid identifier\n"
 						, ERR_PREFIX, argv[0], argv[index]);
 			}
 		}

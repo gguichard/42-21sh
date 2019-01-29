@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 16:19:31 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 16:24:30 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 16:31:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "hashtable.h"
 
-int		delete_all_hashentry(t_hashtable *hashtable)
+int		delete_hashentries(t_hashtable *hashtable)
 {
 	size_t	bucket_idx;
 	t_list	*cur_bucket;

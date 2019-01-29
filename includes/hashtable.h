@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:58:47 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 16:19:21 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 16:31:20 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,6 @@ int				delete_hashentry(t_hashtable *hashtable, t_hashentry *entry);
 /*
 ** Free toutes les hashentry de la hashtable. Retourne toujours 0.
 */
-int				delete_all_hashentry(t_hashtable *hashtable);
+int				delete_hashentries(t_hashtable *hashtable);
 
 #endif
