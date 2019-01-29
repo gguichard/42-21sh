@@ -6,11 +6,12 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 14:54:51 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 08:55:12 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <sys/stat.h>
 #include "libft.h"
 #include "convert_path_to_tab.h"
 #include "shell.h"
@@ -59,23 +60,30 @@ static char		*build_path_to_file(const char *path, const char *file)
 ** commande builtin.
 */
 
-static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs
-		, t_builtin **builtin_tab)
+static void		check_for_builtin_ac(const char *word, t_ac_rdir_inf *acrd
+		, t_ac_suff_inf *acs, t_builtin *builtin_tab)
 {
-	while (*builtin_tab != NULL)
+	char	*word_cpy;
+
+	if ((word_cpy = ft_strdup(word)) == NULL)
+		return ;
+	if (!init_ac_rdir(word_cpy, acrd, 1, 0))
 	{
-		acrd->cur_file_name = (*builtin_tab)->name;
-		if (ft_strnequ(acrd->cur_file_name, acrd->file_word
-					, acrd->file_word_len))
-		{
-			if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name
-						+ acrd->file_word_len, acs->suff, acs->suff_len))
-			{
-				build_ac_suff(acrd, acs, 1);
-			}
-		}
+		free(word_cpy);
+		return ;
+	}
+	ft_bzero(&(acrd->stat_buf), sizeof(struct stat));
+	acrd->force_exec_type = 1;
+	while (builtin_tab->name != NULL)
+	{
+		acrd->cur_file_name = builtin_tab->name;
+		if (!try_ac_for_this_file(acrd, acs))
+			break ;
 		++builtin_tab;
 	}
+	acrd->force_exec_type = 0;
+	delete_ac_rdir(acrd);
+	free(word_cpy);
 }
 
 /*
@@ -84,12 +92,12 @@ static void		check_for_builtin_ac(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs
 */
 
 static void		autocomplete_cmd(const char *word, char **path_tab
-		, t_builtin **builtin_tab, t_ac_suff_inf *acs)
+		, t_builtin *builtin_tab, t_ac_suff_inf *acs)
 {
 	t_ac_rdir_inf	acrd;
 	char			*real_word;
 
-	check_for_builtin_ac(&acrd, acs, builtin_tab);
+	check_for_builtin_ac(word, &acrd, acs, builtin_tab);
 	while (*path_tab != NULL)
 	{
 		if ((real_word = build_path_to_file(*path_tab, word)) == NULL
@@ -107,7 +115,7 @@ static void		autocomplete_cmd(const char *word, char **path_tab
 }
 
 t_ac_suff_inf	*autocomplete_word(t_shell *shell, const char *word
-		, int is_a_cmd, t_builtin **builtin_tab)
+		, int is_a_cmd, t_builtin *builtin_tab)
 {
 	t_ac_suff_inf	*acs;
 	char			**path_tab;

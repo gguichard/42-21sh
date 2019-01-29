@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 10:45:04 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 08:03:18 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int		handle_ac(t_shell *shell, t_term *term)
 	free(line);
 	scmd_init(&scmd, real_line);
 	result = autocomplete_cmdline(&scmd, shell
-			, &(shell->builtins));
+			, shell->builtins);
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
 	{
 		scmd_delete(scmd.sub_var_bracket);

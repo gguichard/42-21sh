@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 11:54:09 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 15:25:53 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 08:47:03 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		valid_file_for_ac(t_ac_rdir_inf *acrd)
 {
 	if (acrd->cur_file_name[0] != '.' || acrd->file_word[0] == '.')
 	{
-		if (!acrd->need_to_be_cmd
+		if (!acrd->need_to_be_cmd || acrd->force_exec_type
 				|| (acrd->can_be_dir && S_ISDIR(acrd->stat_buf.st_mode))
 				|| (S_ISREG(acrd->stat_buf.st_mode)
 					&& access(acrd->cur_file_path, X_OK) == 0))
@@ -44,10 +44,11 @@ t_list	*make_new_choice(t_ac_rdir_inf *acrd)
 
 	tmp_file_name_len = ft_strlen(acrd->cur_file_name);
 	if ((tmp_file_name = (char*)malloc(sizeof(char) * (1 + tmp_file_name_len
-					+ (S_ISDIR(acrd->stat_buf.st_mode) ? 1 : 0)))) == NULL)
+					+ (!acrd->force_exec_type
+						&& S_ISDIR(acrd->stat_buf.st_mode) ? 1 : 0)))) == NULL)
 		return (NULL);
 	ft_memcpy(tmp_file_name, acrd->cur_file_name, tmp_file_name_len + 1);
-	if (S_ISDIR(acrd->stat_buf.st_mode))
+	if (!acrd->force_exec_type && S_ISDIR(acrd->stat_buf.st_mode))
 	{
 		ft_memcpy(tmp_file_name + tmp_file_name_len, "/", 2);
 		++tmp_file_name_len;
@@ -86,6 +87,7 @@ int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
 	char	*last_slash;
 
 	acrd->need_to_be_cmd = need_to_be_cmd;
+	acrd->force_exec_type = 0;
 	acrd->can_be_dir = can_be_dir;
 	if ((last_slash = ft_strrchr(word, '/')) == NULL)
 		acrd->dir_to_use = ft_strdup("./");

@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 14:19:14 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 15:27:16 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 08:47:05 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int		try_ac_for_this_file(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 		if (acs->suff_len == -1 || !ft_strnequ(acrd->cur_file_name
 					+ acrd->file_word_len, acs->suff, acs->suff_len))
 		{
-			if (!build_ac_suff(acrd, acs, 0))
+			if (!build_ac_suff(acrd, acs, acrd->force_exec_type))
 			{
 				ft_memdel((void**)&(acrd->cur_file_path));
 				return (0);

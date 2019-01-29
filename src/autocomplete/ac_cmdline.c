@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:17:37 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 11:49:56 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 08:02:13 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void				process_token(t_token_inf *tk_inf,
 }
 
 static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd,
-		t_shell *shell, t_builtin **builtins)
+		t_shell *shell, t_builtin *builtins)
 {
 	char			*home_expanded_word;
 	char			*real_word;
@@ -58,7 +58,7 @@ static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd,
 }
 
 t_ac_suff_inf			*autocomplete_cmdline(t_str_cmd_inf *scmd,
-		t_shell *shell, t_builtin **builtins)
+		t_shell *shell, t_builtin *builtins)
 {
 	t_list			*all_tokens;
 	t_list			*cur_token;

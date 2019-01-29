@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 16:09:00 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 08:37:55 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct		s_ac_rdir_inf
 	struct stat		stat_buf;
 	int				need_to_be_cmd;
 	int				can_be_dir;
+	int				force_exec_type;
 }					t_ac_rdir_inf;
 
 typedef struct		s_ac_suff_inf
@@ -104,10 +105,10 @@ void				*delete_ac_suff_inf(t_ac_suff_inf *acs);
 ** false s'il peut etre un fichier quelconque.
 */
 t_ac_suff_inf		*autocomplete_word(t_shell *shell, const char *word
-		, int is_a_cmd, t_builtin **builtin_tab);
+		, int is_a_cmd, t_builtin *builtin_tab);
 
 t_ac_suff_inf		*autocomplete_cmdline(t_str_cmd_inf *scmd, t_shell *shell
-		, t_builtin **builtins);
+		, t_builtin *builtins);
 
 /*
 ** Retourne 1 si le fichier present dans le t_ac_rdir_inf peut etre une

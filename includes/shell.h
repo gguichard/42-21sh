@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 16:53:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 08:14:54 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # define ERR_PREFIX "21sh"
 # define MAX_ESC_SEQ_BYTES 8
 # define CMDLINE_DEF_CAPACITY 1024
+
+typedef struct s_shell	t_shell;
 
 typedef enum			e_prompt
 {
@@ -74,10 +76,10 @@ typedef struct			s_history
 typedef struct			s_builtin
 {
 	char				*name;
-	int					(*builtin_fun);
+	int					(*builtin_fun)(t_shell *, int, char **);
 }						t_builtin;
 
-typedef struct			s_shell
+struct					s_shell
 {
 	int					argc;
 	char				**argv;
@@ -90,7 +92,7 @@ typedef struct			s_shell
 	t_history			*history;
 	t_history			*history_off;
 	t_list				*fork_pids;
-}						t_shell;
+};
 
 t_list					*parse_env(char **environ);
 void					setup_signals(void);

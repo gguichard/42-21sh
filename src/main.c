@@ -6,18 +6,37 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 15:05:03 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 09:00:23 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "shell.h"
 #include "input.h"
 #include "history.h"
 #include "vars.h"
+#include "builtins.h"
 
 t_shell		*g_shell = NULL;
 
-static int	init_shell(t_shell *shell, int argc, char **argv
+static t_builtin	*build_builtin_tab(void)
+{
+	t_builtin	*new_tab;
+
+	if ((new_tab = (t_builtin*)malloc(sizeof(t_builtin) * 4)) == NULL)
+		return (NULL);
+	new_tab[0].name = "echo";
+	new_tab[0].builtin_fun = builtin_echo;
+	new_tab[1].name = "cd";
+	new_tab[1].builtin_fun = builtin_cd;
+	new_tab[2].name = "exit";
+	new_tab[2].builtin_fun = builtin_exit;
+	new_tab[3].name = NULL;
+	new_tab[3].builtin_fun = NULL;
+	return (new_tab);
+}
+
+static int			init_shell(t_shell *shell, int argc, char **argv
 		, char **environ)
 {
 	ft_memset(shell, 0, sizeof(t_shell));
@@ -25,11 +44,13 @@ static int	init_shell(t_shell *shell, int argc, char **argv
 	shell->argv = argv;
 	shell->env = parse_env(environ);
 	shell->exec_hashtable = make_def_hashtable();
+	if ((shell->builtins = build_builtin_tab()) == NULL)
+		return (0);
 	setup_signals();
 	return (1);
 }
 
-void		destroy_shell(t_shell *shell)
+void				destroy_shell(t_shell *shell)
 {
 	ft_lstdel(&(shell->env), free_var);
 	ft_lstdel(&(shell->local), free_var);
@@ -41,10 +62,11 @@ void		destroy_shell(t_shell *shell)
 		delete_hashtable(shell->exec_hashtable);
 		shell->exec_hashtable = NULL;
 	}
+	ft_memdel((void**)&(shell->builtins));
 	clear_history(shell);
 }
 
-int			main(int argc, char **argv, char **environ)
+int					main(int argc, char **argv, char **environ)
 {
 	t_shell	shell;
 
