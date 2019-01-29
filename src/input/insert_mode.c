@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 13:53:53 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 14:01:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ int				handle_key(t_shell *shell, t_term *term, char key)
 	}
 	if (!ret)
 		tputs(tgetstr("bl", NULL), 1, t_putchar);
-	if (ac && ac == term->ac_flag)
-		term->ac_flag = 0;
+	term->ac_flag = (ac && ac == term->ac_flag) ? 0 : term->ac_flag;
 	return (1);
 }
