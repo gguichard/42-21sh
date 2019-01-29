@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 08:57:59 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/27 17:52:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 17:12:05 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char			*apply_only_newline_escape(const char *str)
 	{
 		if (str_cmd_inf.str[str_cmd_inf.pos] == '\\'
 				&& str_cmd_inf.str[str_cmd_inf.pos + 1] == '\n'
-				&& !str_cmd_inf.is_in_quote && !str_cmd_inf.is_in_doublequote
+				&& !str_cmd_inf.is_in_quote
 				&& !scmd_cur_char_is_escaped(&str_cmd_inf))
 			remove_cur_char_from_scmd(&str_cmd_inf, new_str, &str_len, 1);
 		else
