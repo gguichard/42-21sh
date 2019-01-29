@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/28 14:35:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 11:32:35 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,44 @@ static t_list	*create_pipeline(t_cmd_inf *cmd_inf)
 	return (pipeline);
 }
 
-static pid_t	pipe_fork(t_shell *shell, t_list *curr, const char *bin_path
-		, char **args)
+static int		exec_pipe(t_shell *shell, t_pipe *pipe)
+{
+	t_error		error;
+	char		**arg_tab;
+	size_t		idx;
+	char		*bin_path;
+
+	if ((arg_tab = arg_lst_to_tab(pipe->cmd_inf->arg_lst)) == NULL)
+		return (0);
+	idx = 0;
+	while (shell->builtins[idx].name != NULL)
+	{
+		if (ft_strequ(shell->builtins[idx].name
+					, pipe->cmd_inf->arg_lst->content))
+		{
+			setup_redirections(pipe->cmd_inf);
+			shell->last_status = shell->builtins[idx].builtin_fun(shell
+					, ft_lstsize(pipe->cmd_inf->arg_lst), arg_tab);
+			reset_redirections(pipe->cmd_inf);
+			break ;
+		}
+		++idx;
+	}
+	if (shell->builtins[idx].name == NULL)
+	{
+		bin_path = get_cmd_inf_path(shell, pipe->cmd_inf, &error);
+		if (error != ERRC_NOERROR)
+			ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
+					, pipe->cmd_inf->arg_lst->content, error_to_str(error));
+		else
+			child_exec_cmd_inf(shell, pipe->cmd_inf, bin_path, arg_tab);
+		free(bin_path);
+	}
+	free(arg_tab);
+	return (1);
+}
+
+static pid_t	pipe_fork(t_shell *shell, t_list *curr)
 {
 	t_pipe	*pipe;
 	pid_t	pid;
@@ -68,34 +104,10 @@ static pid_t	pipe_fork(t_shell *shell, t_list *curr, const char *bin_path
 			close(pipe->out_fd);
 			close((((t_pipe *)curr->next->content)->fildes)[0]);
 		}
-		if (bin_path == NULL || args == NULL)
-			exit(127);
-		child_exec_cmd_inf(shell, pipe->cmd_inf, bin_path, args);
+		exec_pipe(shell, pipe);
+		exit(127);
 	}
 	return (pid);
-}
-
-static int		exec_pipe(t_shell *shell, t_list *curr)
-{
-	t_error		error;
-	t_pipe		*pipe;
-	char		*bin_path;
-	char		**args;
-
-	error = ERRC_NOERROR;
-	pipe = (t_pipe *)curr->content;
-	bin_path = get_cmd_inf_path(shell, pipe->cmd_inf, &error);
-	args = NULL;
-	if (error == ERRC_NOERROR
-			&& (args = arg_lst_to_tab(pipe->cmd_inf->arg_lst)) == NULL)
-		error = ERRC_UNEXPECTED;
-	if (error != ERRC_NOERROR)
-		ft_dprintf(2, "%s: %s: %s\n", ERR_PREFIX
-				, pipe->cmd_inf->arg_lst->content, error_to_str(error));
-	pipe_fork(shell, curr, bin_path, args);
-	free(bin_path);
-	free(args);
-	return (1);
 }
 
 static void		setup_pipes(t_shell *shell, t_list *pipeline)
@@ -117,7 +129,7 @@ static void		setup_pipes(t_shell *shell, t_list *pipeline)
 				next_pipe->in_fd = (next_pipe->fildes)[0];
 			}
 		}
-		if (curr_pipe->cmd_inf->arg_lst != NULL && !exec_pipe(shell, curr))
+		if (curr_pipe->cmd_inf->arg_lst != NULL && pipe_fork(shell, curr) < 0)
 		{
 			kill_forked_pids(shell);
 			break ;
