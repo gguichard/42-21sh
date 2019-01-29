@@ -6,14 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 12:09:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/21 12:12:37 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 12:18:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "shell.h"
-#include "execute.h"
 #include "libft.h"
+#include "execute.h"
 
 char	**arg_lst_to_tab(t_list *arg_lst)
 {

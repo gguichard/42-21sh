@@ -6,14 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 12:06:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 10:49:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 12:17:09 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
 #include "execute.h"
-#include "check_path.h"
 
 int	redirect_input(t_redirect_inf *redirect_inf)
 {
@@ -37,9 +36,7 @@ int	redirect_input(t_redirect_inf *redirect_inf)
 	}
 	if (fd < 0)
 		return (0);
-	dup2_with_rc(redirect_inf, fd
-			, redirect_inf->from_fd >= 0
-			? redirect_inf->from_fd : STDIN_FILENO);
+	dup2_with_rc(redirect_inf, fd, ft_max(STDIN_FILENO, redirect_inf->from_fd));
 	if (should_close)
 		close(fd);
 	return (1);

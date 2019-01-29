@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 11:06:39 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 12:18:23 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,16 @@ char		*get_cmd_inf_path(t_shell *shell, t_cmd_inf *cmd_inf
 	t_hashentry	*hashentry;
 	char		*bin_path;
 
+	*error = ERRC_NOERROR;
 	name = (char *)(cmd_inf->arg_lst->content);
-	if (shell->exec_hashtable != NULL)
-	{
-		if ((hashentry = get_hashentry(shell->exec_hashtable, name)) != NULL)
-			return (ft_strdup((char *)hashentry->value));
-	}
+	if (shell->exec_hashtable != NULL
+			&& (hashentry = get_hashentry(shell->exec_hashtable, name)) != NULL)
+		return (ft_strdup((char *)hashentry->value));
 	if (!ft_strchr(name, '/'))
 		bin_path = search_binary(shell, name, error);
 	else
 	{
-		if ((bin_path = ft_strdup(name)) == NULL)
+		if ((bin_path = ft_strdup(name)) != NULL)
 		{
 			*error = ERRC_UNEXPECTED;
 			return (NULL);
@@ -65,10 +64,32 @@ void		child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 	exit(0);
 }
 
+int			try_execute_builtin(t_shell *shell, t_cmd_inf *cmd_inf
+		, char **arg_tab)
+{
+	size_t	idx;
+	int		ret;
+
+	idx = 0;
+	while (shell->builtins[idx].name != NULL)
+	{
+		if (ft_strequ(shell->builtins[idx].name, cmd_inf->arg_lst->content))
+		{
+			setup_redirections(cmd_inf);
+			ret = shell->builtins[idx].builtin_fun(shell
+					, ft_lstsize(cmd_inf->arg_lst), arg_tab);
+			reset_redirections(cmd_inf);
+			return (ret);
+		}
+		++idx;
+	}
+	return (-1);
+}
+
 static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf)
 {
 	char	**arg_tab;
-	size_t	idx;
+	int		ret;
 
 	if (cmd_inf->pipe_cmd != NULL)
 		execute_pipeline(shell, cmd_inf);
@@ -76,20 +97,10 @@ static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf)
 	{
 		if ((arg_tab = arg_lst_to_tab(cmd_inf->arg_lst)) == NULL)
 			return ;
-		idx = 0;
-		while (shell->builtins[idx].name != NULL)
-		{
-			if (ft_strequ(shell->builtins[idx].name, cmd_inf->arg_lst->content))
-			{
-				setup_redirections(cmd_inf);
-				shell->last_status = shell->builtins[idx].builtin_fun(shell
-						, ft_lstsize(cmd_inf->arg_lst), arg_tab);
-				reset_redirections(cmd_inf);
-				break ;
-			}
-			++idx;
-		}
-		if (shell->builtins[idx].name == NULL)
+		ret = try_execute_builtin(shell, cmd_inf, arg_tab);
+		if (ret != -1)
+			shell->last_status = ret;
+		else
 			execute_single_cmd(shell, cmd_inf);
 		free(arg_tab);
 	}

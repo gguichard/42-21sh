@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 09:39:21 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 11:37:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static int			update_shlvl(t_shell *shell)
 		shlvl = 0;
 	else
 	{
-		endptr = "";
 		shlvl = ft_strtol(var->value, &endptr, 10);
 		if (*endptr != '\0' || shlvl < 0 || shlvl >= INT_MAX)
 		{
@@ -66,7 +65,6 @@ static int			update_shlvl(t_shell *shell)
 	free(tmp);
 	return (1);
 }
-
 
 static int			init_shell(t_shell *shell, int argc, char **argv
 		, char **environ)

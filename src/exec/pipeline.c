@@ -6,11 +6,10 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 11:35:54 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 12:13:47 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "libft.h"
@@ -43,28 +42,18 @@ static t_list	*create_pipeline(t_cmd_inf *cmd_inf)
 
 static int		exec_pipe(t_shell *shell, t_pipe *pipe)
 {
-	t_error		error;
 	char		**arg_tab;
 	int			ret;
-	size_t		idx;
+	t_error		error;
 	char		*bin_path;
 
 	if ((arg_tab = arg_lst_to_tab(pipe->cmd_inf->arg_lst)) == NULL)
 		return (0);
-	idx = 0;
-	while (shell->builtins[idx].name != NULL)
+	ret = try_execute_builtin(shell, pipe->cmd_inf, arg_tab);
+	if (ret != -1)
 	{
-		if (ft_strequ(shell->builtins[idx].name
-					, pipe->cmd_inf->arg_lst->content))
-		{
-			setup_redirections(pipe->cmd_inf);
-			ret = shell->builtins[idx].builtin_fun(shell
-					, ft_lstsize(pipe->cmd_inf->arg_lst), arg_tab);
-			reset_redirections(pipe->cmd_inf);
-			free(arg_tab);
-			exit(ret);
-		}
-		++idx;
+		free(arg_tab);
+		exit(ret);
 	}
 	bin_path = get_cmd_inf_path(shell, pipe->cmd_inf, &error);
 	if (error == ERRC_NOERROR)
@@ -84,25 +73,17 @@ static pid_t	pipe_fork(t_shell *shell, t_list *curr)
 
 	pipe = (t_pipe *)curr->content;
 	pid = fork();
-	if (pid < 0)
+	if (pid > 0)
+		ft_lstpush(&(shell->fork_pids), ft_lstnew(&(pid), sizeof(pid_t)));
+	else if (pid < 0)
+	{
+		kill_forked_pids(shell);
 		ft_dprintf(2, "%s: %s: Unable to fork\n", ERR_PREFIX
 				, pipe->cmd_inf->arg_lst->content);
-	else if (pid > 0)
-		ft_lstpush(&(shell->fork_pids), ft_lstnew(&(pid), sizeof(pid_t)));
+	}
 	else
 	{
-		if (!(pipe->is_leftmost) && pipe->in_fd != -1)
-		{
-			dup2(pipe->in_fd, STDIN_FILENO);
-			close(pipe->in_fd);
-			close((pipe->fildes)[1]);
-		}
-		if (!(pipe->is_rightmost) && pipe->out_fd != -1)
-		{
-			dup2(pipe->out_fd, STDOUT_FILENO);
-			close(pipe->out_fd);
-			close((((t_pipe *)curr->next->content)->fildes)[0]);
-		}
+		setup_pipe_redirections(curr);
 		exec_pipe(shell, pipe);
 		exit(127);
 	}
@@ -111,43 +92,36 @@ static pid_t	pipe_fork(t_shell *shell, t_list *curr)
 
 static void		setup_pipes(t_shell *shell, t_list *pipeline)
 {
-	t_list	*curr;
-	t_pipe	*curr_pipe;
+	t_pipe	*cur_pipe;
 	t_pipe	*next_pipe;
 
-	curr = pipeline;
-	while (curr != NULL)
+	while (pipeline != NULL)
 	{
-		curr_pipe = (t_pipe *)curr->content;
-		if (curr->next != NULL)
+		cur_pipe = (t_pipe *)pipeline->content;
+		if (pipeline->next != NULL)
 		{
-			next_pipe = (t_pipe *)curr->next->content;
+			next_pipe = (t_pipe *)pipeline->next->content;
 			if (pipe(next_pipe->fildes) == 0)
 			{
-				curr_pipe->out_fd = (next_pipe->fildes)[1];
+				cur_pipe->out_fd = (next_pipe->fildes)[1];
 				next_pipe->in_fd = (next_pipe->fildes)[0];
 			}
 		}
-		if (curr_pipe->cmd_inf->arg_lst != NULL && pipe_fork(shell, curr) < 0)
-		{
-			kill_forked_pids(shell);
+		if (cur_pipe->cmd_inf->arg_lst != NULL
+				&& pipe_fork(shell, pipeline) < 0)
 			break ;
-		}
-		if (!(curr_pipe->is_leftmost))
+		if (!(cur_pipe->is_leftmost))
 		{
-			close((curr_pipe->fildes)[0]);
-			close((curr_pipe->fildes)[1]);
+			close((cur_pipe->fildes)[0]);
+			close((cur_pipe->fildes)[1]);
 		}
-		curr = curr->next;
+		pipeline = pipeline->next;
 	}
 }
 
 void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf)
 {
 	t_list	*pipeline;
-	t_list	*curr;
-	t_list	*next;
-	int		status;
 
 	pipeline = create_pipeline(cmd_inf);
 	if (pipeline == NULL)
@@ -157,20 +131,9 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf)
 	}
 	setup_pipes(shell, pipeline);
 	ft_lstfree(&pipeline);
-	curr = shell->fork_pids;
-	if (curr == NULL)
+	if (shell->fork_pids == NULL)
 		shell->last_status = 127;
 	else
-	{
-		while (curr != NULL)
-		{
-			waitpid(*((pid_t *)curr->content), &status, 0);
-			next = curr->next;
-			free(curr->content);
-			free(curr);
-			curr = next;
-		}
-		shell->last_status = WEXITSTATUS(status);
-	}
+		wait_for_pipe_end(shell);
 	shell->fork_pids = NULL;
 }

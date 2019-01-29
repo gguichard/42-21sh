@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 11:06:15 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 12:12:17 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ typedef struct	s_pipe
 
 void			child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 		, const char *bin_path, char **args);
+int				try_execute_builtin(t_shell *shell, t_cmd_inf *cmd_inf
+		, char **arg_tab);
 void			execute_all(t_shell *shell, t_list *all_sub_cmd);
 void			execute_single_cmd(t_shell *shell, t_cmd_inf *cmd_inf);
 void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf);
@@ -49,13 +51,19 @@ char			**arg_lst_to_tab(t_list *arg_lst);
 int				dup2_with_rc(t_redirect_inf *redirect_inf, int from_fd
 		, int to_fd);
 int				close_with_rc(t_redirect_inf *redirect_inf, int fd);
+
 void			process_redir(t_shell *shell, t_cmd_inf *cmd_inf);
 void			prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf);
+
 int				setup_redirections(t_cmd_inf *cmd_inf);
 int				reset_redirections(t_cmd_inf *cmd_inf);
+
 int				redirect_output(t_redirect_inf *redirect_inf);
 int				redirect_input(t_redirect_inf *redirect_inf);
 int				redirect_heredoc(t_redirect_inf *redirect_inf);
+
+void			setup_pipe_redirections(t_list *cur);
+void			wait_for_pipe_end(t_shell *shell);
 
 /*
 ** COMMANDS.

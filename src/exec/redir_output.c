@@ -6,14 +6,13 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 11:58:43 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 10:58:38 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 12:17:01 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
 #include "execute.h"
-#include "check_path.h"
 
 static void	redirect_close_fd(t_redirect_inf *redirect_inf)
 {
