@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 16:37:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 16:44:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,15 @@ static size_t	print_def_prompt(t_shell *shell)
 	len = 0;
 	user = get_var(shell->env, "USER");
 	pwd = get_var(shell->env, "PWD");
+	write(STDOUT_FILENO, "\033[33;1m", 7);
 	len += write(STDOUT_FILENO, user == NULL ? "guest" : user->value
 			, user == NULL ? 5 : ft_strlen(user->value));
+	write(STDOUT_FILENO, "\033[0m", 4);
 	len += write(STDOUT_FILENO, " ", 1);
+	write(STDOUT_FILENO, "\033[34;1m", 7);
 	len += write(STDOUT_FILENO, pwd == NULL ? "unknown" : pwd->value
 			, pwd == NULL ? 7 : ft_strlen(pwd->value));
+	write(STDOUT_FILENO, "\033[0m", 4);
 	len += write(STDOUT_FILENO, " > ", 3);
 	return (len);
 }
