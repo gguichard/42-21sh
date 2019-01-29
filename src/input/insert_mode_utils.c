@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 13:41:48 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 13:50:07 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 18:00:53 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,16 @@ void	add_char_and_escape_if_needed(char char_to_add, int already_escaped
 		insert_cmdline(shell, &(shell->term), char_to_add);
 }
 
-char	*init_scmd_with_realline(t_str_cmd_inf *scmd, t_term *term)
+char	*init_scmd_with_realline(t_str_cmd_inf *scmd, t_term *term
+		, int *at_end_of_line)
 {
 	char	*line;
 	char	*real_line;
 
 	if ((line = get_command_line(term)) == NULL)
 		return (NULL);
+	*at_end_of_line = (line[ft_strlen(line)
+			- (term->size - term->cursor)] == '\0');
 	line[ft_strlen(line) - (term->size - term->cursor)] = '\0';
 	if ((real_line = apply_only_newline_escape(line)) == NULL)
 	{

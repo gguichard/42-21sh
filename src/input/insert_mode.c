@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:37:29 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/29 18:14:38 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,11 @@
 #include "utils.h"
 #include "history.h"
 
-void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
-		, t_str_cmd_inf *scmd)
+void			ac_append(t_shell *shell, t_ac_suff_inf *result
+		, t_str_cmd_inf *scmd, int at_end_of_line)
 {
 	char	*curr;
-	int		is_at_end_of_cmd;
 
-	is_at_end_of_cmd = (scmd->str[scmd->pos] == '\0');
 	curr = result->suff;
 	while (*curr != '\0')
 	{
@@ -32,18 +30,18 @@ void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
 		++curr;
 	}
 	if (result->suff_type == ACS_TYPE_VAR_IN_BRACKETS)
-		insert_cmdline(shell, term, '}');
-	if (is_at_end_of_cmd && (result->suff_type == ACS_TYPE_FILE
+		insert_cmdline(shell, &(shell->term), '}');
+	if (at_end_of_line && (result->suff_type == ACS_TYPE_FILE
 				|| result->suff_type == ACS_TYPE_VAR_IN_BRACKETS))
 	{
 		if (scmd->is_in_quote)
-			insert_cmdline(shell, term, '\'');
+			insert_cmdline(shell, &(shell->term), '\'');
 		else if (scmd->is_in_doublequote)
-			insert_cmdline(shell, term, '\"');
-		insert_cmdline(shell, term, ' ');
+			insert_cmdline(shell, &(shell->term), '\"');
+		insert_cmdline(shell, &(shell->term), ' ');
 	}
 	else if (result->suff_type == ACS_TYPE_DIR)
-		insert_cmdline(shell, term, '/');
+		insert_cmdline(shell, &(shell->term), '/');
 }
 
 int				handle_ac(t_shell *shell, t_term *term)
@@ -51,8 +49,9 @@ int				handle_ac(t_shell *shell, t_term *term)
 	t_ac_suff_inf	*result;
 	t_str_cmd_inf	scmd;
 	char			*real_line;
+	int				at_eol;
 
-	if ((real_line = init_scmd_with_realline(&scmd, term)) == NULL)
+	if ((real_line = init_scmd_with_realline(&scmd, term, &at_eol)) == NULL)
 		return (0);
 	result = autocomplete_cmdline(&scmd, shell);
 	if (result == NULL || result->suff == NULL || result->choices == NULL)
@@ -61,7 +60,7 @@ int				handle_ac(t_shell *shell, t_term *term)
 		free(real_line);
 		return (!!delete_ac_suff_inf(result));
 	}
-	ac_append(shell, term, result, &scmd);
+	ac_append(shell, result, &scmd, at_eol);
 	if ((term->ac_flag)++)
 	{
 		tputs(tparm(tgetstr("do", NULL), term->rows - term->row), 1, t_putchar);
@@ -70,9 +69,8 @@ int				handle_ac(t_shell *shell, t_term *term)
 		print_input(shell, term);
 	}
 	scmd_delete(scmd.sub_var_bracket);
-	delete_ac_suff_inf(result);
 	free(real_line);
-	return (1);
+	return (delete_ac_suff_inf(result) == NULL);
 }
 
 int				handle_eot_key(t_shell *shell, t_term *term)

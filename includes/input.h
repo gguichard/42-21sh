@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 20:36:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 13:55:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/29 18:11:51 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,13 @@ void			insert_spestr_cmdline(t_shell *shell, t_term *term
 		, const char *spe_str, char replace);
 void			add_char_and_escape_if_needed(char char_to_add
 		, int already_escaped, t_shell *shell, t_str_cmd_inf *scmd);
-char			*init_scmd_with_realline(t_str_cmd_inf *scmd, t_term *term);
+char			*init_scmd_with_realline(t_str_cmd_inf *scmd, t_term *term
+		, int *at_end_of_line);
 void			init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term);
 t_ac_format		*ac_get_format(t_list *lst, t_term *term);
 void			ac_print_list(t_list *lst, t_term *term);
-void			ac_append(t_shell *shell, t_term *term, t_ac_suff_inf *result
-		, t_str_cmd_inf *scmd);
+void			ac_append(t_shell *shell, t_ac_suff_inf *result
+		, t_str_cmd_inf *scmd, int at_end_of_line);
 int				handle_ac(t_shell *shell, t_term *term);
 int				handle_eot_key(t_shell *shell, t_term *term);
 int				handle_bs_key(t_shell *shell, t_term *term);
