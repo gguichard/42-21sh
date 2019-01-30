@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 00:48:14 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:45:20 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ static t_builtin	*build_builtin_tab(void)
 static int			init_shell(t_shell *shell, int argc, char **argv
 		, char **environ)
 {
+	t_var	*term_var;
+
 	ft_memset(shell, 0, sizeof(t_shell));
 	shell->argc = argc;
 	shell->argv = argv;
@@ -57,6 +59,13 @@ static int			init_shell(t_shell *shell, int argc, char **argv
 	setup_signals();
 	setup_def_vars(shell);
 	update_winsize(&(shell->term));
+	term_var = get_var(shell->env, "TERM");
+	if (term_var == NULL || tgetent(NULL, term_var->value) <= 0)
+	{
+		ft_dprintf(2, "%s: Unable to find TERM, switching to legacy mode\n"
+				, ERR_PREFIX);
+		shell->term.legacy_mode = 1;
+	}
 	return (1);
 }
 

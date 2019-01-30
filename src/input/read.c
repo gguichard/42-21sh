@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 18:28:21 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/27 00:41:37 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:37:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int			read_input(t_shell *shell)
 		ret = read_advanced(shell);
 	else
 	{
+		ft_strdel(&(shell->term.line));
 		ret = get_next_line(STDIN_FILENO, &(shell->term.line));
 		shell->term.size = !shell->term.line ? 0 : ft_strlen(shell->term.line);
 	}
