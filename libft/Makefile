@@ -6,7 +6,7 @@
 #    By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/29 17:35:18 by gguichar          #+#    #+#              #
-#    Updated: 2019/01/23 15:37:37 by gguichar         ###   ########.fr        #
+#    Updated: 2019/01/30 12:24:35 by gguichar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,22 +43,16 @@ OBJ_DIR	=	.obj
 PF_DIR	=	printf
 PF_LIB	=	$(PF_DIR)/printf.a
 
-OPT_DIR	=	options
-OPT_LIB	=	$(OPT_DIR)/options.a
-
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror -I includes
 
 all: $(NAME)
 
-$(NAME): $(PF_LIB) $(OPT_LIB) $(addprefix $(OBJ_DIR)/,$(OBJ))
+$(NAME): $(PF_LIB) $(addprefix $(OBJ_DIR)/,$(OBJ))
 	libtool -static -o $(NAME) $^
 
 $(PF_LIB):
 	$(MAKE) -C $(PF_DIR)
-
-$(OPT_LIB):
-	$(MAKE) -C $(OPT_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -68,12 +62,10 @@ $(OBJ_DIR):
 
 clean:
 	$(MAKE) -C $(PF_DIR) clean
-	$(MAKE) -C $(OPT_DIR) clean
 	/bin/rm -rf $(OBJ_DIR)
 
 fclean: clean
 	$(MAKE) -C $(PF_DIR) fclean
-	$(MAKE) -C $(OPT_DIR) fclean
 	/bin/rm -f $(NAME)
 
 re: fclean all
