@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 14:20:19 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 00:51:59 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:21:11 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,25 @@
 #include "input.h"
 #include "redirect_inf.h"
 
+static int	read_heredoc_line(t_shell *shell, t_redirect_inf *redirect_inf)
+{
+	int	ret;
+
+	reset_cmdline(shell, PROMPT_HEREDOC);
+	ret = read_input(shell);
+	if (ret <= 0)
+		ft_strdel(&(redirect_inf->heredoc));
+	else
+	{
+		redirect_inf->heredoc = get_command_line(&(shell->term));
+		ft_strdel(&(shell->term.prev_lines));
+		if (ft_strequ(shell->term.line, redirect_inf->to_word))
+			return (0);
+		shell->term.prev_lines = redirect_inf->heredoc;
+	}
+	return (ret);
+}
+
 void		prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf)
 {
 	int	ret;
@@ -23,19 +42,7 @@ void		prompt_heredoc(t_shell *shell, t_redirect_inf *redirect_inf)
 	ret = 1;
 	setup_term(shell);
 	while (ret > 0)
-	{
-		reset_cmdline(shell, PROMPT_HEREDOC);
-		if ((ret = read_input(shell)) <= 0)
-			ft_strdel(&(redirect_inf->heredoc));
-		else
-		{
-			redirect_inf->heredoc = get_command_line(&(shell->term));
-			ft_strdel(&(shell->term.prev_lines));
-			if (ft_strequ(shell->term.line, redirect_inf->to_word))
-				break ;
-			shell->term.prev_lines = redirect_inf->heredoc;
-		}
-	}
+		ret = read_heredoc_line(shell, redirect_inf);
 	reset_term(shell);
 	shell->term.prev_lines = NULL;
 	if (redirect_inf->heredoc == NULL)
