@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 09:45:20 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 12:43:38 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,13 @@ int					main(int argc, char **argv, char **environ)
 	int		ret;
 
 	g_shell = &shell;
-	ret = init_shell(&shell, argc, argv, environ);
-	if (ret)
+	if (!init_shell(&shell, argc, argv, environ))
+		ret = 1;
+	else
+	{
 		wait_for_command(&shell);
+		ret = shell->last_status;
+	}
 	destroy_shell(&shell);
-	return (!ret);
+	return (ret);
 }
