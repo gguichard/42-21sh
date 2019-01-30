@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 12:04:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 10:45:42 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 20:53:36 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ void	wait_for_pipe_end(t_shell *shell)
 		free(curr);
 		curr = next;
 	}
+	shell->fork_pids = NULL;
 	shell->last_status = WEXITSTATUS(status);
 }

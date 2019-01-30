@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 12:02:11 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 20:53:25 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,5 +136,4 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf)
 		shell->last_status = 127;
 	else
 		wait_for_pipe_end(shell);
-	shell->fork_pids = NULL;
 }
