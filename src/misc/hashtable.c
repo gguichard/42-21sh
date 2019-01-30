@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 11:14:45 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/28 16:08:04 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 08:31:58 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ int					add_hashentry(t_hashtable *hashtable, const char *key
 				|| (new_bucket_el = ft_lstnew(entry
 						, sizeof(t_hashentry))) == NULL)
 			return (delete_hashentry(hashtable, entry));
-		ft_lstadd(hashtable->buckets + (hash % hashtable->bucket_count),
-				new_bucket_el);
+		ft_lstadd(hashtable->buckets + (hash % hashtable->bucket_count)
+				, new_bucket_el);
 		free(entry);
 	}
 	return (1);

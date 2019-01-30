@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 12:39:06 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/30 08:19:37 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 08:27:07 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,8 @@ int					readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs);
 ** Initialise le contenu du t_ac_rdir_inf avec les informations passes en
 ** parametre. Retourne 0 si l'initialisation rate, 1 si elle reussi.
 */
-int					init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
-		int need_to_be_cmd, int can_be_dir);
+int					init_ac_rdir(const char *word, t_ac_rdir_inf *acrd
+		, int need_to_be_cmd, int can_be_dir);
 
 /*
 ** Supprime le contenu du t_ac_rdir_inf.

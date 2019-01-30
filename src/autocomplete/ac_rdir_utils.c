@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 11:54:09 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 08:47:03 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 08:30:34 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int		readdir_to_dirent(t_ac_rdir_inf *acrd, t_ac_suff_inf *acs)
 	return (0);
 }
 
-int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
-		int need_to_be_cmd, int can_be_dir)
+int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd
+		, int need_to_be_cmd, int can_be_dir)
 {
 	char	*last_slash;
 
@@ -93,8 +93,8 @@ int		init_ac_rdir(const char *word, t_ac_rdir_inf *acrd,
 		acrd->dir_to_use = ft_strdup("./");
 	else
 		acrd->dir_to_use = ft_strndup(word, last_slash - word + 1);
-	if (acrd->dir_to_use == NULL || (acrd->file_word = ft_strdup(
-					last_slash == NULL ? word : last_slash + 1)) == NULL)
+	if (acrd->dir_to_use == NULL || (acrd->file_word = ft_strdup(last_slash
+					== NULL ? word : last_slash + 1)) == NULL)
 	{
 		ft_memdel((void**)&(acrd->dir_to_use));
 		return (0);

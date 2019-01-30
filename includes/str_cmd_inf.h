@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 11:48:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/25 10:10:59 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 08:27:36 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ int				scmd_cur_char_is_escaped(t_str_cmd_inf *str_cmd_inf);
 ** Retourne 1 si le curseur a la position passee en parametre est echappe,
 ** 0 sinon.
 */
-int				scmd_char_at_is_escaped(t_str_cmd_inf *str_cmd_inf,
-		size_t at_pos);
+int				scmd_char_at_is_escaped(t_str_cmd_inf *str_cmd_inf
+		, size_t at_pos);
 
 /*
 ** Deplace le curseur vers la droite en modifiant si necessaire l'etat de

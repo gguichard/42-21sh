@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:17:37 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 17:42:45 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 08:29:18 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 #include "shell.h"
 #include "autocomplete.h"
 
-static void				process_token(t_token_inf *tk_inf,
-		const char **last_word, int *word_is_cmd)
+static void				process_token(t_token_inf *tk_inf
+		, const char **last_word, int *word_is_cmd)
 {
 	*last_word = "";
 	if (tk_inf->type == TK_WORD)
@@ -86,8 +86,8 @@ static int				end_by_simple_var(const char *last_word
 	return (1);
 }
 
-static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd,
-		t_shell *shell, t_str_cmd_inf *scmd)
+static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd
+		, t_shell *shell, t_str_cmd_inf *scmd)
 {
 	const char		*end_word;
 	char			*home_expanded_word;
@@ -112,8 +112,8 @@ static t_ac_suff_inf	*call_ac_word(const char *last_word, int word_is_cmd,
 	return (result);
 }
 
-t_ac_suff_inf			*autocomplete_cmdline(t_str_cmd_inf *scmd,
-		t_shell *shell)
+t_ac_suff_inf			*autocomplete_cmdline(t_str_cmd_inf *scmd
+		, t_shell *shell)
 {
 	t_list			*all_tokens;
 	t_list			*cur_token;

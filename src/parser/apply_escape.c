@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 08:57:59 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/29 17:12:05 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 08:33:03 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,16 @@ static int		need_to_remove_cur_char(t_str_cmd_inf *str_cmd_inf)
 	return (0);
 }
 
-static void		remove_cur_char_from_scmd(t_str_cmd_inf *str_cmd_inf,
-		char *new_str, size_t *str_len, int is_for_backslash)
+static void		remove_cur_char_from_scmd(t_str_cmd_inf *str_cmd_inf
+		, char *new_str, size_t *str_len, int is_for_backslash)
 {
 	int		cur_move;
 
 	cur_move = (is_for_backslash
 			&& str_cmd_inf->str[str_cmd_inf->pos + 1] == '\n' ? 2 : 1);
-	ft_memmove(new_str + str_cmd_inf->pos,
-			new_str + str_cmd_inf->pos + cur_move,
-			*str_len + 1 - str_cmd_inf->pos - cur_move);
+	ft_memmove(new_str + str_cmd_inf->pos
+			, new_str + str_cmd_inf->pos + cur_move
+			, *str_len + 1 - str_cmd_inf->pos - cur_move);
 	*str_len -= cur_move;
 	if (is_for_backslash && str_cmd_inf->str[str_cmd_inf->pos] != '\0')
 		str_cmd_inf->pos += (cur_move == 2 ? 0 : 1);
@@ -75,8 +75,8 @@ char			*apply_escape(const char *str)
 		if (str_cmd_inf.str[str_cmd_inf.pos] == '\\'
 				&& (scmd_cur_char_is_in_nothing(&str_cmd_inf)
 					|| (str_cmd_inf.is_in_doublequote
-						&& ft_strchr("$\"\\\n",
-							str_cmd_inf.str[str_cmd_inf.pos + 1]) != NULL)))
+						&& ft_strchr("$\"\\\n"
+							, str_cmd_inf.str[str_cmd_inf.pos + 1]) != NULL)))
 			remove_cur_char_from_scmd(&str_cmd_inf, new_str, &str_len, 1);
 		else if (need_to_remove_cur_char(&str_cmd_inf))
 			remove_cur_char_from_scmd(&str_cmd_inf, new_str, &str_len, 0);
