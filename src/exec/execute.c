@@ -6,13 +6,14 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 10:00:22 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:34:16 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include "libft.h"
+#include "shell.h"
 #include "cmd_inf.h"
 #include "join_token_cmd.h"
 #include "vars.h"
@@ -29,9 +30,11 @@ void		child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 	{
 		environ = get_environ_from_list(shell->env);
 		execve(bin_path, args, environ);
+		ft_dprintf(2, "%s: %s: Cannot execute binary file\n"
+				, ERR_PREFIX, bin_path);
 	}
 	free(environ);
-	exit(0);
+	exit(126);
 }
 
 int			try_execute_builtin(t_shell *shell, t_cmd_inf *cmd_inf
