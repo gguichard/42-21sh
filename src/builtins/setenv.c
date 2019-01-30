@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 15:00:41 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 10:28:13 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 11:12:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int			builtin_setenv(t_shell *shell, int argc, char **argv)
 	if (argc <= 1)
 	{
 		ft_dprintf(2, "%s: usage: %s key=value...\n", argv[0], argv[0]);
-		return (0);
+		return (1);
 	}
 	return (update_env_vars(shell, argc, argv));
 }
