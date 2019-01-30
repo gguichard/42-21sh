@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 10:05:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 09:27:42 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:53:37 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	reset_cmdline(t_shell *shell, t_prompt prompt)
 	shell->term.cursor = 0;
 	shell->term.size = 0;
 	shell->term.row = 0;
-	shell->term.col = shell->term.offset % shell->term.winsize.ws_col;
+	shell->term.col = shell->term.offset % shell->term.win_cols;
 	shell->term.rows = 1;
 	shell->term.esc_seq = 0;
 	shell->term.seq_off = 0;
@@ -74,7 +74,7 @@ void	go_to_prompt(t_term *term)
 	int	prompt_height;
 
 	tputs(tgetstr("cr", NULL), 1, t_putchar);
-	prompt_height = term->offset / term->winsize.ws_col;
+	prompt_height = term->offset / term->win_cols;
 	if (term->row + prompt_height > 0)
 		tputs(tparm(tgetstr("UP", NULL), term->row + prompt_height), 1
 				, t_putchar);

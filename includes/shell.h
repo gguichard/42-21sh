@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 00:35:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:54:23 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ typedef struct			s_term
 {
 	struct termios		default_term;
 	struct termios		curr_term;
+	size_t				win_cols;
 	int					legacy_mode;
-	struct winsize		winsize;
 	int					esc_seq;
 	char				seq[MAX_ESC_SEQ_BYTES];
 	int					seq_off;

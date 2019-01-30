@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/15 10:52:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:06:33 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:52:52 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ static size_t	get_col_offset(t_term *term, size_t *index_ptr)
 	size_t	index;
 
 	row = 0;
-	col = term->offset % term->winsize.ws_col;
+	col = term->offset % term->win_cols;
 	index = 0;
 	while (index < term->size && row < term->row)
 	{
-		if ((col + 1) % term->winsize.ws_col != 0
+		if ((col + 1) % term->win_cols != 0
 				&& (term->line)[index] != '\n')
 			col++;
 		else
@@ -45,7 +45,7 @@ size_t			get_max_col(t_term *term)
 	size_t	index;
 
 	col = get_col_offset(term, &index);
-	while (col < (term->winsize.ws_col - 1))
+	while (col < (term->win_cols - 1))
 	{
 		if ((term->line)[index] == '\0'
 				|| (term->line)[index] == '\n')
@@ -63,11 +63,11 @@ size_t			get_total_rows(t_term *term)
 	size_t	index;
 
 	rows = 1;
-	col = term->offset % term->winsize.ws_col;
+	col = term->offset % term->win_cols;
 	index = 0;
 	while (index < term->size)
 	{
-		if ((col + 1) % term->winsize.ws_col != 0
+		if ((col + 1) % term->win_cols != 0
 				&& (term->line)[index] != '\n')
 			col++;
 		else
@@ -96,11 +96,11 @@ void			update_pos_data(t_term *term)
 	size_t	index;
 
 	row = 0;
-	col = term->offset % term->winsize.ws_col;
+	col = term->offset % term->win_cols;
 	index = 0;
 	while (index < term->cursor)
 	{
-		if ((col + 1) % term->winsize.ws_col != 0
+		if ((col + 1) % term->win_cols != 0
 				&& (term->line)[index] != '\n')
 			col++;
 		else

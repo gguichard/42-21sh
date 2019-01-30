@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 09:39:10 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 09:28:02 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:53:49 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void		init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term)
 		lst = lst->next;
 	}
 	fmt->col_width += 2;
-	fmt->max_col = term->winsize.ws_col / fmt->col_width;
+	fmt->max_col = term->win_cols / fmt->col_width;
 	fmt->max_row = (int)ft_ceil(fmt->elems / (double)fmt->max_col);
 	fmt->max_col = (int)ft_ceil(fmt->elems / (double)fmt->max_row);
 }

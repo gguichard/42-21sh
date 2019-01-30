@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 14:19:25 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:06:02 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:53:04 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	fix_outbound_col(t_term *term)
 	size_t	real_off;
 
 	max_col = get_max_col(term);
-	real_off = term->offset % term->winsize.ws_col;
+	real_off = term->offset % term->win_cols;
 	if (term->row == 0 && term->col < real_off)
 		term->col = real_off;
 	else if (term->col > max_col)

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 19:52:57 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 09:44:15 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:55:56 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	setup_term(t_shell *shell)
 		return ;
 	tcgetattr(STDIN_FILENO, &(shell->term.default_term));
 	ft_memcpy(&(shell->term.curr_term), &(shell->term.default_term)
-		, sizeof(struct termios));
+			, sizeof(struct termios));
 	(shell->term.curr_term).c_lflag &= ~(ICANON | ECHO);
 	(shell->term.curr_term).c_cc[VMIN] = 1;
 	(shell->term.curr_term).c_cc[VTIME] = 0;
@@ -38,18 +38,14 @@ void	reset_term(t_shell *shell)
 
 void	update_winsize(t_term *term)
 {
-	int	ret;
+	int				ret;
+	struct winsize	ws;
 
-	ret = ioctl(STDERR_FILENO, TIOCGWINSZ, &(term->winsize));
+	ft_memset(&ws, 0, sizeof(struct winsize));
+	ret = ioctl(STDERR_FILENO, TIOCGWINSZ, &ws);
+	term->win_cols = ft_max(1, ws.ws_col);
 	if (ret == -1)
-	{
-		term->winsize.ws_col = 1;
 		term->legacy_mode = 1;
-	}
 	else
-	{
-		if (term->winsize.ws_col <= 0)
-			term->winsize.ws_col = 1;
 		update_pos_data(term);
-	}
 }
