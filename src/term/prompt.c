@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 17:10:37 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 00:43:31 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 12:22:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*get_custom_prompt_pwd(t_shell *shell)
 	home = get_shell_var(shell, "HOME");
 	if (home == NULL)
 		return (pwd);
-	if (ft_strstr(pwd, home) == pwd)
+	if (home[0] != '\0' && ft_strstr(pwd, home) == pwd)
 	{
 		home_len = ft_strlen(home);
 		ft_memmove(pwd + 1, pwd + home_len, ft_strlen(pwd) - home_len + 1);
