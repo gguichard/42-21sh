@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 09:39:10 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/17 11:45:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:28:02 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,11 @@ void		ac_print_list(t_list *lst, t_term *term)
 		col = 0;
 		while (col < fmt->max_col && (fmt->cols)[col] != NULL)
 		{
-			ft_printf("%-*s", fmt->col_width, (fmt->cols)[col]->content);
+			ft_dprintf(2, "%-*s", fmt->col_width, (fmt->cols)[col]->content);
 			(fmt->cols)[col] = (fmt->cols)[col]->next;
 			col++;
 		}
-		ft_putchar('\n');
+		ft_putchar_fd('\n', 2);
 		row++;
 	}
 	free(fmt->cols);

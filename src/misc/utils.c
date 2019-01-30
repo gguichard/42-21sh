@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/04 12:12:54 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/06 01:16:03 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:26:45 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 int	t_putchar(int c)
 {
-	return (write(STDOUT_FILENO, &c, 1));
+	return (write(STDERR_FILENO, &c, 1));
 }

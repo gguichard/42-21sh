@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 19:52:57 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 00:57:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:25:24 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,11 @@ void	update_winsize(t_term *term)
 {
 	int	ret;
 
-	if (term->legacy_mode)
-		return ;
-	ret = ioctl(STDOUT_FILENO, TIOCGWINSZ, &(term->winsize));
+	ret = ioctl(STDERR_FILENO, TIOCGWINSZ, &(term->winsize));
 	if (ret == -1)
 	{
-		term->legacy_mode = 1;
 		term->winsize.ws_col = 1;
+		term->legacy_mode = 1;
 	}
 	else
 	{

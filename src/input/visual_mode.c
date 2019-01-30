@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:17:27 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/23 14:13:07 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 09:26:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	print_select_line(t_term *term)
 	if (sl_end > sl_begin)
 	{
 		tputs(tgetstr("mr", NULL), 1, t_putchar);
-		write(STDOUT_FILENO, &(term->line[sl_begin]), sl_end - sl_begin);
+		write(STDERR_FILENO, &(term->line[sl_begin]), sl_end - sl_begin);
 		tputs(tgetstr("me", NULL), 1, t_putchar);
 	}
 	if (sl_end < term->size)
-		write(STDOUT_FILENO, &(term->line[sl_end]), term->size - sl_end);
+		write(STDERR_FILENO, &(term->line[sl_end]), term->size - sl_end);
 }
 
 int		vm_toggle(t_shell *shell, t_term *term)

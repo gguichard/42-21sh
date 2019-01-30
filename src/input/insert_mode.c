@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 18:14:38 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 09:27:27 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int				handle_key(t_shell *shell, t_term *term, char key)
 	else if (key == '\n')
 	{
 		move_cursor_end(shell, term);
-		ft_putchar('\n');
+		ft_putchar_fd('\n', 2);
 		return (0);
 	}
 	if (!ret)
