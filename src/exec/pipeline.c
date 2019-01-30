@@ -6,10 +6,11 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:34:46 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 12:13:47 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 12:02:11 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "libft.h"
@@ -77,7 +78,7 @@ static pid_t	pipe_fork(t_shell *shell, t_list *curr)
 		ft_lstpush(&(shell->fork_pids), ft_lstnew(&(pid), sizeof(pid_t)));
 	else if (pid < 0)
 	{
-		kill_forked_pids(shell);
+		kill_forked_pids(shell, SIGINT);
 		ft_dprintf(2, "%s: %s: Unable to fork\n", ERR_PREFIX
 				, pipe->cmd_inf->arg_lst->content);
 	}

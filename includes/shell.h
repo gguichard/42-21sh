@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:33:39 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 09:54:23 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 12:02:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void					setup_def_vars(t_shell *shell);
 
 t_list					*parse_env(char **environ);
 void					setup_signals(void);
-void					kill_forked_pids(t_shell *shell);
+void					kill_forked_pids(t_shell *shell, int sig);
 void					destroy_shell(t_shell *shell);
 
 void					show_prompt(t_shell *shell);
