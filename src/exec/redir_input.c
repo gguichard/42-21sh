@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 12:06:28 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 13:15:55 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 13:16:28 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	get_redirect_input_fd(t_redirect_inf *redirect_inf)
 	if (fd == FD_NOTSET)
 	{
 		fd = open(redirect_inf->to_word, O_RDONLY);
-		redirect->close_to_fd = 1;
+		redirect_inf->close_to_fd = 1;
 	}
 	else if (fd == FD_AMPERSAND)
 	{
