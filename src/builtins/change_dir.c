@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:13:49 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 10:24:06 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 12:24:00 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,20 @@
 #include <stdlib.h>
 #include "shell.h"
 #include "vars.h"
-#include "options.h"
 #include "error.h"
 #include "check_path.h"
 #include "builtins.h"
 
-static t_opts	*cd_get_opts(int argc, char **argv)
+static char		*get_path_or_cwd(t_shell *shell, const char *name)
 {
-	t_opts	*opts;
+	t_var	*var;
 
-	opts = parse_opts(argc, argv, "");
-	if (opts == NULL)
-	{
-		ft_dprintf(2, "%s: %s: Unexpected error\n", ERR_PREFIX, argv[0]);
-		return (NULL);
-	}
-	else if (opts->error != 0)
-	{
-		ft_dprintf(2, "%s: %s: -%c: Invalid option\n", ERR_PREFIX, argv[0]
-				, opts->error);
-		ft_dprintf(2, "%s: usage: %s [dir]\n", argv[0], argv[0]);
-		ft_memdel((void *)&opts);
-	}
-	return (opts);
+	var = get_var(shell->env, name);
+	if (var == NULL)
+		var = get_var(shell->local, name);
+	if (var == NULL)
+		return (getcwd(NULL, 0));
+	return (ft_strdup(var->value));
 }
 
 static char		*get_new_cur_path(t_shell *shell, const char *cur_path)
@@ -50,7 +41,7 @@ static char		*get_new_cur_path(t_shell *shell, const char *cur_path)
 		new_path = ft_strdup(cur_path);
 	else
 	{
-		pwd = get_shell_var(shell, "PWD");
+		pwd = get_path_or_cwd(shell, "PWD");
 		pwd_len = (pwd == NULL) ? 0 : ft_strlen(pwd);
 		if (pwd_len > 0 && pwd[pwd_len - 1] == '/')
 			pwd_len -= 1;
@@ -68,19 +59,18 @@ static char		*get_new_cur_path(t_shell *shell, const char *cur_path)
 	return (new_path);
 }
 
-static char		*get_cur_path(t_shell *shell, t_opts *opts, int argc
-		, char **argv)
+static char		*get_cur_path(t_shell *shell, int argc, char **argv)
 {
 	char	*cur_path;
 	char	*tmp;
 
 	cur_path = NULL;
-	if (opts->index >= argc)
-		cur_path = get_shell_var(shell, "HOME");
-	else if (!ft_strequ(argv[opts->index], "-"))
-		cur_path = ft_strdup(argv[opts->index]);
+	if (argc <= 1)
+		cur_path = get_path_or_cwd(shell, "HOME");
+	else if (!ft_strequ(argv[1], "-"))
+		cur_path = ft_strdup(argv[1]);
 	else
-		cur_path = get_shell_var(shell, "OLDPWD");
+		cur_path = get_path_or_cwd(shell, "OLDPWD");
 	if (cur_path != NULL)
 	{
 		tmp = get_new_cur_path(shell, cur_path);
@@ -94,15 +84,16 @@ static char		*get_cur_path(t_shell *shell, t_opts *opts, int argc
 
 static int		change_dir(t_shell *shell, const char *cur_path, char **argv)
 {
-	t_var		*pwd;
+	char		*pwd;
 	t_error		error;
 	const char	*def_path;
 
 	if (chdir(cur_path) == 0)
 	{
-		pwd = get_var(shell->env, "PWD");
-		update_var(&(shell->env), "OLDPWD", pwd == NULL ? "" : pwd->value);
+		pwd = get_path_or_cwd(shell, "PWD");
+		update_var(&(shell->env), "OLDPWD", pwd == NULL ? "" : pwd);
 		update_var(&(shell->env), "PWD", cur_path);
+		free(pwd);
 		return (0);
 	}
 	error = check_dir_rights(cur_path, X_OK);
@@ -115,14 +106,11 @@ static int		change_dir(t_shell *shell, const char *cur_path, char **argv)
 
 int				builtin_cd(t_shell *shell, int argc, char **argv)
 {
-	t_opts	*opts;
 	int		ret;
 	char	*cur_path;
 
-	if ((opts = cd_get_opts(argc, argv)) == NULL)
-		return (1);
 	ret = 0;
-	cur_path = get_cur_path(shell, opts, argc, argv);
+	cur_path = get_cur_path(shell, argc, argv);
 	if (cur_path == NULL)
 	{
 		ret = 1;
@@ -131,10 +119,9 @@ int				builtin_cd(t_shell *shell, int argc, char **argv)
 	else
 	{
 		ret = change_dir(shell, cur_path, argv);
-		if (ret == 0 && opts->index < argc && ft_strequ(argv[opts->index], "-"))
+		if (ret == 0 && argc > 1 && ft_strequ(argv[1], "-"))
 			ft_printf("%s\n", cur_path);
 		free(cur_path);
 	}
-	free(opts);
 	return (ret);
 }
