@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/08 14:28:03 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 09:27:27 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:21:40 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "utils.h"
 #include "history.h"
 
-void			ac_append(t_shell *shell, t_ac_suff_inf *result
+static void	ac_append(t_shell *shell, t_ac_suff_inf *result
 		, t_str_cmd_inf *scmd, int at_end_of_line)
 {
 	char	*curr;
@@ -44,7 +44,7 @@ void			ac_append(t_shell *shell, t_ac_suff_inf *result
 		insert_cmdline(shell, &(shell->term), '/');
 }
 
-int				handle_ac(t_shell *shell, t_term *term)
+int			handle_ac(t_shell *shell, t_term *term)
 {
 	t_ac_suff_inf	*result;
 	t_str_cmd_inf	scmd;
@@ -73,7 +73,7 @@ int				handle_ac(t_shell *shell, t_term *term)
 	return (delete_ac_suff_inf(result) == NULL);
 }
 
-int				handle_eot_key(t_shell *shell, t_term *term)
+int			handle_eot_key(t_shell *shell, t_term *term)
 {
 	(void)shell;
 	if (term->size == 0)
@@ -82,7 +82,7 @@ int				handle_eot_key(t_shell *shell, t_term *term)
 	return (0);
 }
 
-int				handle_key(t_shell *shell, t_term *term, char key)
+int			handle_key(t_shell *shell, t_term *term, char key)
 {
 	int	ret;
 	int	ac;

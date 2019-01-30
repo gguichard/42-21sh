@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 09:39:10 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 09:53:49 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:20:45 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "shell.h"
 #include "input.h"
 
-void		init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term)
+static void			init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term)
 {
 	fmt->elems = 0;
 	fmt->col_width = 0;
@@ -31,7 +31,7 @@ void		init_ac_format(t_ac_format *fmt, t_list *lst, t_term *term)
 	fmt->max_col = (int)ft_ceil(fmt->elems / (double)fmt->max_row);
 }
 
-t_ac_format	*ac_get_format(t_list *lst, t_term *term)
+static t_ac_format	*ac_get_format(t_list *lst, t_term *term)
 {
 	t_ac_format	*fmt;
 	int			col;
@@ -40,9 +40,8 @@ t_ac_format	*ac_get_format(t_list *lst, t_term *term)
 	if ((fmt = (t_ac_format *)malloc(sizeof(t_ac_format))) == NULL)
 		return (NULL);
 	init_ac_format(fmt, lst, term);
-	if (fmt->max_col <= 0
-			|| (fmt->cols = (t_list **)malloc(fmt->max_col
-					* sizeof(t_list *))) == NULL)
+	if (fmt->max_col <= 0 || fmt->max_row <= 0 || (fmt->cols = (t_list **)
+				malloc(fmt->max_col * sizeof(t_list *))) == NULL)
 	{
 		free(fmt);
 		return (NULL);
@@ -59,14 +58,26 @@ t_ac_format	*ac_get_format(t_list *lst, t_term *term)
 	return (fmt);
 }
 
-void		ac_print_list(t_list *lst, t_term *term)
+static void			ac_print_simple_list(t_list *lst)
+{
+	while (lst != NULL)
+	{
+		ft_dprintf(2, "%s\n", lst->content);
+		lst = lst->next;
+	}
+}
+
+void				ac_print_list(t_list *lst, t_term *term)
 {
 	t_ac_format	*fmt;
 	int			row;
 	int			col;
 
 	if ((fmt = ac_get_format(lst, term)) == NULL)
+	{
+		ac_print_simple_list(lst);
 		return ;
+	}
 	row = 0;
 	while (row < fmt->max_row)
 	{

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 15:13:49 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 23:18:58 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:24:06 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static t_opts	*cd_get_opts(int argc, char **argv)
 	{
 		ft_dprintf(2, "%s: %s: -%c: Invalid option\n", ERR_PREFIX, argv[0]
 				, opts->error);
-		ft_dprintf(2, "%s: usage: cd [dir]\n", argv[0]);
+		ft_dprintf(2, "%s: usage: %s [dir]\n", argv[0], argv[0]);
 		ft_memdel((void *)&opts);
 	}
 	return (opts);

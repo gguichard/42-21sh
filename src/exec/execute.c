@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 20:00:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:00:22 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ static void	execute_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf)
 			shell->last_status = ret;
 		else
 			execute_single_cmd(shell, cmd_inf);
+		update_var(&(shell->env), "_"
+				, arg_tab[ft_lstsize(cmd_inf->arg_lst) - 1]);
 		free(arg_tab);
 	}
 }

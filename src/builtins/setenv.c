@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 15:00:41 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 16:32:00 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:28:13 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	is_valid_identifier(const char *key)
 
 static int	update_env_var(t_shell *shell, const char *key, const char *value)
 {
-	if (!is_valid_identifier(key))
+	if (key[0] == '\0' || !is_valid_identifier(key))
 		return (0);
 	if (ft_strequ("PATH", key))
 		delete_hashentries(shell->exec_hashtable);
@@ -41,14 +41,14 @@ static int	update_env_var(t_shell *shell, const char *key, const char *value)
 	return (1);
 }
 
-int			builtin_setenv(t_shell *shell, int argc, char **argv)
+static int	update_env_vars(t_shell *shell, int argc, char **argv)
 {
+	int		ret;
 	int		index;
 	char	*tmp;
-	int		ret;
 
-	index = 1;
 	ret = 0;
+	index = 1;
 	while (index < argc)
 	{
 		tmp = ft_strchr(argv[index], '=');
@@ -61,8 +61,19 @@ int			builtin_setenv(t_shell *shell, int argc, char **argv)
 				ft_dprintf(2, "%s: %s: `%s': Not a valid identifier\n"
 						, ERR_PREFIX, argv[0], argv[index]);
 			}
+			*tmp = '=';
 		}
 		index++;
 	}
 	return (ret);
+}
+
+int			builtin_setenv(t_shell *shell, int argc, char **argv)
+{
+	if (argc <= 1)
+	{
+		ft_dprintf(2, "%s: usage: %s key=value...\n", argv[0], argv[0]);
+		return (0);
+	}
+	return (update_env_vars(shell, argc, argv));
 }
