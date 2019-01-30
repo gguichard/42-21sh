@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 12:12:17 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:43:48 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void			execute_pipeline(t_shell *shell, t_cmd_inf *cmd_inf);
 char			*search_binary(t_shell *shell, const char *binary
 		, t_error *error);
 char			**arg_lst_to_tab(t_list *arg_lst);
+void			print_sig_message(int status);
 
 /*
 ** REDIRECTIONS.

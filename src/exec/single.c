@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 18:18:26 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:52:01 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:43:53 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static void	single_fork(t_shell *shell, t_cmd_inf *cmd_inf
 	{
 		shell->fork_pids = ft_lstnew(&pid, sizeof(pid_t));
 		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status))
+			print_sig_message(status);
 		shell->last_status = WEXITSTATUS(status);
 		ft_lstfree(&(shell->fork_pids));
 	}

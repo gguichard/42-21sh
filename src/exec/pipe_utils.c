@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 12:04:35 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 12:14:33 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:45:42 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	wait_for_pipe_end(t_shell *shell)
 	while (curr != NULL)
 	{
 		waitpid(*((pid_t *)curr->content), &status, 0);
+		if (WIFSIGNALED(status))
+			print_sig_message(status);
 		next = curr->next;
 		free(curr->content);
 		free(curr);

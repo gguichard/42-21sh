@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 12:09:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/29 17:58:32 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 10:58:37 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <sys/wait.h>
+#include <signal.h>
 #include "libft.h"
 #include "check_path.h"
 #include "execute.h"
@@ -85,4 +87,43 @@ char		**arg_lst_to_tab(t_list *arg_lst)
 		args[index] = NULL;
 	}
 	return (args);
+}
+
+static void	print_sig_message_2(int signal)
+{
+	if (signal == SIGFPE)
+		ft_dprintf(2, "Floating point exception: %d\n", signal);
+	else if (signal == SIGKILL)
+		ft_dprintf(2, "Killed: %d\n", signal);
+	else if (signal == SIGBUS)
+		ft_dprintf(2, "Bus error: %d\n", signal);
+	else if (signal == SIGSEGV)
+		ft_dprintf(2, "Segmentation fault: %d\n", signal);
+	else if (signal == SIGSYS)
+		ft_dprintf(2, "Bad system call: %d\n", signal);
+	else if (signal == SIGALRM)
+		ft_dprintf(2, "Alarm clock: %d\n", signal);
+	else if (signal == SIGTERM)
+		ft_dprintf(2, "Terminated: %d\n", signal);
+}
+
+void		print_sig_message(int status)
+{
+	int	signal;
+
+	signal = WTERMSIG(status);
+	if (signal == SIGHUP)
+		ft_dprintf(2, "Hangup: %d\n", signal);
+	else if (signal == SIGQUIT)
+		ft_dprintf(2, "Quit: %d\n", signal);
+	else if (signal == SIGILL)
+		ft_dprintf(2, "Illegal instruction: %d\n", signal);
+	else if (signal == SIGTRAP)
+		ft_dprintf(2, "Trace/BPT trap: %d\n", signal);
+	else if (signal == SIGABRT)
+		ft_dprintf(2, "Abort trap: %d\n", signal);
+	else if (signal == SIGEMT)
+		ft_dprintf(2, "EMT trap: %d\n", signal);
+	else
+		print_sig_message_2(signal);
 }
