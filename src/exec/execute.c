@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 09:53:07 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 10:34:16 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 11:21:03 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include "execute.h"
 
 void		child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
-		, const char *bin_path, char **args)
+		, const char *bin_path, char **arg_tab)
 {
 	char	**environ;
 
@@ -29,7 +29,7 @@ void		child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
 	if (setup_redirections(cmd_inf))
 	{
 		environ = get_environ_from_list(shell->env);
-		execve(bin_path, args, environ);
+		execve(bin_path, arg_tab, environ);
 		ft_dprintf(2, "%s: %s: Cannot execute binary file\n"
 				, ERR_PREFIX, bin_path);
 	}

@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 13:12:56 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 10:43:48 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 11:20:26 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct	s_pipe
 }				t_pipe;
 
 void			child_exec_cmd_inf(t_shell *shell, t_cmd_inf *cmd_inf
-		, const char *bin_path, char **args);
+		, const char *bin_path, char **arg_tab);
 int				try_execute_builtin(t_shell *shell, t_cmd_inf *cmd_inf
 		, char **arg_tab);
 void			execute_all(t_shell *shell, t_list *all_sub_cmd);
