@@ -6,7 +6,7 @@
 /*   By: fwerner <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 09:10:18 by fwerner           #+#    #+#             */
-/*   Updated: 2019/01/30 08:18:00 by fwerner          ###   ########.fr       */
+/*   Updated: 2019/01/30 09:46:24 by fwerner          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void		autocomplete_cmd(const char *word, char **path_tab
 	while (*path_tab != NULL)
 	{
 		if ((real_word = build_path_to_file(*path_tab, word)) == NULL
-				|| !init_ac_rdir(real_word, &acrd, 1, 1))
+				|| !init_ac_rdir(real_word, &acrd, 1, 0))
 		{
 			free(real_word);
 			ft_memdel((void**)&(acs->suff));
