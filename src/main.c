@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/03 13:34:02 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 12:46:16 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/01/30 13:26:46 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void				destroy_shell(t_shell *shell)
 	ft_strdel(&(shell->term.prev_lines));
 	ft_strdel(&(shell->term.line));
 	ft_strdel(&(shell->term.def_line));
+	ft_strdel(&(shell->term.select.clipboard));
 	if (shell->exec_hashtable != NULL)
 	{
 		delete_hashtable(shell->exec_hashtable);
