@@ -6,7 +6,7 @@
 /*   By: gguichar <gguichar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 14:20:19 by gguichar          #+#    #+#             */
-/*   Updated: 2019/01/30 21:06:46 by gguichar         ###   ########.fr       */
+/*   Updated: 2019/03/30 15:06:56 by gguichar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "shell.h"
 #include "input.h"
 #include "redirect_inf.h"
+#include "execute.h"
 
 static int	read_heredoc_line(t_shell *shell, t_redirect_inf *redirect_inf)
 {
@@ -65,7 +66,7 @@ int			redirect_heredoc(t_redirect_inf *redirect_inf)
 		ft_dprintf(2, "%s: heredoc: Pipe error\n", ERR_PREFIX);
 		return (0);
 	}
-	dup2(fildes[0], STDIN_FILENO);
+	dup2_with_rc(redirect_inf, fildes[0], STDIN_FILENO);
 	write(fildes[1], redirect_inf->heredoc
 			, ft_strlen(redirect_inf->heredoc));
 	close(fildes[1]);
